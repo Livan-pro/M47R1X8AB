@@ -1,0 +1,15 @@
+input UserInput {
+  email: String
+  password: String
+  passwordConfirmation: String
+  firstName: String
+  lastName: String
+  birthday: Date
+  phone: String
+  vkId: String
+  medicalInfo: String
+}
+
+type Mutation {
+  createUserWithCharacter(user: UserInput!, character: CharacterInput!): Boolean
+}

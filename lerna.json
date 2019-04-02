@@ -1,0 +1,11 @@
+{
+  "packages": [
+    "packages/*"
+  ],
+  "hoist": [
+    "class-validator",
+    "reflect-metadata",
+    "typescript"
+],
+  "version": "0.0.0"
+}

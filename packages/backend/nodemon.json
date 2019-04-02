@@ -1,0 +1,15 @@
+{
+  "ignore": [
+    "src/graphql.schema.ts"
+  ],
+  "watch": [
+    "src",
+    "ormconfig.js",
+    ".env"
+  ],
+  "ext": "ts,graphql",
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "exec": "ts-node src/main.ts"
+}

@@ -1,0 +1,12 @@
+{
+  "name": "root",
+  "private": true,
+  "devDependencies": {
+    "@types/mkdirp": "^0.5.2",
+    "lerna": "^3.13.0"
+  },
+  "dependencies": {
+    "graphql-upload": "^8.0.4",
+    "mkdirp": "^0.5.1"
+  }
+}
