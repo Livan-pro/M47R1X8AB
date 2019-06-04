@@ -1,8 +1,8 @@
-import {registerDecorator} from 'class-validator/index';
-import {ValidationOptions} from 'class-validator/decorator/ValidationOptions';
-import {ValidatorConstraintInterface} from 'class-validator/validation/ValidatorConstraintInterface';
-import {ValidatorConstraint} from 'class-validator/decorator/decorators';
-import {ValidationArguments} from 'class-validator/validation/ValidationArguments';
+import {registerDecorator} from "class-validator/index";
+import {ValidationOptions} from "class-validator/decorator/ValidationOptions";
+import {ValidatorConstraintInterface} from "class-validator/validation/ValidatorConstraintInterface";
+import {ValidatorConstraint} from "class-validator/decorator/decorators";
+import {ValidationArguments} from "class-validator/validation/ValidationArguments";
 
 export function IsEqualTo(property: string, validationOptions?: ValidationOptions) {
   return (object: object, propertyName: string) => {
@@ -16,7 +16,7 @@ export function IsEqualTo(property: string, validationOptions?: ValidationOption
   };
 }
 
-@ValidatorConstraint({ name: 'isEqualTo' })
+@ValidatorConstraint({ name: "isEqualTo" })
 export class IsEqualToConstraint implements ValidatorConstraintInterface {
   public validate(value: any, args: ValidationArguments) {
     const [relatedPropertyName] = args.constraints;

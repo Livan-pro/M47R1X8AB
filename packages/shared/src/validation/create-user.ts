@@ -23,12 +23,12 @@ export class CreateUser {
 
   @IsNotEmpty({message: "Должен быть заполнен"})
   @IsDate()
-  birthday: Date = null;
+  birthday: Date | null = null;
 
   @MinLength(9, {message: "Телефон должен быть длиннее 8 символов"})
   @MaxLength(20, {message: "Телефон должен быть короче 21 символа"})
   phone: string = "";
-  
+
   @IsNotEmpty({message: "Должна быть заполнена"})
   @MaxLength(47, {message: "Должна быть короче 48 символов"}) // 47 = "https://vk.com/" + 32
   vkId: string = "";

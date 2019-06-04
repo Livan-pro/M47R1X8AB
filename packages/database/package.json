@@ -1,0 +1,31 @@
+{
+  "name": "matrix-database",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "lint": "tslint -p tsconfig.json",
+    "test": "echo No tests! && exit 0",
+    "dev": "tsc -w",
+    "build": "rimraf dist && tsc",
+    "migration:run": "cross-env NODE_ENV=production typeorm migration:run",
+    "migration:revert": "cross-env NODE_ENV=production typeorm migration:revert",
+    "migration:generate": "ts-node ./node_modules/typeorm/cli.js migration:generate -n"
+  },
+  "author": "Livan",
+  "devDependencies": {
+    "@types/dotenv": "^6.1.0",
+    "rimraf": "^2.6.3",
+    "tslint": "^5.13.0",
+    "typescript": "^3.3.3333"
+  },
+  "dependencies": {
+    "cross-env": "^5.2.0",
+    "dotenv": "^6.2.0",
+    "mysql": "^2.16.0",
+    "tsconfig-paths": "^3.8.0",
+    "typeorm": "^0.2.14"
+  }
+}

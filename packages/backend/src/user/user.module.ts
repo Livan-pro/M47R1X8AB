@@ -2,8 +2,7 @@ import { Module, forwardRef } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthModule } from "auth/auth.module";
-import { User } from "./user.entity";
-import { CharacterModule } from "character/character.module";
+import { User } from "matrix-database";
 import { UserResolvers } from "./user.resolvers";
 import { FileModule } from "file/file.module";
 

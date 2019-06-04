@@ -1,19 +1,17 @@
 {
   "compilerOptions": {
+    "target": "esnext",
     "module": "commonjs",
-    "declaration": false,
-    "noImplicitAny": false,
-    "removeComments": true,
-    "noLib": false,
+    "noImplicitAny": true,
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es2017",
-    "lib": ["es2017", "esnext.asynciterable"],
-    "sourceMap": true,
-    "allowJs": true,
-    "outDir": "./dist",
+    "strict": true,
+    "allowJs": false,
+    "strictPropertyInitialization": false,
+    "declaration": true,
     "baseUrl": "./src",
+    "outDir": "./dist",
     "paths": {
       "*": ["./*"]
     }
@@ -22,7 +20,6 @@
     "src/**/*"
   ],
   "exclude": [
-    "node_modules",
-    "**/*.spec.ts"
+    "node_modules"
   ]
 }

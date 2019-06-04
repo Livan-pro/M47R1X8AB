@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { JwtPayload } from "./jwt-payload.interface";
 import { UserService } from "user/user.service";
 import { compare, hash } from "bcryptjs";
-import { User } from "user/user.entity";
+import { User } from "matrix-database";
 
 @Injectable()
 export class AuthService {

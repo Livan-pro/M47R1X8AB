@@ -9,5 +9,5 @@ export class CreateCharacter {
   @Max(1000, {message: "Максимальный возраст - 1000 лет"})
   age: number = 0;
 
-  quenta: File = null;
+  quenta: any = null;
 }

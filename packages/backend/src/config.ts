@@ -1,7 +1,6 @@
 import { parse, DotenvParseOutput } from "dotenv";
 import { readFileSync } from "fs";
 import { resolve } from "path";
-import { dataPath } from "utils";
 
 const projectRoot = resolve(__dirname, "..");
 let conf: DotenvParseOutput = null;

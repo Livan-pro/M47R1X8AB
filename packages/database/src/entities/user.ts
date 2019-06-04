@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany} from "typeorm";
-import { Character } from "character/character.entity";
+import { Character } from "./character";
 
 @Entity("users")
 export class User {

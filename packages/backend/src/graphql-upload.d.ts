@@ -9,8 +9,8 @@ declare module "graphql-upload" {
   }>;
 
   type UploadOptions = {
-    maxFieldSize?: number = 1000000;
-    maxFileSize?: number = Infinity;
-    maxFiles?: nnumber = Infinity;
+    maxFieldSize?: number;
+    maxFileSize?: number;
+    maxFiles?: number;
   };
 }
