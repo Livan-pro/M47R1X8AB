@@ -10,7 +10,8 @@
     "start": "ts-node src/main.ts",
     "dev": "nodemon",
     "prod": "cross-env NODE_ENV=production node dist/main.js",
-    "build": "rimraf dist && tsc"
+    "build": "rimraf dist && tsc",
+    "deploy": "pm2 reload ecosystem.config.js"
   },
   "dependencies": {
     "@nestjs/common": "^6.3.0",
