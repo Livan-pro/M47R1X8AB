@@ -9,7 +9,7 @@ import { Component, Vue, Prop } from "nuxt-property-decorator";
 export default class RollingDots extends Vue {
   char = ".";
   dots = "...";
-  intervalId: number = null;
+  intervalId: number = -1;
   @Prop({type: Number, default: 1}) min!: number;
   @Prop({type: Number, default: 3}) max!: number;
   @Prop({type: Number, default: 1000}) interval!: number;

@@ -27,16 +27,13 @@
 
 <script lang="ts">
 import { Component, Vue } from "nuxt-property-decorator";
-import { CreateUser, CreateCharacter } from "shared";
-import { validate } from "shared";
+import { CreateUser, CreateCharacter, validate } from "shared";
 import UniversalForm from "@/components/UniversalForm.vue";
 import gql from "graphql-tag";
-
-const objectify = (obj: any, [k, v]: [string, any]) => (obj[k] = v, obj);
-
+import { objectify } from "@/utils";
 
 @Component({
-  components: {UniversalForm}
+  components: { UniversalForm },
 })
 export default class Register extends Vue {
   userForm = new CreateUser();
@@ -75,7 +72,7 @@ export default class Register extends Vue {
     return {
       userForm: this.userForm,
       characterForm: {...this.characterForm}, // {...} is needed for file uploads to work
-    }
+    };
   }
 }
 </script>

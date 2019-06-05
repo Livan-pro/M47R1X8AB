@@ -44,14 +44,13 @@
 import { Component, Vue, Prop } from "nuxt-property-decorator";
 import { validate } from "shared";
 import InputDate from "@/components/InputDate.vue";
+import { objectify } from "@/utils";
 
-const objectify = (obj: any, [k, v]: [string, any]) => (obj[k] = v, obj);
-
-type InputDefinition = {
-  name: string,
-  label: string,
-  type: string,
-};
+interface IInputDefinition {
+  name: string;
+  label: string;
+  type: string;
+}
 
 @Component({
   components: {InputDate},
@@ -64,7 +63,7 @@ export default class UniversalForm extends Vue {
   errors: {[key: string]: string} = Object.keys(this.form).map(k => [k, ""]).reduce(objectify, {});
   state: {[key: string]: boolean | null} = Object.keys(this.form).map(k => [k, null]).reduce(objectify, {});
 
-  get normalizedInputs(): InputDefinition[] {
+  get normalizedInputs(): IInputDefinition[] {
     return Object.keys(this.form).map(key => {
       let obj = {
         name: key,
@@ -95,6 +94,7 @@ export default class UniversalForm extends Vue {
     const errors = await validate(this.form);
     // Clear previous errors
     for (const key in this.errors) {
+      if (!this.errors.hasOwnProperty(key)) continue;
       this.errors[key] = "";
       this.state[key] = this.dirty[key] || null;
     }

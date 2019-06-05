@@ -13,11 +13,11 @@ const config: NuxtConfiguration = {
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "theme-color", content: "#002637" },
-      { hid: "description", name: "description", content: "description" }
+      { hid: "description", name: "description", content: "description" },
     ],
     link: [
-      { rel: "icon", type: "image/x-icon", href: "/favicon.ico" }
-    ]
+      { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+    ],
   },
 
   /*
@@ -40,15 +40,15 @@ const config: NuxtConfiguration = {
   /*
   ** Nuxt.js modules
   */
-  modules: [,
+  modules: [
     // doc: https://bootstrap-vue.js.org/docs/
     "bootstrap-vue/nuxt",
     "@nuxtjs/apollo",
-    "@nuxtjs/proxy"
+    "@nuxtjs/proxy",
   ],
   bootstrapVue: {
     bootstrapCSS: true, // or `css`
-    bootstrapVueCSS: true // or `bvCSS`
+    bootstrapVueCSS: true, // or `bvCSS`
   },
 
   /*
@@ -64,10 +64,10 @@ const config: NuxtConfiguration = {
     errorHandler: "@/plugins/apollo-error-handler",
     clientConfigs: {
       default: "@/plugins/apollo",
-    }
+    },
   },
   proxy: [
-    "http://localhost:3001/graphql"
+    "http://localhost:3001/graphql",
   ],
   server: {
     host: "0.0.0.0",

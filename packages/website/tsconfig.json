@@ -12,6 +12,8 @@
     "experimentalDecorators": true,
     "jsx": "preserve",
     "sourceMap": true,
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "noEmit": true,
     "skipLibCheck": true,
