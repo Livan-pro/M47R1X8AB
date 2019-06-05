@@ -1,8 +1,8 @@
 export default () => ({
-  httpEndpoint: '/graphql',
+  httpEndpoint: "/graphql",
   httpLinkOptions: {
-    credentials: 'same-origin'
+    credentials: "same-origin"
   },
-  // Enable Automatic Query persisting with Apollo Engine
-  persisting: false, // Optional
+  // enable Automatic Query persisting with Apollo Engine
+  persisting: false, // optional
 });

@@ -42,7 +42,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from "nuxt-property-decorator";
-import { validate } from "class-validator";
+import { validate } from "shared";
 import InputDate from "@/components/InputDate.vue";
 
 const objectify = (obj: any, [k, v]: [string, any]) => (obj[k] = v, obj);

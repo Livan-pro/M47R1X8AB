@@ -28,7 +28,7 @@
 <script lang="ts">
 import { Component, Vue } from "nuxt-property-decorator";
 import { CreateUser, CreateCharacter } from "shared";
-import { validate } from "class-validator";
+import { validate } from "shared";
 import UniversalForm from "@/components/UniversalForm.vue";
 import gql from "graphql-tag";
 

@@ -13,7 +13,7 @@
   "private": true,
   "dependencies": {
     "class-validator": "^0.9.1",
-    "typescript": "^3.4.1"
+    "typescript": "^3.5.1"
   },
   "devDependencies": {
     "rimraf": "^2.6.3",

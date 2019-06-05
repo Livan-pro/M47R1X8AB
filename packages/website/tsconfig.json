@@ -14,6 +14,7 @@
     "sourceMap": true,
     "noImplicitAny": true,
     "noEmit": true,
+    "skipLibCheck": true,
     "baseUrl": ".",
     "types": [
       "@types/node",
