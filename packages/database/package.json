@@ -12,7 +12,8 @@
     "build": "rimraf dist && tsc",
     "migration:run": "cross-env NODE_ENV=production typeorm migration:run",
     "migration:revert": "cross-env NODE_ENV=production typeorm migration:revert",
-    "migration:generate": "ts-node ./node_modules/typeorm/cli.js migration:generate -n"
+    "migration:generate": "ts-node ./node_modules/typeorm/cli.js migration:generate -n",
+    "deploy": "npm run migration:run"
   },
   "author": "Livan",
   "devDependencies": {
