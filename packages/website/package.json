@@ -9,7 +9,7 @@
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
-    "deploy": "cp -r ./dist /var/www/website-new && rm -rf /var/www/website-old && mv /var/www/website /var/www/website-old && mv /var/www/website-new /var/www/website"
+    "deploy": "cp -r ./dist /var/www/website-new && rm -rf /var/www/website-old && mv /var/www/website /var/www/website-old || true && mv /var/www/website-new /var/www/website"
   },
   "dependencies": {
     "@nuxt/config": "^2.8.1",

@@ -10,6 +10,7 @@
   "scripts": {
     "bootstrap-ci": "lerna bootstrap --ci",
     "bootstrap": "npm i && lerna bootstrap",
-    "build": "lerna run build"
+    "build": "lerna run build",
+    "deploy": "lerna run deploy"
   }
 }
