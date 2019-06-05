@@ -1,1 +1,1 @@
-module.exports = require("finadvisor-database/ormconfig");
+module.exports = require("matrix-database/ormconfig.js");

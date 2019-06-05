@@ -1,11 +1,17 @@
+
+/** ------------------------------------------------------
+ * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+ * -------------------------------------------------------
+ */
+
 /* tslint:disable */
-export abstract class CharacterInput {
+export class CharacterInput {
     name?: string;
     age?: number;
     quenta?: Upload;
 }
 
-export abstract class UserInput {
+export class UserInput {
     email?: string;
     password?: string;
     passwordConfirmation?: string;
@@ -22,7 +28,7 @@ export abstract class IMutation {
 }
 
 export abstract class IQuery {
-    abstract temp__(): boolean | Promise<boolean>;
+    abstract none(): boolean | Promise<boolean>;
 }
 
 export type Date = any;

@@ -9,6 +9,7 @@ import { AuthModule } from "./auth/auth.module";
 import { CharacterModule } from "character/character.module";
 import { UserModule } from "./user/user.module";
 import { DateScalar } from "./date.scalar";
+import { AppResolvers } from "./app.resolvers";
 
 @Module({
   imports: [
@@ -31,7 +32,7 @@ import { DateScalar } from "./date.scalar";
     CharacterModule,
     UserModule,
   ],
-  providers: [DateScalar],
+  providers: [DateScalar, AppResolvers],
   controllers: [AppController],
 })
 export class AppModule {}
