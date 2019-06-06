@@ -2,7 +2,7 @@ import { Resolver, Mutation, Args } from "@nestjs/graphql";
 import { Logger, ValidationPipe } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { AuthService } from "auth/auth.service";
-import { CreateUser, CreateCharacter } from "shared";
+import { CreateUser, CreateCharacter } from "shared/node";
 
 @Resolver()
 // @UseGuards(AuthGuard("jwt"))

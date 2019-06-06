@@ -42,7 +42,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from "nuxt-property-decorator";
-import { validate } from "shared";
+import { validate } from "shared/browser";
 import InputDate from "@/components/InputDate.vue";
 import { objectify } from "@/utils";
 

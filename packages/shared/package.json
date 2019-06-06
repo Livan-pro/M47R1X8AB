@@ -2,11 +2,10 @@
   "name": "shared",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
   "scripts": {
     "lint": "tslint -p tsconfig.json",
     "test": "echo No tests! && exit 0",
-    "build": "rimraf dist && tsc"
+    "build": "rimraf node && tsc && rimraf browser && tsc -p tsconfig.browser.json"
   },
   "keywords": [],
   "author": "Livan",
