@@ -87,6 +87,6 @@ pm2 save # save pm2 process list for autostart on reboot
 ```bash
 npm ci # only if needed
 npm run bootstrap-ci # only if needed
-npm run build # or: npx lerna run --scope <website/backend/matrix-database/shared> build 
-npm run deploy # or: npx lerna run --scope <website/backend/matrix-database/shared> build 
+npm run build # or: npx lerna run --scope <website/backend/matrix-database/shared> build
+npm run deploy # or: npx lerna run --scope <website/backend/matrix-database/shared> deploy
 ```
