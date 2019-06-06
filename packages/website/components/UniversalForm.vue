@@ -90,6 +90,15 @@ export default class UniversalForm extends Vue {
     await this.validateForm();
   }
 
+  markAllDirty() {
+    for (const key of Object.keys(this.form)) this.dirty[key] = true;
+  }
+
+  async validateAll() {
+    this.markAllDirty();
+    return await this.validateForm();
+  }
+
   async validateForm(): Promise<boolean> {
     const errors = await validate(this.form);
     // Clear previous errors

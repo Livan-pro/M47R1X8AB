@@ -9,11 +9,11 @@
       <b-alert v-if="error" show variant="danger">
         {{ error }}
       </b-alert>
-      <b-form @submit.prevent="mutate()">
+      <b-form @submit.prevent="onSubmit(mutate)">
         <h2 class="text-center">Информация об игроке</h2>
-        <universal-form :form="userForm" :inputs="userInputs"/>
+        <universal-form ref="fUser" :form="userForm" :inputs="userInputs"/>
         <h2 class="text-center">Информация о персонаже</h2>
-        <universal-form :form="characterForm" :inputs="characterInputs"/>
+        <universal-form ref="fCharacter" :form="characterForm" :inputs="characterInputs"/>
         <div class="text-center">
           <b-button class="text-center" type="submit" variant="primary">Зарегистрироваться</b-button>
         </div>
@@ -40,6 +40,27 @@ export default class Register extends Vue {
   characterForm = new CreateCharacter();
   done = false;
 
+  checkVK(): boolean {
+    if (this.userForm.vkId.startsWith("vk.com/")) this.userForm.vkId = this.userForm.vkId.substring(7);
+    else if (this.userForm.vkId.startsWith("http://vk.com/")) this.userForm.vkId = this.userForm.vkId.substring(14);
+    else if (this.userForm.vkId.startsWith("https://vk.com/")) this.userForm.vkId = this.userForm.vkId.substring(15);
+    else if (this.userForm.vkId.length > 0 && this.userForm.vkId[0] >= "0" && this.userForm.vkId[0] <= "9") {
+      this.userForm.vkId = "id" + this.userForm.vkId;
+    }
+    return true;
+  }
+
+  async validateForm(): Promise<boolean> {
+    let valid = await (this.$refs.fUser as UniversalForm).validateAll();
+    valid = await (this.$refs.fCharacter as UniversalForm).validateAll() && valid;
+    return valid;
+  }
+
+  async onSubmit(mutate: () => void) {
+    this.checkVK();
+    if (await this.validateForm()) mutate();
+  }
+
   get mutation() {
     return gql`mutation($userForm: UserInput!, $characterForm: CharacterInput!) {
       createUserWithCharacter(user: $userForm, character: $characterForm)
@@ -55,7 +76,7 @@ export default class Register extends Vue {
       lastName: "Фамилия",
       birthday: {label: "Дата рождения", type: "date"},
       phone: "Телефон",
-      vkId: "ID Вконтакте",
+      vkId: "Ссылка или ID Вконтакте",
       medicalInfo: "Аллергии, медицинские показания",
     };
   }
