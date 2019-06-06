@@ -1,10 +1,10 @@
 <template>
   <div class="text-center" id="main">
     <h1 id="title">Киберпанк <span class="purple">2219</span></h1>
-    <div>
+    <div style="width: 100%">
       <h2 id="standby">Please stand by<RollingDots/></h2>
       <hr>
-      <h2 id="countdown">05:18:28:19</h2>
+      <h2 id="countdown"><Countdown :timestamp="1569517200000"/></h2>
       <hr>
     </div>
     <img id="main-logo" src="@/assets/img/Cyberpunk_2219_round.png" alt="Cyberpunk 2219">
@@ -15,9 +15,10 @@
 <script lang="ts">
 import { Component, Vue } from "nuxt-property-decorator";
 import RollingDots from "@/components/RollingDots.vue";
+import Countdown from "@/components/Countdown.vue";
 
 @Component({
-  components: {RollingDots}
+  components: {RollingDots, Countdown},
 })
 export default class Index extends Vue {
 }
@@ -39,7 +40,7 @@ export default class Index extends Vue {
   font-size: 8vw;
 }
 #countdown {
-  font-size: 16vw;
+  font-size: 14vw;
   padding-bottom: 8px;
   margin: 0;
 }
@@ -57,7 +58,7 @@ export default class Index extends Vue {
     font-size: 43px;
   }
   #countdown {
-    font-size: 86px;
+    font-size: 80px;
   }
   #vk-link {
     font-size: 30px;
