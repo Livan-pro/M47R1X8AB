@@ -42,6 +42,9 @@ import UniversalForm from "@/components/UniversalForm.vue";
 import gql from "graphql-tag";
 import { objectify } from "@/utils";
 
+const userFieldsToTrim: (keyof CreateUser)[] = ["email", "firstName", "lastName", "phone", "vkId", "medicalInfo"];
+const characterFieldsToTrim: (keyof CreateCharacter)[] = ["name"];
+
 @Component({
   components: { UniversalForm },
 })
@@ -51,6 +54,15 @@ export default class Register extends Vue {
   done = false;
   isAdult = false;
   errorMsg = "";
+
+  trimSpaces() {
+    for (const key of userFieldsToTrim) {
+      this.userForm[key] = this.userForm[key].trim();
+    }
+    for (const key of characterFieldsToTrim) {
+      this.characterForm[key] = this.characterForm[key].trim();
+    }
+  }
 
   checkVK(): boolean {
     if (this.userForm.vkId.startsWith("vk.com/")) this.userForm.vkId = this.userForm.vkId.substring(7);
@@ -69,11 +81,12 @@ export default class Register extends Vue {
   }
 
   async onSubmit(mutate: () => void) {
+    this.trimSpaces();
+    this.checkVK();
     if (!this.isAdult) {
       this.errorMsg = "Вам должно быть не менее 18 лет!";
       return;
     }
-    this.checkVK();
     if (await this.validateForm()) {
       this.errorMsg = "";
       mutate();
