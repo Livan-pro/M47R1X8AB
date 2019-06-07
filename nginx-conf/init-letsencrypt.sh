@@ -13,7 +13,7 @@ else
   staging=0
 fi
 
-domains=(m47r1x8ab.tk www.m47r1x8ab.tk)
+domains=(cyberpunk2219.tech www.cyberpunk2219.tech)
 rsa_key_size=4096
 letsencrypt_path="/etc/letsencrypt"
 
