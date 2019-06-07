@@ -5,7 +5,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from "nuxt-property-decorator";
 
-@Component
+@Component // FIXME
 export default class InputDate extends Vue {
   @Prop(String) id!: string;
   @Prop() state!: string | boolean | null;

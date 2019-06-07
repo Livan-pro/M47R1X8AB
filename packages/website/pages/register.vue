@@ -5,13 +5,14 @@
     :variables="variables"
     @done="done = true"
   >
-    <template slot-scope="{ mutate, loading, error }">
-      <b-alert v-if="error" show variant="danger">
-        {{ error }}
+    <template slot-scope="{ mutate, loading, error, gqlError }">
+      <b-alert v-if="errorMsg || gqlError || error" show variant="danger">
+        {{ errorMsg || gqlError.message || gqlError || error }}
       </b-alert>
       <b-form @submit.prevent="onSubmit(mutate)">
         <h2 class="text-center">Информация об игроке</h2>
         <universal-form ref="fUser" :form="userForm" :inputs="userInputs"/>
+        <b-checkbox v-model="isAdult">Мне есть 18 лет</b-checkbox>
         <h2 class="text-center">Информация о персонаже</h2>
         <universal-form ref="fCharacter" :form="characterForm" :inputs="characterInputs"/>
         <div class="text-center">
@@ -39,6 +40,8 @@ export default class Register extends Vue {
   userForm = new CreateUser();
   characterForm = new CreateCharacter();
   done = false;
+  isAdult = false;
+  errorMsg = "";
 
   checkVK(): boolean {
     if (this.userForm.vkId.startsWith("vk.com/")) this.userForm.vkId = this.userForm.vkId.substring(7);
@@ -57,8 +60,15 @@ export default class Register extends Vue {
   }
 
   async onSubmit(mutate: () => void) {
+    if (!this.isAdult) {
+      this.errorMsg = "Вам должно быть не менее 18 лет!";
+      return;
+    }
     this.checkVK();
-    if (await this.validateForm()) mutate();
+    if (await this.validateForm()) {
+      this.errorMsg = "";
+      mutate();
+    } else this.errorMsg = "Вы не заполнили некоторые поля!";
   }
 
   get mutation() {
@@ -74,7 +84,6 @@ export default class Register extends Vue {
       passwordConfirmation: {label: "Подтверждение пароля", type: "password"},
       firstName: "Имя",
       lastName: "Фамилия",
-      birthday: {label: "Дата рождения", type: "date"},
       phone: "Телефон",
       vkId: "Ссылка или ID Вконтакте",
       medicalInfo: "Аллергии, медицинские показания",

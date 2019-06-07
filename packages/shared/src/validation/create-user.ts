@@ -21,10 +21,6 @@ export class CreateUser {
   @MaxLength(255, {message: "Фамилия должна быть короче 256 символов"})
   lastName: string = "";
 
-  @IsNotEmpty({message: "Должен быть заполнен"})
-  @IsDate()
-  birthday: Date | null = null;
-
   @MinLength(9, {message: "Телефон должен быть длиннее 8 символов"})
   @MaxLength(20, {message: "Телефон должен быть короче 21 символа"})
   phone: string = "";

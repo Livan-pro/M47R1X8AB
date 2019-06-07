@@ -4,7 +4,6 @@ input UserInput {
   passwordConfirmation: String
   firstName: String
   lastName: String
-  birthday: Date
   phone: String
   vkId: String
   medicalInfo: String
