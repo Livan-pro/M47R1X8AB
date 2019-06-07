@@ -8,7 +8,7 @@
       <hr>
     </div>
     <img id="main-logo" src="@/assets/img/Cyberpunk_2219_round.png" alt="Cyberpunk 2219">
-    <h3 class="mt-2" id="vk-link"><span class="blink">></span> <a href="https://vk.com/cyberpunk_crimea">vk.com/cyberpunk_crimea</a></h3>
+    <h3 class="mt-2 purple" id="vk-link"><span class="blink">></span> <a href="https://vk.com/cyberpunk_crimea">vk.com/cyberpunk_crimea</a></h3>
   </div>
 </template>
 
