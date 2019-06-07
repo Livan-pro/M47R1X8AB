@@ -2,7 +2,7 @@
   <div class="text-center" id="main">
     <h1 id="title">Киберпанк <span class="purple">2219</span></h1>
     <div style="width: 100%">
-      <h2 id="standby">Please stand by<RollingDots/></h2>
+      <h2 class="yellow" id="standby">Please stand by<RollingDots/></h2>
       <hr>
       <h2 id="countdown"><Countdown :timestamp="1569517200000"/></h2>
       <hr>
@@ -26,7 +26,7 @@ export default class Index extends Vue {
 
 <style lang="scss">
 #title {
-  font-size: 10vw;
+  font-size: 9vw;
   margin-bottom: 0;
 }
 #main {
@@ -52,7 +52,7 @@ export default class Index extends Vue {
 }
 @media screen and (min-width: 540px) {
   #title {
-    font-size: 54px;
+    font-size: 52px;
   }
   #standby {
     font-size: 43px;

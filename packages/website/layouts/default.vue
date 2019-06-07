@@ -35,6 +35,8 @@ $primary-color: #01CEFD;
 $primary-color-rgb: "rgb(1,206,253)";
 $secondary-color: #CF32FF;
 $secondary-color-rgb: "rgb(207,55,255)";
+$yellow-color: #DBE285;
+$yellow-color-rgb: "rgb(219,226,133)";
 
 @font-face {
   font-family: 'Ignis';
@@ -42,9 +44,15 @@ $secondary-color-rgb: "rgb(207,55,255)";
   font-weight: normal;
   font-style: normal;
 }
-@font-face {
+/* @font-face {
   font-family: 'Sanasoft';
   src: url('../assets/fonts/Sanasoft_Inset_D.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+} */
+@font-face {
+  font-family: 'Library';
+  src: url('../assets/fonts/Library_3_am.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -130,9 +138,12 @@ hr {
 .blue {
   color: $primary-color;
 }
+.yellow {
+  color: $yellow-color;
+}
 
 h1 {
-  font-family: Sanasoft;
+  font-family: Library;
 }
 
 .blink {
