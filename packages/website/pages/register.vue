@@ -22,7 +22,16 @@
     </template>
   </ApolloMutation>
   <div v-else>
-    <h2 class="mt-5 text-center">Спасибо за регистрацию!</h2>
+    <h2 class="mt-5 text-center">
+      Спасибо за регистрацию!
+    </h2>
+    Данные об игроке и персонаже занесены в базу данных МГ.<br>
+    Если у вас есть дополнительные вопросы или вы хотите исправить / дополнить информацию - обратитесь к <a class="purple" href="https://vk.com/tramplerr">мастеру игры</a>.<br>
+    Следите за новостями проекта на наших ресурсах:<br>
+    - <a class="purple" href="https://vk.com/cyberpunk_crimea">VK</a><br>
+    - <a class="purple" href="https://cyberpunk2218.fandom.com/ru/wiki/Киберпанк2218">Wiki</a><br>
+    До встречи на КИБЕРПАНК 2219<br>
+    26-28.09.2019
   </div>
 </template>
 
