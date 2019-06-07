@@ -21,7 +21,7 @@
       </b-form>
     </template>
   </ApolloMutation>
-  <div v-else>
+  <div v-else class="text-center">
     <h2 class="mt-5 text-center">
       Спасибо за регистрацию!
     </h2>
@@ -31,7 +31,7 @@
     - <a class="purple" href="https://vk.com/cyberpunk_crimea">VK</a><br>
     - <a class="purple" href="https://cyberpunk2218.fandom.com/ru/wiki/Киберпанк2218">Wiki</a><br>
     До встречи на КИБЕРПАНК 2219<br>
-    26-28.09.2019
+    <span class="yellow">26-28.09.2019</span>
   </div>
 </template>
 
