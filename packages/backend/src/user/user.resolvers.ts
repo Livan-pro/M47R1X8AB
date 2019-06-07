@@ -20,9 +20,10 @@ export class UserResolvers {
     @Args("character") characterData: CreateCharacter,
   ): Promise<boolean> {
     try {
-      const data = {...userData, birthday: new Date(0)};
-      data.password = await this.auth.hashPassword(data.password);
-      await this.user.createWithCharacter(data, characterData as any);
+      const uData = {...userData, birthday: new Date(0)};
+      uData.password = await this.auth.hashPassword(uData.password);
+      const cData = {...characterData, age: 0};
+      await this.user.createWithCharacter(uData, cData);
       return true;
     } catch (err) {
       if (err.errno === 1062) throw new Error("Пользователь с таким email уже зарегистрирован!");

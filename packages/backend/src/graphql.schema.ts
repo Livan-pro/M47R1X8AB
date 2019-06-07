@@ -7,7 +7,6 @@
 /* tslint:disable */
 export class CharacterInput {
     name?: string;
-    age?: number;
     quenta?: Upload;
 }
 

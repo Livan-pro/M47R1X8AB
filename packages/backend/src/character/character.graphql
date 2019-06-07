@@ -1,5 +1,4 @@
 input CharacterInput {
   name: String
-  age: Int
   quenta: Upload
 }
