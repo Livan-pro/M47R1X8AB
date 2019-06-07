@@ -3,7 +3,7 @@
     v-if="!done"
     :mutation="mutation"
     :variables="variables"
-    @done="done = true"
+    @done="$router.push('/register#success')"
   >
     <template slot-scope="{ mutate, loading, error, gqlError }">
       <b-alert v-if="errorMsg || gqlError || error" show variant="danger">
@@ -13,6 +13,7 @@
         <h2 class="text-center">Информация об игроке</h2>
         <universal-form ref="fUser" :form="userForm" :inputs="userInputs"/>
         <b-checkbox v-model="isAdult">Мне есть 18 лет</b-checkbox>
+        <br><br>
         <h2 class="text-center">Информация о персонаже</h2>
         <universal-form ref="fCharacter" :form="characterForm" :inputs="characterInputs"/>
         <div class="text-center">
@@ -22,16 +23,19 @@
     </template>
   </ApolloMutation>
   <div v-else class="text-center">
-    <h2 class="mt-5 text-center">
+    <h2 class="mt-5">
       Спасибо за регистрацию!
     </h2>
     Данные об игроке и персонаже занесены в базу данных МГ.<br>
     Если у вас есть дополнительные вопросы или вы хотите исправить / дополнить информацию - обратитесь к <a class="purple" href="https://vk.com/tramplerr">мастеру игры</a>.<br>
     Следите за новостями проекта на наших ресурсах:<br>
-    - <a class="purple" href="https://vk.com/cyberpunk_crimea">VK</a><br>
-    - <a class="purple" href="https://cyberpunk2218.fandom.com/ru/wiki/Киберпанк2218">Wiki</a><br>
-    До встречи на КИБЕРПАНК 2219<br>
-    <span class="yellow">26-28.09.2019</span>
+    <a class="purple" href="https://vk.com/cyberpunk_crimea">VK</a><br>
+    <a class="purple" href="https://cyberpunk2218.fandom.com/ru/wiki/Киберпанк2218">Wiki</a><br>
+    <br><br>
+    <h4>
+      До встречи на КИБЕРПАНК 2219<br>
+      <span class="yellow">26-28.09.2019</span>
+    </h4>
   </div>
 </template>
 
@@ -51,9 +55,12 @@ const characterFieldsToTrim: (keyof CreateCharacter)[] = ["name"];
 export default class Register extends Vue {
   userForm = new CreateUser();
   characterForm = new CreateCharacter();
-  done = false;
   isAdult = false;
   errorMsg = "";
+
+  get done() {
+    return this.$route.hash === "#success";
+  }
 
   trimSpaces() {
     for (const key of userFieldsToTrim) {
