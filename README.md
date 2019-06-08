@@ -83,10 +83,13 @@ nano packages/backend/.env # set DB_PASSWORD & JWT_SECRET
 npm run deploy # migrate DB, restart backend, rebuild website
 pm2 save # save pm2 process list for autostart on reboot
 ```
-### On update
-```bash
-npm ci # only if needed
-npm run bootstrap-ci # only if needed
-npm run build # or: npx lerna run --scope <website/backend/matrix-database/shared> build
-npm run deploy # or: npx lerna run --scope <website/backend/matrix-database/shared> deploy
-```
+### Deploy on update
+* Automatic: `./deploy`
+* Manual
+  ```bash
+  git pull
+  npm ci # only if needed
+  npm run bootstrap-ci # only if needed
+  npm run build # or: npx lerna run --scope <website/backend/matrix-database/shared> build
+  npm run deploy # or: npx lerna run --scope <website/backend/matrix-database/shared> deploy
+  ```
