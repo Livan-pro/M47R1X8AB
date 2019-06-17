@@ -9,7 +9,6 @@ import { FileModule } from "file/file.module";
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
-    forwardRef(() => AuthModule),
     FileModule,
   ],
   providers: [UserService, UserResolvers],
