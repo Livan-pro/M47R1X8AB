@@ -58,6 +58,12 @@ export class UserResolvers {
     }
   }
 
+  @Mutation("logout")
+  async logout(@Context("res") res: Response): Promise<boolean> {
+    res.clearCookie("token");
+    return true;
+  }
+
   @Query("me")
   @UseGuards(GqlAuthGuard)
   async me(@GetUser() user: User): Promise<User> {
