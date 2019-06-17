@@ -13,12 +13,11 @@
 <script lang="ts">
 import { Component, Vue } from "nuxt-property-decorator";
 import UniversalForm from "@/components/UniversalForm.vue";
-import Loading from "@/components/Loading.vue";
 import gql from "graphql-tag";
 import {} from "vue-apollo/types/vue";
 
 @Component({
-  components: { UniversalForm, Loading },
+  components: { UniversalForm },
   middleware: "loggedIn",
   apollo: {
     me: {
