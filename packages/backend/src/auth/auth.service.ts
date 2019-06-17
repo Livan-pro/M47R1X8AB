@@ -13,7 +13,7 @@ export class AuthService {
   ) {}
 
   createToken(email: string, rememberMe: boolean): {token: string, expires: Date} {
-    const expiresIn = rememberMe ? 604800 : 3600;
+    const expiresIn = rememberMe ? 2592000 : 3600; // 30 days / 1 hour
     const token = this.jwt.sign({email}, {expiresIn});
     return {
       token,

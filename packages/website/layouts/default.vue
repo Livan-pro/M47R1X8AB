@@ -6,7 +6,13 @@
         <b-navbar-toggle target="nav_collapse" right></b-navbar-toggle>
         <b-collapse is-nav id="nav_collapse" class="blue text-right">
           <b-navbar-nav>
-            <b-nav-item to="/register">Регистрация</b-nav-item>
+            <template v-if="!me">
+              <b-nav-item to="/register">Регистрация</b-nav-item>
+              <b-nav-item to="/login">Логин</b-nav-item>
+            </template>
+            <template v-else>
+              <b-nav-item @click="logout">Выход</b-nav-item>
+            </template>
           </b-navbar-nav>
         </b-collapse>
       </nav>
@@ -23,10 +29,37 @@
 
 <script lang="ts">
 import { Component, Vue } from "nuxt-property-decorator";
+import gql from "graphql-tag";
+import { query } from "@/graphql/me";
 
-@Component
+@Component({
+  apollo: {
+    me: {
+      query: gql`{
+        me {
+          email
+        }
+      }`,
+      errorPolicy: "ignore",
+    },
+  },
+})
 export default class DefaultLayout extends Vue {
   fluid = true;
+
+  async logout() {
+    await this.$apollo.mutate({
+      mutation: gql`mutation {
+        logout
+      }`,
+      update: (proxy: any) => {
+        proxy.writeQuery({query, data: {
+          me: null,
+        }});
+      },
+    });
+    this.$router.push("/");
+  }
 }
 </script>
 
@@ -122,6 +155,7 @@ body {
   padding: 0 20px 50px 20px;
   flex-grow: 1;
   display: flex;
+  justify-content: center;
 }
 
 hr {

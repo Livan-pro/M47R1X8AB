@@ -9,6 +9,28 @@ input UserInput {
   medicalInfo: String
 }
 
+input LoginInput {
+  email: String!
+  password: String!
+  rememberMe: Boolean
+}
+
+type User {
+  email: String
+  firstName: String
+  lastName: String
+  phone: String
+  vkId: String
+  medicalInfo: String
+  characters: [Character]
+}
+
+type Query {
+  me: User
+}
+
 type Mutation {
   createUserWithCharacter(user: UserInput!, character: CharacterInput!): Boolean
+  login(email: String!, password: String!, rememberMe: Boolean): String!
+  logout: Boolean
 }
