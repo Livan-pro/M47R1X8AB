@@ -31,6 +31,6 @@ type Query {
 
 type Mutation {
   createUserWithCharacter(user: UserInput!, character: CharacterInput!): Boolean
-  login(email: String!, password: String!, rememberMe: Boolean): Boolean
+  login(email: String!, password: String!, rememberMe: Boolean): String!
   logout: Boolean
 }

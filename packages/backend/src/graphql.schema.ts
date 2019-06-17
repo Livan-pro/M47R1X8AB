@@ -35,7 +35,7 @@ export class Character {
 export abstract class IMutation {
     abstract createUserWithCharacter(user: UserInput, character: CharacterInput): boolean | Promise<boolean>;
 
-    abstract login(email: string, password: string, rememberMe?: boolean): boolean | Promise<boolean>;
+    abstract login(email: string, password: string, rememberMe?: boolean): string | Promise<string>;
 
     abstract logout(): boolean | Promise<boolean>;
 }

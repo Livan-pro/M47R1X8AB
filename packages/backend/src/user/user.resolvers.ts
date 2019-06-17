@@ -45,13 +45,13 @@ export class UserResolvers {
     @Args("password") password: string,
     @Args("rememberMe") rememberMe: boolean,
     @Context("res") res: Response,
-  ): Promise<boolean> {
+  ): Promise<string> {
     try {
       const user = await this.user.getByEmail(email);
       if (!await this.auth.verifyPassword(password, user.password)) throw new Error("INVALID_PWD");
       const token = await this.auth.createToken(email, rememberMe);
       res.cookie("token", token.token, { expires: token.expires, httpOnly: true });
-      return true;
+      return user.email;
     } catch (err) {
       if (err.message !== "INVALID_PWD") this.log.warn(`Error while logging in: ${err.stack}`);
       throw new Error("Неверный логин или пароль");
