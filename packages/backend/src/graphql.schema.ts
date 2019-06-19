@@ -18,6 +18,7 @@ export class LoginInput {
 
 export class UserInput {
     email?: string;
+    currentPassword?: string;
     password?: string;
     passwordConfirmation?: string;
     firstName?: string;
@@ -38,6 +39,8 @@ export abstract class IMutation {
     abstract login(email: string, password: string, rememberMe?: boolean): string | Promise<string>;
 
     abstract logout(): boolean | Promise<boolean>;
+
+    abstract editUser(user: UserInput): boolean | Promise<boolean>;
 }
 
 export abstract class IQuery {

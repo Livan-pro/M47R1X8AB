@@ -1,5 +1,6 @@
 input UserInput {
   email: String
+  currentPassword: String
   password: String
   passwordConfirmation: String
   firstName: String
@@ -33,4 +34,5 @@ type Mutation {
   createUserWithCharacter(user: UserInput!, character: CharacterInput!): Boolean
   login(email: String!, password: String!, rememberMe: Boolean): String!
   logout: Boolean
+  editUser(user: UserInput!): Boolean
 }

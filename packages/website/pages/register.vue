@@ -41,7 +41,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "nuxt-property-decorator";
-import { CreateUser, CreateCharacter, validate } from "shared/browser";
+import { CreateUser, CreateCharacter, validate, InitForm } from "shared/browser";
 import UniversalForm from "@/components/UniversalForm.vue";
 import gql from "graphql-tag";
 import { objectify } from "@/utils";
@@ -57,8 +57,8 @@ const characterFieldsToTrim: (keyof CreateCharacter)[] = ["name"];
   },
 })
 export default class Register extends Vue {
-  userForm = new CreateUser();
-  characterForm = new CreateCharacter();
+  userForm = InitForm(new CreateUser());
+  characterForm = InitForm(new CreateCharacter());
   isAdult = false;
   errorMsg = "";
 

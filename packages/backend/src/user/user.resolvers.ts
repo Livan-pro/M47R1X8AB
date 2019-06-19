@@ -8,6 +8,7 @@ import { Response } from "express";
 import { GqlAuthGuard } from "auth/gql-auth.guard";
 import { GetUser } from "./get-user.decorator";
 import { User } from "matrix-database";
+import { clean } from "utils";
 
 @Resolver()
 // @UseGuards(AuthGuard("jwt"))
@@ -69,5 +70,31 @@ export class UserResolvers {
   async me(@GetUser() user: User): Promise<User> {
     this.log.log(`Me: ${user.email}`);
     return user;
+  }
+
+  @Mutation()
+  @UseGuards(GqlAuthGuard)
+  async editUser(
+    @Args("user" , new ValidationPipe({
+      skipMissingProperties: true,
+      transform: false,
+      transformOptions: {enableImplicitConversion: true},
+    })) userData: CreateUser,
+    @GetUser() user: User,
+  ): Promise<boolean> {
+    if (userData.email) throw new Error("Нельзя изменить email!");
+    try {
+      if (userData.password)  {
+        if (!await this.auth.verifyPassword(userData.password, user.password)) throw new Error("Неверный пароль");
+        userData.password = await this.auth.hashPassword(userData.password);
+        userData = Object.assign(userData, {passwordChangedAt: new Date()});
+      }
+      await this.user.update(user.id, userData);
+      return true;
+    } catch (err) {
+      const code = ntob(Date.now());
+      this.log.error(`ERR${code} ${err.stack}`);
+      throw new Error(`Возникла ошибка. Код ошибки: ${code}. Обратитесь к мастерам!`);
+    }
   }
 }

@@ -42,4 +42,8 @@ export class UserService {
     this.log.log(`User created: ${user.email}`);
     return {user, character};
   }
+
+  async update(userId: number, data: Partial<User>): Promise<void> {
+    await this.repo.update(userId, this.repo.create(data));
+  }
 }
