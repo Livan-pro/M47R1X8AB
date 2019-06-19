@@ -15,6 +15,7 @@ import { Component, Vue } from "nuxt-property-decorator";
 import UniversalForm from "@/components/UniversalForm.vue";
 import gql from "graphql-tag";
 import {} from "vue-apollo/types/vue";
+import {} from "@/vue-meta";
 
 @Component({
   components: { UniversalForm },

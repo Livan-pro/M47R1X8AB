@@ -24,9 +24,9 @@ export default async function({ app, redirect, route }: Context) {
   const auth = getMetaAuth(route);
   if (auth === null || auth === undefined) return;
   try {
-    if (!app) {
+    if (!app || !app.apolloProvider || !app.apolloProvider.defaultClient) {
       // tslint:disable-next-line:no-console
-      console.error("[auth] app is undefined");
+      console.error("[auth] apollo client not found");
       return;
     }
     const data = await app.apolloProvider.defaultClient.query({...me, fetchPolicy: "cache-first"});

@@ -45,6 +45,7 @@ import { CreateUser, CreateCharacter, validate } from "shared/browser";
 import UniversalForm from "@/components/UniversalForm.vue";
 import gql from "graphql-tag";
 import { objectify } from "@/utils";
+import {} from "@/vue-meta";
 
 const userFieldsToTrim: (keyof CreateUser)[] = ["email", "firstName", "lastName", "phone", "vkId", "medicalInfo"];
 const characterFieldsToTrim: (keyof CreateCharacter)[] = ["name"];
