@@ -30,18 +30,11 @@
 <script lang="ts">
 import { Component, Vue } from "nuxt-property-decorator";
 import gql from "graphql-tag";
-import { query } from "@/graphql/me";
+import * as me from "@/graphql/me";
 
 @Component({
   apollo: {
-    me: {
-      query: gql`{
-        me {
-          email
-        }
-      }`,
-      errorPolicy: "ignore",
-    },
+    me,
   },
 })
 export default class DefaultLayout extends Vue {
@@ -53,7 +46,7 @@ export default class DefaultLayout extends Vue {
         logout
       }`,
       update: (proxy: any) => {
-        proxy.writeQuery({query, data: {
+        proxy.writeQuery({query: me.query, data: {
           me: null,
         }});
       },

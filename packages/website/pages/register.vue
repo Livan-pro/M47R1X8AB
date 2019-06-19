@@ -51,7 +51,9 @@ const characterFieldsToTrim: (keyof CreateCharacter)[] = ["name"];
 
 @Component({
   components: { UniversalForm },
-  middleware: "loggedOut",
+  meta: {
+    auth: false,
+  },
 })
 export default class Register extends Vue {
   userForm = new CreateUser();

@@ -20,7 +20,9 @@ import { query } from "@/graphql/me";
 
 @Component({
   components: { UniversalForm },
-  middleware: "loggedOut",
+  meta: {
+    auth: false,
+  },
 })
 export default class Login extends Vue {
   form = {

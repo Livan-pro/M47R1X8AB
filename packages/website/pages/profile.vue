@@ -18,7 +18,9 @@ import {} from "vue-apollo/types/vue";
 
 @Component({
   components: { UniversalForm },
-  middleware: "loggedIn",
+  meta: {
+    auth: true,
+  },
   apollo: {
     me: {
       query: gql`{

@@ -73,6 +73,9 @@ const config: NuxtConfiguration = {
     host: "0.0.0.0",
     port: 3000,
   },
+  router: {
+    middleware: "auth",
+  },
 };
 
 export default config;
