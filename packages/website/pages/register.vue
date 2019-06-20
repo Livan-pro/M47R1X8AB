@@ -7,7 +7,7 @@
   >
     <template slot-scope="{ mutate, loading, error, gqlError }">
       <b-alert v-if="errorMsg || gqlError || error" show variant="danger">
-        {{ errorMsg || gqlError.message || gqlError || error }}
+        {{ errorMsg || (gqlError ? gqlError.message :  gqlError) || error }}
       </b-alert>
       <b-form @submit.prevent="onSubmit(mutate)">
         <h2 class="text-center">Информация об игроке</h2>
@@ -68,21 +68,22 @@ export default class Register extends Vue {
 
   trimSpaces() {
     for (const key of userFieldsToTrim) {
-      this.userForm[key] = this.userForm[key].trim();
+      if (typeof this.userForm[key] !== "string") continue;
+      this.userForm[key] = this.userForm[key]!.trim();
     }
     for (const key of characterFieldsToTrim) {
       this.characterForm[key] = this.characterForm[key].trim();
     }
   }
 
-  checkVK(): boolean {
+  checkVK() {
+    if (!this.userForm.vkId) return;
     if (this.userForm.vkId.startsWith("vk.com/")) this.userForm.vkId = this.userForm.vkId.substring(7);
     else if (this.userForm.vkId.startsWith("http://vk.com/")) this.userForm.vkId = this.userForm.vkId.substring(14);
     else if (this.userForm.vkId.startsWith("https://vk.com/")) this.userForm.vkId = this.userForm.vkId.substring(15);
     else if (this.userForm.vkId.length > 0 && this.userForm.vkId[0] >= "0" && this.userForm.vkId[0] <= "9") {
       this.userForm.vkId = "id" + this.userForm.vkId;
     }
-    return true;
   }
 
   async validateForm(): Promise<boolean> {
