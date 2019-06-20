@@ -70,26 +70,44 @@ export default class UniversalForm extends Vue {
   @Prop() form!: any;
   @Prop({default: []}) inputs!: any;
   @Prop({type: Boolean, default: true}) validation!: boolean;
+  @Prop({type: Boolean, default: true}) hideUndefined!: boolean;
+  @Prop({type: Boolean, default: true}) showSuccess!: boolean;
   dirty: {[key: string]: boolean} = Object.keys(this.form).map(k => [k, false]).reduce(objectify, {});
   errors: {[key: string]: string} = Object.keys(this.form).map(k => [k, ""]).reduce(objectify, {});
   state: {[key: string]: boolean | null} = Object.keys(this.form).map(k => [k, null]).reduce(objectify, {});
 
   get normalizedInputs(): IInputDefinition[] {
-    return Object.keys(this.form).map(key => {
-      let obj = {
-        name: key,
-        label: key,
-        type: "text",
-      };
-      if (this.inputs[key]) {
+    if (this.hideUndefined) {
+      return Object.keys(this.inputs).map(key => {
+        let obj = {
+          name: key,
+          label: key,
+          type: "text",
+        };
         if (typeof this.inputs[key] === "string") {
           obj.label = this.inputs[key];
         } else {
           obj = {...obj, ...this.inputs[key]};
         }
-      }
-      return obj;
-    });
+        return obj;
+      });
+    } else {
+      return Object.keys(this.form).map(key => {
+        let obj = {
+          name: key,
+          label: key,
+          type: "text",
+        };
+        if (this.inputs[key]) {
+          if (typeof this.inputs[key] === "string") {
+            obj.label = this.inputs[key];
+          } else {
+            obj = {...obj, ...this.inputs[key]};
+          }
+        }
+        return obj;
+      });
+    }
   }
 
   onFileChanged(name: string, event: any) {
@@ -117,7 +135,7 @@ export default class UniversalForm extends Vue {
     for (const key in this.errors) {
       if (!this.errors.hasOwnProperty(key)) continue;
       this.errors[key] = "";
-      this.state[key] = this.dirty[key] || null;
+      this.state[key] = this.showSuccess ? this.dirty[key] || null : null;
     }
     // Set errors
     for (const err of errors) {
