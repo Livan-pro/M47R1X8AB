@@ -15,6 +15,10 @@ export class CharacterService {
     private readonly file: FileService,
   ) {}
 
+  async getByIdAndOwner(id: number, userId: number): Promise<Character> {
+    return await this.repo.findOneOrFail({id, userId});
+  }
+
   @Transaction()
   async update(
     id: number,

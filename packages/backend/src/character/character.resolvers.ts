@@ -22,6 +22,7 @@ export class CharacterResolvers {
     @GetUser() user: User,
   ): Promise<boolean> {
     try {
+      if (user.mainCharacterId !== id) await this.character.getByIdAndOwner(id, user.id);
       await this.character.update(id, data);
       return true;
     } catch (err) {
