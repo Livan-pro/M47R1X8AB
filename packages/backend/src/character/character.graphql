@@ -4,6 +4,11 @@ input CharacterInput {
 }
 
 type Character {
+  id: Int!
   name: String
   quenta: String
+}
+
+type Mutation {
+  editCharacter(id: Int!, character: CharacterInput!): Boolean
 }

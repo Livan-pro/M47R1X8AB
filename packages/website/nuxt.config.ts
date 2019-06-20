@@ -68,6 +68,7 @@ const config: NuxtConfiguration = {
   },
   proxy: [
     "http://localhost:3001/graphql",
+    "http://localhost:3001/data",
   ],
   server: {
     host: "0.0.0.0",

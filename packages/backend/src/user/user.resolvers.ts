@@ -2,7 +2,7 @@ import { Resolver, Mutation, Args, Context, Query } from "@nestjs/graphql";
 import { Logger, ValidationPipe, UseGuards } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { AuthService } from "auth/auth.service";
-import { CreateUser, CreateCharacter } from "shared/node";
+import { CreateUser, CreateCharacter, EditUser, ChangePassword } from "shared/node";
 import { ntob } from "number-to-base64";
 import { Response } from "express";
 import { GqlAuthGuard } from "auth/gql-auth.guard";
@@ -69,5 +69,43 @@ export class UserResolvers {
   async me(@GetUser() user: User): Promise<User> {
     this.log.log(`Me: ${user.email}`);
     return user;
+  }
+
+  @Mutation()
+  @UseGuards(GqlAuthGuard)
+  async editUser(
+    @Args("user" , new ValidationPipe({
+      skipMissingProperties: true,
+    })) userData: EditUser,
+    @GetUser() user: User,
+  ): Promise<boolean> {
+    try {
+      await this.user.update(user.id, userData);
+      return true;
+    } catch (err) {
+      const code = ntob(Date.now());
+      this.log.error(`ERR${code} ${err.stack}`);
+      throw new Error(`Возникла ошибка. Код ошибки: ${code}. Обратитесь к мастерам!`);
+    }
+  }
+
+  @Mutation()
+  @UseGuards(GqlAuthGuard)
+  async changePassword(
+    @Args("data", ValidationPipe) data: ChangePassword,
+    @GetUser() user: User,
+  ): Promise<boolean> {
+    if (!await this.auth.verifyPassword(data.currentPassword, user.password)) throw new Error("Неверный пароль");
+    try {
+      await this.user.update(user.id, {
+        password: await this.auth.hashPassword(data.password),
+        passwordChangedAt: new Date(),
+      });
+      return true;
+    } catch (err) {
+      const code = ntob(Date.now());
+      this.log.error(`ERR${code} ${err.stack}`);
+      throw new Error(`Возникла ошибка. Код ошибки: ${code}. Обратитесь к мастерам!`);
+    }
   }
 }

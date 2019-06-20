@@ -5,6 +5,7 @@
   "scripts": {
     "lint": "tslint -p tsconfig.json",
     "test": "echo No tests! && exit 0",
+    "dev": "tsc -w",
     "build": "rimraf node && tsc && rimraf browser && tsc -p tsconfig.browser.json"
   },
   "keywords": [],

@@ -11,6 +11,8 @@
               <b-nav-item to="/login">Логин</b-nav-item>
             </template>
             <template v-else>
+              <b-nav-item to="/profile">Профиль</b-nav-item>
+              <b-nav-item to="/edit-profile">Редактирование профиля</b-nav-item>
               <b-nav-item @click="logout">Выход</b-nav-item>
             </template>
           </b-navbar-nav>

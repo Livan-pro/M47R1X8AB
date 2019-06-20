@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany} from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany, OneToOne, JoinColumn} from "typeorm";
 import { Character } from "./character";
 
 @Entity("users")
@@ -40,6 +40,13 @@ export class User {
 
   @Column({length: 1000, nullable: true})
   medicalInfo: string;
+
+  @OneToOne(type => Character, character => character.user)
+  @JoinColumn({name: "mainCharacterId"})
+  mainCharacter: Character;
+
+  @Column({nullable: true})
+  mainCharacterId: number;
 
   @OneToMany(type => Character, character => character.user)
   characters: Character[];

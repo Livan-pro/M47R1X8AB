@@ -19,6 +19,13 @@ export class UserService {
     return await this.repo.findOneOrFail({email});
   }
 
+  async getByEmailWithCharacter(email: string): Promise<User> {
+    const user = await this.repo.findOneOrFail({email}, {
+      relations: ["mainCharacter"],
+    });
+    return user;
+  }
+
   @Transaction()
   async createWithCharacter(
     userData: Partial<User>,
@@ -32,6 +39,8 @@ export class UserService {
     const character = manager.getRepository(Character).create({...characterData, quenta: quenta && quenta.filename});
     character.userId = user.id;
     await manager.save(character);
+    user.mainCharacter = character;
+    await manager.save(user);
 
     if (quenta && quenta.filename) {
       this.log.log("Uploading file...");
@@ -41,5 +50,9 @@ export class UserService {
 
     this.log.log(`User created: ${user.email}`);
     return {user, character};
+  }
+
+  async update(userId: number, data: Partial<User>): Promise<void> {
+    await this.repo.update(userId, this.repo.create(data));
   }
 }

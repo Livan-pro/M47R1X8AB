@@ -1,18 +1,6 @@
-import {IsEmail, MinLength, MaxLength, IsNotEmpty, IsOptional, IsDate} from "class-validator";
-import {IsEqualTo} from "../utils/IsEqualTo";
+import {MinLength, MaxLength, IsNotEmpty} from "class-validator";
 
-export class CreateUser {
-  @IsEmail(undefined, {message: "Неверный email"})
-  email: string | undefined = undefined;
-
-  @MinLength(8, {message: "Пароль должен содержать не менее 8 символов"})
-  @MaxLength(64, {message: "Пароль должен содержать не более 64 символов"})
-  password: string | undefined = undefined;
-
-  @IsOptional()
-  @IsEqualTo("password", {message: "Пароль и подтверждение не совпадают"})
-  passwordConfirmation: string | undefined = undefined;
-
+export class EditUser {
   @MinLength(2, {message: "Имя должно быть длиннее 1 символа"})
   @MaxLength(255, {message: "Имя должно быть короче 256 символов"})
   firstName: string | undefined = undefined;
