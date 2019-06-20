@@ -5,9 +5,23 @@
  */
 
 /* tslint:disable */
+export class ChangePasswordInput {
+    currentPassword: string;
+    password: string;
+    passwordConfirmation: string;
+}
+
 export class CharacterInput {
     name?: string;
     quenta?: Upload;
+}
+
+export class EditUserInput {
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
+    vkId?: string;
+    medicalInfo?: string;
 }
 
 export class LoginInput {
@@ -18,7 +32,6 @@ export class LoginInput {
 
 export class UserInput {
     email?: string;
-    currentPassword?: string;
     password?: string;
     passwordConfirmation?: string;
     firstName?: string;
@@ -29,6 +42,7 @@ export class UserInput {
 }
 
 export class Character {
+    id: number;
     name?: string;
     quenta?: string;
 }
@@ -40,7 +54,11 @@ export abstract class IMutation {
 
     abstract logout(): boolean | Promise<boolean>;
 
-    abstract editUser(user: UserInput): boolean | Promise<boolean>;
+    abstract editUser(user: EditUserInput): boolean | Promise<boolean>;
+
+    abstract editCharacter(id: number, character: CharacterInput): boolean | Promise<boolean>;
+
+    abstract changePassword(data: ChangePasswordInput): boolean | Promise<boolean>;
 }
 
 export abstract class IQuery {
@@ -57,6 +75,7 @@ export class User {
     vkId?: string;
     medicalInfo?: string;
     characters?: Character[];
+    mainCharacter?: Character;
 }
 
 export type Date = any;

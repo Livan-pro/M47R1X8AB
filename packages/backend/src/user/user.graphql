@@ -1,8 +1,15 @@
 input UserInput {
   email: String
-  currentPassword: String
   password: String
   passwordConfirmation: String
+  firstName: String
+  lastName: String
+  phone: String
+  vkId: String
+  medicalInfo: String
+}
+
+input EditUserInput {
   firstName: String
   lastName: String
   phone: String
@@ -16,6 +23,12 @@ input LoginInput {
   rememberMe: Boolean
 }
 
+input ChangePasswordInput {
+  currentPassword: String!
+  password: String!
+  passwordConfirmation: String!
+}
+
 type User {
   email: String
   firstName: String
@@ -24,6 +37,7 @@ type User {
   vkId: String
   medicalInfo: String
   characters: [Character]
+  mainCharacter: Character
 }
 
 type Query {
@@ -34,5 +48,7 @@ type Mutation {
   createUserWithCharacter(user: UserInput!, character: CharacterInput!): Boolean
   login(email: String!, password: String!, rememberMe: Boolean): String!
   logout: Boolean
-  editUser(user: UserInput!): Boolean
+  editUser(user: EditUserInput!): Boolean
+  editCharacter(id: Int!, character: CharacterInput!): Boolean
+  changePassword(data: ChangePasswordInput!): Boolean
 }

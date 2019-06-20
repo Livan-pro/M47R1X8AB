@@ -4,6 +4,7 @@ input CharacterInput {
 }
 
 type Character {
+  id: Int!
   name: String
   quenta: String
 }
