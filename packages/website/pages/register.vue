@@ -126,7 +126,7 @@ export default class Register extends Vue {
 
   get characterInputs() {
     return {
-      name: "Имя и фамилия",
+      name: "Имя персонажа",
       quenta: {label: "Квента", type: "file"},
     };
   }

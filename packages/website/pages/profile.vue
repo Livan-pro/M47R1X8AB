@@ -9,7 +9,7 @@
     Аллергии, мед. показания: {{ me.medicalInfo }}<br>
     <br><br>
     <h2 class="text-center">Информация о персонаже</h2>
-    Имя: {{ me.mainCharacter.name }}<br>
+    Имя персонажа: {{ me.mainCharacter.name }}<br>
     Квента:
     <a v-if="me.mainCharacter.quenta" :href="quentaLink" download>скачать</a>
     <span v-else>не загружена</span>
