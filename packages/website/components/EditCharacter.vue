@@ -57,8 +57,8 @@ export default class EditCharacter extends Vue {
 
   getChanges() {
     let changes = {};
-    if (this.form.name !== this.initData.name) changes = {...changes, name: this.initData.name};
-    if (this.form.quenta) changes = {...changes, quenta: this.initData.quenta};
+    if (this.form.name !== this.initData.name) changes = {...changes, name: this.form.name};
+    if (this.form.quenta) changes = {...changes, quenta: this.form.quenta};
     return changes;
   }
 
