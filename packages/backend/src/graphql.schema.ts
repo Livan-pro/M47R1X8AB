@@ -48,6 +48,8 @@ export class Character {
 }
 
 export abstract class IMutation {
+    abstract editCharacter(id: number, character: CharacterInput): boolean | Promise<boolean>;
+
     abstract createUserWithCharacter(user: UserInput, character: CharacterInput): boolean | Promise<boolean>;
 
     abstract login(email: string, password: string, rememberMe?: boolean): string | Promise<string>;
@@ -55,8 +57,6 @@ export abstract class IMutation {
     abstract logout(): boolean | Promise<boolean>;
 
     abstract editUser(user: EditUserInput): boolean | Promise<boolean>;
-
-    abstract editCharacter(id: number, character: CharacterInput): boolean | Promise<boolean>;
 
     abstract changePassword(data: ChangePasswordInput): boolean | Promise<boolean>;
 }

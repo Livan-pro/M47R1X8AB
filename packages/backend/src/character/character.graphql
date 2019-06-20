@@ -8,3 +8,7 @@ type Character {
   name: String
   quenta: String
 }
+
+type Mutation {
+  editCharacter(id: Int!, character: CharacterInput!): Boolean
+}

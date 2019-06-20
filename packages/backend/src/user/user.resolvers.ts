@@ -80,11 +80,6 @@ export class UserResolvers {
     @GetUser() user: User,
   ): Promise<boolean> {
     try {
-      /* if (userData.password)  {
-        if (!await this.auth.verifyPassword(userData.password, user.password)) throw new Error("Неверный пароль");
-        userData.password = await this.auth.hashPassword(userData.password);
-        userData = Object.assign(userData, {passwordChangedAt: new Date()});
-      } */
       await this.user.update(user.id, userData);
       return true;
     } catch (err) {
