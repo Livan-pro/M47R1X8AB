@@ -7,6 +7,13 @@
     Телефон: {{ me.phone }}<br>
     ID Вконтакте: {{ me.vkId }}<br>
     Аллергии, мед. показания: {{ me.medicalInfo }}<br>
+    <br><br>
+    <h2 class="text-center">Информация о персонаже</h2>
+    Имя: {{ me.mainCharacter.name }}<br>
+    Квента:
+    <a v-if="me.mainCharacter.quenta" :href="quentaLink" download>скачать</a>
+    <span v-else>не загружена</span>
+    <br>
   </div>
 </template>
 
@@ -32,6 +39,11 @@ import {} from "@/vue-meta";
           phone
           vkId
           medicalInfo
+          mainCharacter {
+            id
+            name
+            quenta
+          }
         }
       }`,
       fetchPolicy: "cache-and-network",
@@ -40,5 +52,9 @@ import {} from "@/vue-meta";
 })
 export default class Profile extends Vue {
   me: any;
+
+  get quentaLink() {
+    return `/data/quenta/${this.me.mainCharacter.id}/${this.me.mainCharacter.quenta}`;
+  }
 }
 </script>
