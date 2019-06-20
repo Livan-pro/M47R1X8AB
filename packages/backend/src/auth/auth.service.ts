@@ -27,7 +27,6 @@ export class AuthService {
       if (user.passwordChangedAt && (user.passwordChangedAt.getTime() / 1000 > payload.iat)) return null;
       return user;
     } catch (err) {
-      console.error(err);
       return null;
     }
   }
