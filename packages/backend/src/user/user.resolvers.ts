@@ -100,8 +100,8 @@ export class UserResolvers {
     @Args("data", ValidationPipe) data: ChangePassword,
     @GetUser() user: User,
   ): Promise<boolean> {
+    if (!await this.auth.verifyPassword(data.currentPassword, user.password)) throw new Error("Неверный пароль");
     try {
-      if (!await this.auth.verifyPassword(data.currentPassword, user.password)) throw new Error("Неверный пароль");
       await this.user.update(user.id, {
         password: await this.auth.hashPassword(data.password),
         passwordChangedAt: new Date(),
