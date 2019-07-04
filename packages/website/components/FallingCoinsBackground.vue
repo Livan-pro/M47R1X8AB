@@ -25,7 +25,7 @@ export default class FallingCoinsBackground extends Vue {
 }
 
 img {
-  height: 50px;
+  height: 40px;
   position: absolute;
   top:-100vh;
   animation: 5s fall cubic-bezier(.62,.21,.91,.41) infinite;
@@ -34,7 +34,7 @@ img {
 @for $i from 1 through 50 {
   img:nth-child(#{$i}) {
     left: random() * 100 + vw;
-    $duration: random() * 2 + 4;
+    $duration: random() * 2 + 9;
     animation-duration: $duration + s;
     animation-delay: -(random() * $duration) + s;
   }
