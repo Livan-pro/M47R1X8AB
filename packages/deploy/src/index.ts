@@ -198,6 +198,8 @@ class Deploy extends Command {
     try {
       const ctx = await this.prepare(flags.directory, flags.skipPull, !!flags.actions);
 
+      const defaultActions = flags.actions ? flags.actions.split(",") : ctx.defaults;
+
       if (!ctx.updatedFiles.length) this.log("No files updated. Select what you want to do.");
       else this.log("Updated files:\n" + ctx.updatedFiles.join("\n") + "\n");
 
@@ -212,19 +214,20 @@ class Deploy extends Command {
         if (restart) {
           if (flags.yes) this.log("Deploy tool updated. Restarting...");
           await execa("npm", ["run", "--silent", "build"], {cwd: self.location});
-          require("../lib").run().catch(require("@oclif/errors/handle"));
+          const args = ["--skipPull", "--actions=" + defaultActions.join(",")];
+          if (flags.yes) args.push("--yes");
+          if (flags.directory) args.push("--directory=" + flags.directory);
+          await require("../lib").run(args).catch(require("@oclif/errors/handle"));
           return;
         }
       }
 
-      const defaults = flags.actions ? flags.actions.split(",") : ctx.defaults;
-
-      const {actions}: {actions: string[]} = flags.yes ? {actions: ctx.defaults} : await inquirer.prompt([{
+      const {actions}: {actions: string[]} = flags.yes ? {actions: defaultActions} : await inquirer.prompt([{
         type: "checkbox",
         name: "actions",
         message: "Actions:",
         choices: ctx.actions,
-        default: defaults,
+        default: defaultActions,
       }]);
 
       if (!actions.length) {
