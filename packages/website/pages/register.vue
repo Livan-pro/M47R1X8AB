@@ -34,7 +34,7 @@
     <br><br>
     <h4>
       До встречи на КИБЕРПАНК 2219<br>
-      <span class="yellow">26-28.09.2019</span>
+      <span class="yellow">03-05.10.2019</span>
     </h4>
   </div>
 </template>
