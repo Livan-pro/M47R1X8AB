@@ -45,7 +45,7 @@ export class User {
   @JoinColumn({name: "mainCharacterId"})
   mainCharacter: Character;
 
-  @Column({nullable: true})
+  @Column({nullable: true, unique: true})
   mainCharacterId: number;
 
   @OneToMany(type => Character, character => character.user)
