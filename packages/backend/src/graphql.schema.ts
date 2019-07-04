@@ -77,6 +77,8 @@ export abstract class IQuery {
 
     abstract characters(): Character[] | Promise<Character[]>;
 
+    abstract character(id: number): Character | Promise<Character>;
+
     abstract news(): News[] | Promise<News[]>;
 
     abstract me(): User | Promise<User>;

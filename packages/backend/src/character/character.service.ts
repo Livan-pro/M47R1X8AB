@@ -23,6 +23,10 @@ export class CharacterService {
     return await this.repo.find();
   }
 
+  async findById(id: number): Promise<Character | undefined> {
+    return await this.repo.findOne(id);
+  }
+
   @Transaction()
   async update(
     id: number,

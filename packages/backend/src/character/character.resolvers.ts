@@ -21,6 +21,11 @@ export class CharacterResolvers {
     return this.character.getAll();
   }
 
+  @Query("character")
+  async getCharacter(@Args("id") id: number): Promise<Character | undefined> {
+    return this.character.findById(id);
+  }
+
   @Mutation()
   async editCharacter(
     @Args("id") id: number,

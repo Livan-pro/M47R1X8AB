@@ -11,6 +11,7 @@ type Character {
 
 type Query {
   characters: [Character!]!
+  character(id: Int!): Character
 }
 
 type Mutation {
