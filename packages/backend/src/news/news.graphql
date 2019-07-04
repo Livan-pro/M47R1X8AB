@@ -1,0 +1,9 @@
+type News {
+  title: String!
+  text: String!
+  datetime: Date!
+}
+
+type Query {
+  news: [News!]!
+}

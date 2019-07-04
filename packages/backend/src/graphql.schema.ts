@@ -66,8 +66,16 @@ export abstract class IMutation {
     abstract changePassword(data: ChangePasswordInput): boolean | Promise<boolean>;
 }
 
+export class News {
+    title: string;
+    text: string;
+    datetime: Date;
+}
+
 export abstract class IQuery {
     abstract none(): boolean | Promise<boolean>;
+
+    abstract news(): News[] | Promise<News[]>;
 
     abstract me(): User | Promise<User>;
 }
