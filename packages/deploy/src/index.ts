@@ -55,6 +55,7 @@ class Deploy extends Command {
     version: Flags.version({char: "v"}),
     help: Flags.help({char: "h"}),
     directory: Flags.string({char: "d"}),
+    yes: Flags.boolean({char: "y"}),
   };
 
   cwd = __dirname;
@@ -198,20 +199,21 @@ class Deploy extends Command {
 
       const self = findSelf(ctx.packages);
       if (self && ctx.updatedPackages.includes(self.name)) {
-        const {restart} = await inquirer.prompt({
+        const {restart} = flags.yes ? {restart: true} : await inquirer.prompt({
           type: "confirm",
           name: "restart",
           message: "This deploy tool updated. Do you want to rebuild and restart it now?",
           default: true,
         });
         if (restart) {
+          if (flags.yes) this.log("Deploy tool updated. Restarting...");
           await execa("npm", ["run", "--silent", "build"], {cwd: self.location});
           require("../lib").run().catch(require("@oclif/errors/handle"));
           return;
         }
       }
 
-      const {actions}: {actions: string[]} = await inquirer.prompt([{
+      const {actions}: {actions: string[]} = flags.yes ? {actions: ctx.defaults} : await inquirer.prompt([{
         type: "checkbox",
         name: "actions",
         message: "Actions:",
