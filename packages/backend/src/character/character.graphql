@@ -5,8 +5,12 @@ input CharacterInput {
 
 type Character {
   id: Int!
-  name: String
+  name: String!
   quenta: String
+}
+
+type Query {
+  characters: [Character!]!
 }
 
 type Mutation {

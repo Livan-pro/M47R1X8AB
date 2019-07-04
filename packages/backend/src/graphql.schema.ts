@@ -43,7 +43,7 @@ export class UserInput {
 
 export class Character {
     id: number;
-    name?: string;
+    name: string;
     quenta?: string;
 }
 
@@ -74,6 +74,8 @@ export class News {
 
 export abstract class IQuery {
     abstract none(): boolean | Promise<boolean>;
+
+    abstract characters(): Character[] | Promise<Character[]>;
 
     abstract news(): News[] | Promise<News[]>;
 

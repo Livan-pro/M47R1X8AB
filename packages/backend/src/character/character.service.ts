@@ -19,6 +19,10 @@ export class CharacterService {
     return await this.repo.findOneOrFail({id, userId});
   }
 
+  async getAll(): Promise<Character[]> {
+    return await this.repo.find();
+  }
+
   @Transaction()
   async update(
     id: number,

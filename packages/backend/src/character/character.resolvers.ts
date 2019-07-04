@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Args } from "@nestjs/graphql";
+import { Resolver, Mutation, Args, Query } from "@nestjs/graphql";
 import { Logger, ValidationPipe, UseGuards } from "@nestjs/common";
 import { CharacterService } from "./character.service";
 import { CreateCharacter } from "shared/node";
@@ -6,6 +6,7 @@ import { ntob } from "number-to-base64";
 import { GqlAuthGuard } from "auth/gql-auth.guard";
 import { GetUser } from "user/get-user.decorator";
 import { User } from "matrix-database";
+import { Character } from "graphql.schema";
 
 @Resolver()
 @UseGuards(GqlAuthGuard)
@@ -14,6 +15,11 @@ export class CharacterResolvers {
   constructor(
     private readonly character: CharacterService,
   ) {}
+
+  @Query()
+  async characters(): Promise<Character[]> {
+    return this.character.getAll();
+  }
 
   @Mutation()
   async editCharacter(
