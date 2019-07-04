@@ -5,7 +5,8 @@
         "lib": [
             "dom",
             "es2015",
-            "es6"
+            "es6",
+            "esnext"
         ],
         "noEmitHelpers": true,
         "importHelpers": true,

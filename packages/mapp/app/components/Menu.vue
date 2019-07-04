@@ -1,6 +1,6 @@
 <template>
   <StackLayout class="p-x-20 p-y-10">
-    <UserItem name="My character_name" :avatarSize="50" />
+    <UserItem :name="name" :avatarSize="50" />
     <StackLayout class="hr-light m-y-10" />
     <ListView for="item in items" @itemTap="onItemTap">
       <v-template>
@@ -17,22 +17,36 @@ import * as appSettings from "tns-core-modules/application-settings";
 
 import UserItem from "@/components/UserItem.vue";
 import Login from "@/components/Login.vue";
+import { logout } from "@/vue-apollo";
+import gql from "graphql-tag";
 
 @Component({
   components: { UserItem },
+  apollo: {
+    me: {
+      query: gql`{
+        me {
+          mainCharacter {
+            name
+          }
+        }
+      }`,
+      fetchPolicy: "cache-and-network",
+    },
+  },
 })
 export default class Menu extends Vue {
+  me: any = {};
   items = [
     {title: "Деньги"},
     {title: "Сообщения"},
     {title: "Инвентарь"},
     {title: "Свойства"},
-    {title: "Выход", action: this.logout},
+    {title: "Выход", action: logout},
   ];
 
-  logout() {
-    appSettings.remove("token");
-    this.$navigateTo(Login);
+  get name() {
+    return (this.me && this.me.mainCharacter && this.me.mainCharacter.name) || "unknown";
   }
 
   onItemTap({ item }) {

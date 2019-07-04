@@ -40,13 +40,18 @@ type User {
   mainCharacter: Character
 }
 
+type LoginResult {
+  email: String!
+  token: String!
+}
+
 type Query {
   me: User
 }
 
 type Mutation {
   createUserWithCharacter(user: UserInput!, character: CharacterInput!): Boolean
-  login(email: String!, password: String!, rememberMe: Boolean): String!
+  login(email: String!, password: String!, rememberMe: Boolean): LoginResult!
   logout: Boolean
   editUser(user: EditUserInput!): Boolean
   changePassword(data: ChangePasswordInput!): Boolean

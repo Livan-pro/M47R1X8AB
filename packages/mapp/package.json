@@ -15,6 +15,13 @@
   },
   "dependencies": {
     "@vue/devtools": "^5.1.1",
+    "apollo-cache-inmemory": "^1.6.2",
+    "apollo-client": "^2.6.3",
+    "apollo-link": "^1.2.12",
+    "apollo-link-context": "^1.0.18",
+    "apollo-link-error": "^1.1.11",
+    "apollo-link-http": "^1.5.15",
+    "graphql": "^14.4.2",
     "nativescript-barcodescanner": "^3.2.0",
     "nativescript-socketio": "^3.2.1",
     "nativescript-theme-core": "^1.0.4",
@@ -22,6 +29,7 @@
     "nativescript-vue": "^2.0.0",
     "nativescript-vue-devtools": "^1.2.0",
     "tns-core-modules": "^5.4.3",
+    "vue-apollo": "^3.0.0-rc.1",
     "vue-property-decorator": "^8.2.1"
   },
   "devDependencies": {
@@ -31,6 +39,8 @@
     "babel-traverse": "6.26.0",
     "babel-types": "6.26.0",
     "babylon": "6.18.0",
+    "dotenv": "^8.0.0",
+    "graphql-tag": "^2.10.1",
     "lazy": "1.0.11",
     "nativescript-dev-typescript": "^0.10.0",
     "nativescript-dev-webpack": "^0.24.1",

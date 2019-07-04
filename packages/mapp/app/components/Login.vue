@@ -2,9 +2,10 @@
   <Page backgroundSpanUnderStatusBar="true">
     <ActionBar title="Вход в Матрицу" android:flat="true" />
     <StackLayout class="p-x-20" verticalAlignment="center">
+      <Label :text="url" />
       <ActivityIndicator :busy="loading" />
-      <TextField v-model="login" hint="Логин" returnKeyType="next" />
-      <TextField v-model="password" hint="Пароль" returnKeyType="done" secure="true" @returnPress="doLogin" />
+      <TextField v-model="form.email" hint="Email" returnKeyType="next" />
+      <TextField v-model="form.password" hint="Пароль" returnKeyType="done" secure="true" @returnPress="doLogin" />
       <Button text="Вход" @tap="doLogin" />
     </StackLayout>
   </Page>
@@ -15,31 +16,59 @@ import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
 import * as appSettings from "tns-core-modules/application-settings";
 import App from "./App.vue";
+import gql from "graphql-tag";
+import { query } from "@/graphql/me";
+import { login } from "@/vue-apollo";
 
 const sleep = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms));
 
 @Component
 export default class Login extends Vue {
-  login = "";
-  password = "";
+  form = {
+    email: "",
+    password: "",
+    rememberMe: true,
+  };
   loading = false;
 
+  get url() {
+    return process.env.GRAPHQL_URL;
+  }
+
   async doLogin() {
-    const login = this.login.toLowerCase();
     this.loading = true;
     await sleep(500);
     this.loading = false;
-    if (login !== "a@a.a" || this.password !== "1") {
+
+    try {
+      console.log(this.form);
+      const result = await this.$apollo.mutate({
+        mutation: gql`mutation($email: String!, $password: String!, $rememberMe: Boolean) {
+          login(email: $email, password: $password, rememberMe: $rememberMe) {
+            email
+            token
+          }
+        }`,
+        variables: this.form,
+        update: (proxy: any, res: any) => {
+          proxy.writeQuery({query, data: {
+            me: {
+              __typename: "User",
+              email: res.data.login.email,
+            },
+          }});
+        },
+      });
+      login(result.data.login.token);
+    } catch (error) {
+      console.error(JSON.stringify(error));
+      const message = ((error.graphQLErrors && error.graphQLErrors[0]) || error.networkError || error).message;
       await alert({
         title: "Ошибка",
-        message: "Неверный логин или пароль",
+        message,
         okButtonText: "ОК",
       });
-      return;
     }
-
-    appSettings.setString("token", "asd");
-    this.$navigateTo(App);
   }
 }
 </script>

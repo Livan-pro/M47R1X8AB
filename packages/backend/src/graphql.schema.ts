@@ -47,12 +47,17 @@ export class Character {
     quenta?: string;
 }
 
+export class LoginResult {
+    email: string;
+    token: string;
+}
+
 export abstract class IMutation {
     abstract editCharacter(id: number, character: CharacterInput): boolean | Promise<boolean>;
 
     abstract createUserWithCharacter(user: UserInput, character: CharacterInput): boolean | Promise<boolean>;
 
-    abstract login(email: string, password: string, rememberMe?: boolean): string | Promise<string>;
+    abstract login(email: string, password: string, rememberMe?: boolean): LoginResult | Promise<LoginResult>;
 
     abstract logout(): boolean | Promise<boolean>;
 
