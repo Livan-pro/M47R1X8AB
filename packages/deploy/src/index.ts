@@ -56,6 +56,8 @@ class Deploy extends Command {
     help: Flags.help({char: "h"}),
     directory: Flags.string({char: "d"}),
     yes: Flags.boolean({char: "y"}),
+    actions: Flags.string({char: "a"}),
+    skipPull: Flags.boolean({char: "p"}),
   };
 
   cwd = __dirname;
@@ -67,7 +69,7 @@ class Deploy extends Command {
     );
   }
 
-  async prepare(directory: string | undefined) {
+  async prepare(directory: string | undefined, skipPull: boolean, skipDetect: boolean) {
     return await new Listr([
       {
         title: "Looking for project root",
@@ -93,6 +95,7 @@ class Deploy extends Command {
       },
       {
         title: "Pulling",
+        enabled: () => !skipPull,
         task: async (ctx, task) => {
           ctx.updatedFiles = [];
           const git = SimpleGit(this.cwd);
@@ -132,6 +135,7 @@ class Deploy extends Command {
       },
       {
         title: "Detecting changes",
+        enabled: () => !skipDetect,
         task: async (ctx, task) => {
           const updatedPackages = ctx.updatedFiles.reduce((acc, v) => {
             const path = resolve(this.cwd, v);
@@ -192,7 +196,7 @@ class Deploy extends Command {
   async run() {
     const {flags} = this.parse(Deploy);
     try {
-      const ctx = await this.prepare(flags.directory);
+      const ctx = await this.prepare(flags.directory, flags.skipPull, !!flags.actions);
 
       if (!ctx.updatedFiles.length) this.log("No files updated. Select what you want to do.");
       else this.log("Updated files:\n" + ctx.updatedFiles.join("\n") + "\n");
@@ -213,12 +217,14 @@ class Deploy extends Command {
         }
       }
 
+      const defaults = flags.actions ? flags.actions.split(",") : ctx.defaults;
+
       const {actions}: {actions: string[]} = flags.yes ? {actions: ctx.defaults} : await inquirer.prompt([{
         type: "checkbox",
         name: "actions",
         message: "Actions:",
         choices: ctx.actions,
-        default: ctx.defaults,
+        default: defaults,
       }]);
 
       if (!actions.length) {
