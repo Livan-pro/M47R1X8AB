@@ -5,10 +5,10 @@ import { setContext } from "apollo-link-context";
 import { onError } from "apollo-link-error";
 import VueApollo from "vue-apollo";
 import * as appSettings from "tns-core-modules/application-settings";
-import { vue } from "@/main";
+import { vue } from "./main";
 
-import App from "./components/App.vue";
-import Login from "./components/Login.vue";
+import App from "./pages/App.vue";
+import Login from "./pages/Login.vue";
 
 const production = TNS_ENV === "production";
 

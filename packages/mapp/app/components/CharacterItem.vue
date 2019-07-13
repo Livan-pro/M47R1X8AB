@@ -1,6 +1,6 @@
 <template>
-  <StackLayout class="p-b-10" orientation="horizontal">
-    <Image :src="avatarUrl" class="m-r-10" :width="avatarSize" :height="avatarSize" />
+  <StackLayout class="p-b-10" orientation="horizontal" @tap="onTap">
+    <CharacterAvatar :id="id" :size="avatarSize" />
     <StackLayout>
       <Label :text="name" dock="left" class="h2" />
     </StackLayout>
@@ -10,16 +10,19 @@
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
+import Character from "@/pages/Character.vue";
+import CharacterAvatar from "@/components/CharacterAvatar.vue";
 
-@Component
+@Component({
+  components: { CharacterAvatar },
+})
 export default class CharacterItem extends Vue {
   @Prop({type: String, default: ""}) name!: string;
   @Prop({type: Number, default: -1}) id!: number;
   @Prop({type: Number, default: 100}) avatarSize!: number;
 
-  get avatarUrl() {
-    if (this.id < 0) return "https://cyberpunk2219.tech/data/avatar/no-avatar.png";
-    else return `https://cyberpunk2219.tech/data/avatar/${this.id}.png`; // "https://placehold.it/100x100";
+  onTap() {
+    this.$navigateTo(Character, {frame: this.$root.currentFrame, props: {id: this.id}} as any);
   }
 }
 </script>

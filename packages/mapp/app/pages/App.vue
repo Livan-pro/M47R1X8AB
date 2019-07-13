@@ -10,16 +10,24 @@
       @selectedIndexChange="onSelectedIndexChange"
     >
       <TabViewItem class="fas" :title="'\uf1ea'">
-        <News />
+        <Frame id="f0">
+          <News />
+        </Frame>
       </TabViewItem>
       <TabViewItem class="fas" :title="'\uf0c0'">
-        <Characters />
+        <Frame id="f1">
+          <Characters />
+        </Frame>
       </TabViewItem>
       <TabViewItem class="fas" :title="'\uf029'">
-        <ScanResult :loading="scanLoading" :result="scanResult" />
+        <Frame id="f2">
+          <ScanResult :loading="scanLoading" :result="scanResult" />
+        </Frame>
       </TabViewItem>
       <TabViewItem class="fas" :title="'\uf0c9'">
-        <Menu />
+        <Frame id="f3">
+          <Menu />
+        </Frame>
       </TabViewItem>
     </TabView>
   </Page>
@@ -47,6 +55,7 @@ export default class App extends Vue {
   scanLoading = true;
 
   async onSelectedIndexChange({ value, oldValue }) {
+    this.$root.currentFrame = "f" + value;
     if (value === 2) if (!await this.scan()) this.selectedIndex = oldValue;
   }
 

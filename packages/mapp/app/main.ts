@@ -4,8 +4,8 @@ import * as appSettings from "tns-core-modules/application-settings";
 import VueApollo from "vue-apollo";
 import { apolloProvider } from "./vue-apollo";
 
-import App from "./components/App.vue";
-import Login from "./components/Login.vue";
+import App from "./pages/App.vue";
+import Login from "./pages/Login.vue";
 
 if (TNS_ENV !== "production") {
   Vue.use(VueDevtools);
@@ -20,6 +20,9 @@ const isLoggedIn = appSettings.hasKey("token");
 
 export const vue = new Vue({
   apolloProvider,
+  data: {
+    currentFrame: "",
+  },
   render: h => h("frame", [isLoggedIn ? h(App) : h(Login)]),
 });
 

@@ -41,7 +41,6 @@ export default class Login extends Vue {
     this.loading = false;
 
     try {
-      console.log(this.form);
       const result = await this.$apollo.mutate({
         mutation: gql`mutation($email: String!, $password: String!, $rememberMe: Boolean) {
           login(email: $email, password: $password, rememberMe: $rememberMe) {
@@ -61,6 +60,7 @@ export default class Login extends Vue {
       });
       login(result.data.login.token);
     } catch (error) {
+      // tslint:disable-next-line:no-console
       console.error(JSON.stringify(error));
       const message = ((error.graphQLErrors && error.graphQLErrors[0]) || error.networkError || error).message;
       await alert({
