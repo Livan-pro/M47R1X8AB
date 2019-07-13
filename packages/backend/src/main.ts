@@ -18,6 +18,9 @@ async function bootstrap() {
   app.use(cookieParser());
   if (Config.getBoolean("SERVE_DATA")) {
     app.use("/data", express.static(join(__dirname, "..", "data")));
+    app.use("/data/avatar", (_, res) => {
+      res.redirect(302, "/data/avatar/no-avatar.png");
+    });
   }
   if (Config.getBoolean("LOG_RESPONSE_TIME")) app.use(responseTimeLogger);
   const port = Config.getInt("PORT", 3000);
