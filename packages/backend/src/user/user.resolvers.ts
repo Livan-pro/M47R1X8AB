@@ -8,6 +8,7 @@ import { Response } from "express";
 import { GqlAuthGuard } from "auth/gql-auth.guard";
 import { GetUser } from "./get-user.decorator";
 import { User } from "matrix-database";
+import { LoginResult } from "graphql.schema";
 
 @Resolver()
 // @UseGuards(AuthGuard("jwt"))
@@ -45,13 +46,16 @@ export class UserResolvers {
     @Args("password") password: string,
     @Args("rememberMe") rememberMe: boolean,
     @Context("res") res: Response,
-  ): Promise<string> {
+  ): Promise<LoginResult> {
     try {
       const user = await this.user.getByEmail(email);
       if (!await this.auth.verifyPassword(password, user.password)) throw new Error("INVALID_PWD");
       const token = await this.auth.createToken(email, rememberMe);
       res.cookie("token", token.token, { expires: token.expires, httpOnly: true });
-      return user.email;
+      return {
+        email: user.email,
+        token: token.token,
+      };
     } catch (err) {
       if (err.message !== "INVALID_PWD") this.log.warn(`Error while logging in: ${err.stack}`);
       throw new Error("Неверный логин или пароль");

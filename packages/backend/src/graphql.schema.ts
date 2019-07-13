@@ -43,8 +43,13 @@ export class UserInput {
 
 export class Character {
     id: number;
-    name?: string;
+    name: string;
     quenta?: string;
+}
+
+export class LoginResult {
+    email: string;
+    token: string;
 }
 
 export abstract class IMutation {
@@ -52,7 +57,7 @@ export abstract class IMutation {
 
     abstract createUserWithCharacter(user: UserInput, character: CharacterInput): boolean | Promise<boolean>;
 
-    abstract login(email: string, password: string, rememberMe?: boolean): string | Promise<string>;
+    abstract login(email: string, password: string, rememberMe?: boolean): LoginResult | Promise<LoginResult>;
 
     abstract logout(): boolean | Promise<boolean>;
 
@@ -61,8 +66,20 @@ export abstract class IMutation {
     abstract changePassword(data: ChangePasswordInput): boolean | Promise<boolean>;
 }
 
+export class News {
+    title: string;
+    text: string;
+    datetime: Date;
+}
+
 export abstract class IQuery {
     abstract none(): boolean | Promise<boolean>;
+
+    abstract characters(): Character[] | Promise<Character[]>;
+
+    abstract character(id: number): Character | Promise<Character>;
+
+    abstract news(): News[] | Promise<News[]>;
 
     abstract me(): User | Promise<User>;
 }

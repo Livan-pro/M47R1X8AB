@@ -10,16 +10,24 @@
       @selectedIndexChange="onSelectedIndexChange"
     >
       <TabViewItem class="fas" :title="'\uf1ea'">
-        <News />
+        <Frame id="f0">
+          <News />
+        </Frame>
       </TabViewItem>
       <TabViewItem class="fas" :title="'\uf0c0'">
-        <Users />
+        <Frame id="f1">
+          <Characters />
+        </Frame>
       </TabViewItem>
       <TabViewItem class="fas" :title="'\uf029'">
-        <ScanResult :loading="scanLoading" :result="scanResult" />
+        <Frame id="f2">
+          <ScanResult :loading="scanLoading" :result="scanResult" />
+        </Frame>
       </TabViewItem>
       <TabViewItem class="fas" :title="'\uf0c9'">
-        <Menu />
+        <Frame id="f3">
+          <Menu />
+        </Frame>
       </TabViewItem>
     </TabView>
   </Page>
@@ -32,14 +40,14 @@ import * as appSettings from "tns-core-modules/application-settings";
 import { BarcodeScanner } from "nativescript-barcodescanner";
 
 import News from "./News.vue";
-import Users from "./Users.vue";
+import Characters from "./Characters.vue";
 import ScanResult from "./ScanResult.vue";
 import Menu from "./Menu.vue";
 
 const barcodescanner = new BarcodeScanner();
 
 @Component({
-  components: { News, Users, ScanResult, Menu },
+  components: { News, Characters, ScanResult, Menu },
 })
 export default class App extends Vue {
   selectedIndex: number = 0;
@@ -47,6 +55,7 @@ export default class App extends Vue {
   scanLoading = true;
 
   async onSelectedIndexChange({ value, oldValue }) {
+    this.$root.currentFrame = "f" + value;
     if (value === 2) if (!await this.scan()) this.selectedIndex = oldValue;
   }
 

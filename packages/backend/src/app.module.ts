@@ -10,6 +10,7 @@ import { CharacterModule } from "character/character.module";
 import { UserModule } from "./user/user.module";
 import { DateScalar } from "./date.scalar";
 import { AppResolvers } from "./app.resolvers";
+import { NewsModule } from "./news/news.module";
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { AppResolvers } from "./app.resolvers";
     TypeOrmModule.forRoot(),
     AuthModule,
     CharacterModule,
+    NewsModule,
     UserModule,
   ],
   providers: [DateScalar, AppResolvers],

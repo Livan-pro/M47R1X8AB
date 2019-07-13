@@ -1,8 +1,10 @@
 <template>
-  <GridLayout class="p-x-20 p-y-10" rows="*" columns="*">
-    <ActivityIndicator v-if="loading" busy="true" />
-    <Label v-else :text="'Результат: ' + result" />
-  </GridLayout>
+  <Page actionBarHidden="true">
+    <GridLayout class="p-x-20 p-y-10" rows="*" columns="*">
+      <ActivityIndicator v-if="loading" busy="true" />
+      <Label v-else :text="'Результат: ' + result" />
+    </GridLayout>
+  </Page>
 </template>
 
 <script lang="ts">

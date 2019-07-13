@@ -14,6 +14,13 @@ const nativescriptTarget = require("nativescript-dev-webpack/nativescript-target
 const { NativeScriptWorkerPlugin } = require("nativescript-worker-loader/NativeScriptWorkerPlugin");
 const hashSalt = Date.now().toString();
 
+const objectify = (obj, [k, v]) => (obj[k] = v, obj);
+const result = require("dotenv").config();
+if (result.error) {
+  throw result.error;
+}
+const envVariables = Object.entries(result.parsed).map(([k, v]) => ["ENV_" + k.toUpperCase(), JSON.stringify(v)]).reduce(objectify, {});
+
 module.exports = env => {
     // Add your custom Activities, Services and other android app components here.
     const appComponents = [
@@ -230,7 +237,8 @@ module.exports = env => {
             // Define useful constants like TNS_WEBPACK
             new webpack.DefinePlugin({
                 "global.TNS_WEBPACK": "true",
-                "TNS_ENV": JSON.stringify(mode)
+                "TNS_ENV": JSON.stringify(mode),
+                ...envVariables
             }),
             // Remove all files from the out dir.
             new CleanWebpackPlugin([`${dist}/**/*`]),

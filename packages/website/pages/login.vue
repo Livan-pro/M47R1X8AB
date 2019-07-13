@@ -51,14 +51,16 @@ export default class Login extends Vue {
     try {
       await this.$apollo.mutate({
         mutation: gql`mutation($email: String!, $password: String!, $rememberMe: Boolean) {
-          login(email: $email, password: $password, rememberMe: $rememberMe)
+          login(email: $email, password: $password, rememberMe: $rememberMe) {
+            email
+          }
         }`,
         variables: this.form,
         update: (proxy: any, res: any) => {
           proxy.writeQuery({query, data: {
             me: {
               __typename: "User",
-              email: res.data.login,
+              email: res.data.login.email,
             },
           }});
         },
