@@ -48,6 +48,7 @@ export class CharacterResolvers {
     @Args("avatar") avatar: string,
     @GetUser() user: User,
   ): Promise<Date> {
+    if (user.mainCharacterId !== id) await this.character.getByIdAndOwner(id, user.id);
     if (avatar.length > 666 * 1024 /* 😈, ~= 500KB */ ) throw new CustomError("Слишком большой размер файла");
     const buffer = Buffer.from(avatar, "base64");
     const img = imageSizeSync(buffer);
