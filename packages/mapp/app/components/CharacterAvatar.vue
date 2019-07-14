@@ -1,5 +1,5 @@
 <template>
-  <Image :src="avatarUrl" class="m-r-10" :width="size" :height="size" />
+  <Image :src="avatarUrl" class="m-r-10" :width="size" :height="size" @tap="$emit('tap')" />
 </template>
 
 <script lang="ts">
@@ -11,11 +11,12 @@ const dataUrl = TNS_ENV === "production" ? "https://cyberpunk2219.tech/data" : E
 @Component
 export default class CharacterItem extends Vue {
   @Prop({type: Number, default: -1}) id!: number;
+  @Prop({type: Number}) avatarUploadedAt!: number;
   @Prop({type: Number, default: 100}) size!: number;
 
   get avatarUrl() {
-    if (this.id < 0) return `${dataUrl}/avatar/no-avatar.png`;
-    else return `${dataUrl}/avatar/${this.id}.png`;
+    if (this.id < 0 || !this.avatarUploadedAt) return `${dataUrl}/avatar/no-avatar.png`;
+    else return `${dataUrl}/avatar/${this.id}_${Math.floor(this.avatarUploadedAt / 1000)}.png`;
   }
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
   <StackLayout class="p-b-10" orientation="horizontal" @tap="onTap">
-    <CharacterAvatar :id="id" :size="avatarSize" />
+    <CharacterAvatar :id="id" :avatarUploadedAt="avatarUploadedAt" :size="avatarSize" />
     <StackLayout>
       <Label :text="name" dock="left" class="h2" />
     </StackLayout>
@@ -19,6 +19,7 @@ import CharacterAvatar from "@/components/CharacterAvatar.vue";
 export default class CharacterItem extends Vue {
   @Prop({type: String, default: ""}) name!: string;
   @Prop({type: Number, default: -1}) id!: number;
+  @Prop({type: Number}) avatarUploadedAt!: number;
   @Prop({type: Number, default: 100}) avatarSize!: number;
 
   onTap() {
