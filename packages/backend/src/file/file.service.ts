@@ -1,13 +1,15 @@
 import { Injectable } from "@nestjs/common";
-import { createWriteStream } from "fs";
+import { createWriteStream, ReadStream, writeFile as writeFileCb } from "fs";
 import * as path from "path";
 import { Config } from "config";
 import * as mkdirp from "mkdirp";
+import { promisify } from "util";
+const writeFile = promisify(writeFileCb);
 
 @Injectable()
 export class FileService {
   async upload(
-    input: any,
+    input: { createReadStream: () => ReadStream },
     outputPath: string[] | string,
   ): Promise<void> {
     return new Promise(async (resolve, reject) => {
@@ -24,6 +26,16 @@ export class FileService {
         resolve();
       });
     });
+  }
+
+  async uploadFromBuffer(
+    input: Buffer,
+    outputPath: string[] | string,
+  ): Promise<void> {
+    if (typeof outputPath === "string") outputPath = [outputPath];
+    outputPath = path.resolve(Config.getDataPath(), ...outputPath);
+    await this.mkdirp(path.dirname(outputPath));
+    await writeFile(outputPath, input);
   }
 
   async mkdirp(dir: string): Promise<void> {
