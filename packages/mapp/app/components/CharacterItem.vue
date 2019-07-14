@@ -2,7 +2,7 @@
   <StackLayout class="p-b-10" orientation="horizontal" @tap="onTap">
     <CharacterAvatar :id="id" :avatarUploadedAt="avatarUploadedAt" :size="avatarSize" />
     <StackLayout>
-      <Label :text="name" dock="left" class="h2" />
+      <Label :text="name" dock="left" class="h2" :class="{own}" />
     </StackLayout>
   </StackLayout>
 </template>
@@ -20,6 +20,7 @@ export default class CharacterItem extends Vue {
   @Prop({type: String, default: ""}) name!: string;
   @Prop({type: Number, default: -1}) id!: number;
   @Prop({type: Number}) avatarUploadedAt!: number;
+  @Prop({type: Boolean, default: false}) own!: boolean;
   @Prop({type: Number, default: 100}) avatarSize!: number;
 
   onTap() {
@@ -28,5 +29,8 @@ export default class CharacterItem extends Vue {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.own {
+  color: $primary;
+}
 </style>
