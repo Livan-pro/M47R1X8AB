@@ -97,7 +97,7 @@ export default class UploadAvatar extends Vue {
             }
           }`;
           const variables = { id: this.id };
-          const data = store.readQuery({ query, variables }) as { avatarUploadedAt: number };
+          const data = store.readQuery({ query, variables }) as { character: { avatarUploadedAt: number } };
           data.character.avatarUploadedAt = uploadAvatar;
           store.writeQuery({ query, variables, data });
         },
