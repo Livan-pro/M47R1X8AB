@@ -8,7 +8,7 @@ import App from "./pages/App.vue";
 import Login from "./pages/Login.vue";
 
 if (TNS_ENV !== "production") {
-  Vue.use(VueDevtools);
+  Vue.use(VueDevtools, {host: ENV_DEV_HOST});
 }
 
 Vue.use(VueApollo);

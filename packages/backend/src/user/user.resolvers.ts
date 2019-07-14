@@ -9,6 +9,7 @@ import { GqlAuthGuard } from "auth/gql-auth.guard";
 import { GetUser } from "./get-user.decorator";
 import { User } from "matrix-database";
 import { LoginResult } from "graphql.schema";
+import { CustomError } from "CustomError";
 
 @Resolver()
 // @UseGuards(AuthGuard("jwt"))
@@ -31,12 +32,8 @@ export class UserResolvers {
       await this.user.createWithCharacter(uData, cData);
       return true;
     } catch (err) {
-      if (err.errno === 1062) throw new Error("Пользователь с таким email уже зарегистрирован!");
-      else {
-        const code = ntob(Date.now());
-        this.log.error(`ERR${code} ${err.stack}`);
-        throw new Error(`Возникла ошибка при регистрации. Код ошибки: ${code}. Обратитесь к мастерам!`);
-      }
+      if (err.errno === 1062) throw new CustomError("Пользователь с таким email уже зарегистрирован!");
+      throw err;
     }
   }
 
@@ -47,19 +44,14 @@ export class UserResolvers {
     @Args("rememberMe") rememberMe: boolean,
     @Context("res") res: Response,
   ): Promise<LoginResult> {
-    try {
-      const user = await this.user.getByEmail(email);
-      if (!await this.auth.verifyPassword(password, user.password)) throw new Error("INVALID_PWD");
-      const token = await this.auth.createToken(email, rememberMe);
-      res.cookie("token", token.token, { expires: token.expires, httpOnly: true });
-      return {
-        email: user.email,
-        token: token.token,
-      };
-    } catch (err) {
-      if (err.message !== "INVALID_PWD") this.log.warn(`Error while logging in: ${err.stack}`);
-      throw new Error("Неверный логин или пароль");
-    }
+    const user = await this.user.getByEmail(email);
+    if (!await this.auth.verifyPassword(password, user.password)) throw new CustomError("Неверный логин или пароль");
+    const token = await this.auth.createToken(email, rememberMe);
+    res.cookie("token", token.token, { expires: token.expires, httpOnly: true });
+    return {
+      email: user.email,
+      token: token.token,
+    };
   }
 
   @Mutation("logout")
@@ -83,14 +75,8 @@ export class UserResolvers {
     })) userData: EditUser,
     @GetUser() user: User,
   ): Promise<boolean> {
-    try {
-      await this.user.update(user.id, userData);
-      return true;
-    } catch (err) {
-      const code = ntob(Date.now());
-      this.log.error(`ERR${code} ${err.stack}`);
-      throw new Error(`Возникла ошибка. Код ошибки: ${code}. Обратитесь к мастерам!`);
-    }
+    await this.user.update(user.id, userData);
+    return true;
   }
 
   @Mutation()
@@ -99,17 +85,11 @@ export class UserResolvers {
     @Args("data", ValidationPipe) data: ChangePassword,
     @GetUser() user: User,
   ): Promise<boolean> {
-    if (!await this.auth.verifyPassword(data.currentPassword, user.password)) throw new Error("Неверный пароль");
-    try {
-      await this.user.update(user.id, {
-        password: await this.auth.hashPassword(data.password),
-        passwordChangedAt: new Date(),
-      });
-      return true;
-    } catch (err) {
-      const code = ntob(Date.now());
-      this.log.error(`ERR${code} ${err.stack}`);
-      throw new Error(`Возникла ошибка. Код ошибки: ${code}. Обратитесь к мастерам!`);
-    }
+    if (!await this.auth.verifyPassword(data.currentPassword, user.password)) throw new CustomError("Неверный пароль");
+    await this.user.update(user.id, {
+      password: await this.auth.hashPassword(data.password),
+      passwordChangedAt: new Date(),
+    });
+    return true;
   }
 }

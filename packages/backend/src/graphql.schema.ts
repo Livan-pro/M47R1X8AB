@@ -45,6 +45,8 @@ export class Character {
     id: number;
     name: string;
     quenta?: string;
+    own: boolean;
+    avatarUploadedAt?: Date;
 }
 
 export class LoginResult {
@@ -54,6 +56,8 @@ export class LoginResult {
 
 export abstract class IMutation {
     abstract editCharacter(id: number, character: CharacterInput): boolean | Promise<boolean>;
+
+    abstract uploadAvatar(id: number, avatar: string): Date | Promise<Date>;
 
     abstract createUserWithCharacter(user: UserInput, character: CharacterInput): boolean | Promise<boolean>;
 

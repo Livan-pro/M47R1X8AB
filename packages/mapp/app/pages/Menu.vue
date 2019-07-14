@@ -1,7 +1,7 @@
 <template>
   <Page actionBarHidden="true">
     <StackLayout class="p-x-20 p-y-10">
-      <CharacterItem :id="characterId" :name="name" :avatarSize="50" />
+      <CharacterItem :id="characterId" :avatarUploadedAt="avatarUploadedAt" :name="name" :avatarSize="50" />
       <StackLayout class="hr-light m-y-10" />
       <ListView for="item in items" @itemTap="onItemTap">
         <v-template>
@@ -31,6 +31,7 @@ import Login from "./Login.vue";
           mainCharacter {
             id
             name
+            avatarUploadedAt
           }
         }
       }`,
@@ -50,6 +51,10 @@ export default class Menu extends Vue {
 
   get characterId() {
     return (this.me && this.me.mainCharacter && this.me.mainCharacter.id) || -1;
+  }
+
+  get avatarUploadedAt() {
+    return (this.me && this.me.mainCharacter && this.me.mainCharacter.avatarUploadedAt) || null;
   }
 
   get name() {
