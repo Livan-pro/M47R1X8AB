@@ -5,6 +5,11 @@
  */
 
 /* tslint:disable */
+export enum Role {
+    Admin = "Admin",
+    SuperAdmin = "SuperAdmin"
+}
+
 export class ChangePasswordInput {
     currentPassword: string;
     password: string;
@@ -61,13 +66,15 @@ export abstract class IMutation {
 
     abstract createUserWithCharacter(user: UserInput, character: CharacterInput): boolean | Promise<boolean>;
 
-    abstract login(email: string, password: string, rememberMe?: boolean): LoginResult | Promise<LoginResult>;
+    abstract login(email: string, password: string, rememberMe?: boolean, admin?: boolean): LoginResult | Promise<LoginResult>;
 
     abstract logout(): boolean | Promise<boolean>;
 
     abstract editUser(user: EditUserInput): boolean | Promise<boolean>;
 
     abstract changePassword(data: ChangePasswordInput): boolean | Promise<boolean>;
+
+    abstract setUserRole(id: number, role: Role, value?: boolean): boolean | Promise<boolean>;
 }
 
 export class News {
@@ -86,9 +93,12 @@ export abstract class IQuery {
     abstract news(): News[] | Promise<News[]>;
 
     abstract me(): User | Promise<User>;
+
+    abstract users(): User[] | Promise<User[]>;
 }
 
 export class User {
+    id: number;
     email?: string;
     firstName?: string;
     lastName?: string;
@@ -97,6 +107,8 @@ export class User {
     medicalInfo?: string;
     characters?: Character[];
     mainCharacter?: Character;
+    roles?: Role[];
+    createdAt?: Date;
 }
 
 export type Date = any;
