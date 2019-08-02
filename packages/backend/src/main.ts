@@ -10,7 +10,7 @@ import { AppModule } from "./app.module";
 import responseTimeLogger from "./responseTimeLogger";
 import { Logger } from "@nestjs/common";
 import * as express from "express";
-import { join } from "path";
+import { join, basename } from "path";
 import { AllExceptionsFilter } from "all-exceptions.filter";
 
 const log = new Logger("main");

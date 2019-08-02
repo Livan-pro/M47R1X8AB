@@ -5,14 +5,15 @@ import { CreateCharacter } from "shared/node";
 import { ntob } from "number-to-base64";
 import { GqlAuthGuard } from "auth/gql-auth.guard";
 import { GetUser } from "user/get-user.decorator";
-import { User } from "matrix-database";
+import { User, Role } from "matrix-database";
 import { Character } from "graphql.schema";
 import { FileService } from "file/file.service";
 import * as imageSizeSync from "image-size";
 import { CustomError } from "CustomError";
+import { Roles } from "auth/roles.decorator";
 
 @Resolver()
-@UseGuards(GqlAuthGuard)
+@Roles(Role.LoggedIn)
 export class CharacterResolvers {
   private readonly log = new Logger(CharacterResolvers.name);
   constructor(
@@ -37,7 +38,7 @@ export class CharacterResolvers {
     @Args("character") data: CreateCharacter,
     @GetUser() user: User,
   ): Promise<boolean> {
-    if (user.mainCharacterId !== id) await this.character.getByIdAndOwner(id, user.id);
+    if (user.mainCharacterId !== id && !user.roles.has(Role.Admin)) await this.character.getByIdAndOwner(id, user.id);
     await this.character.update(id, data);
     return true;
   }

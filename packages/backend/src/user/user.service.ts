@@ -1,7 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository, Transaction, TransactionManager, EntityManager } from "typeorm";
-import { User } from "matrix-database";
+import { Repository, Transaction, TransactionManager, EntityManager, TransactionRepository } from "typeorm";
+import { User, Role } from "matrix-database";
 import { Character } from "matrix-database";
 import { FileUpload } from "graphql-upload";
 import { FileService } from "file/file.service";
@@ -15,8 +15,16 @@ export class UserService {
     private readonly file: FileService,
   ) {}
 
+  async getById(id: number): Promise<User> {
+    return await this.repo.findOneOrFail({id});
+  }
+
   async getByEmail(email: string): Promise<User> {
     return await this.repo.findOneOrFail({email});
+  }
+
+  async getAllWithMainCharacter(): Promise<User[]> {
+    return await this.repo.find({relations: ["mainCharacter"]});
   }
 
   async getByEmailWithCharacter(email: string): Promise<User> {
