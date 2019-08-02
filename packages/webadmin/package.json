@@ -10,7 +10,8 @@
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
-    "codegen": "apollo codegen:generate --target typescript --queries \"gql/*.ts\" --outputFlat gql/__generated__/"
+    "codegen": "apollo codegen:generate --target typescript --queries \"gql/*.ts\" --outputFlat gql/__generated__/",
+    "deploy": "cp -r ./dist /var/www/webadmin-new && rm -rf /var/www/webadmin-old && mv /var/www/webadmin /var/www/webadmin-old || true && mv /var/www/webadmin-new /var/www/webadmin"
   },
   "dependencies": {
     "@nuxtjs/apollo": "^4.0.0-rc9",
