@@ -47,7 +47,7 @@ export class UserResolvers {
     let user: User;
     try {
       user = await this.user.getByEmail(email);
-    } catch(err) {
+    } catch (err) {
       throw new CustomError("Неверный логин или пароль");
     }
     if (admin && !user.roles.has(Role.Admin)) throw new CustomError("Неверный логин или пароль");
@@ -70,13 +70,13 @@ export class UserResolvers {
   @Roles(Role.LoggedIn)
   async me(@GetUser() user: User): Promise<GqlUser> {
     this.log.log(`Me: ${user.email}`);
-    return mapUser(user);
+    return mapUser(user, user);
   }
 
   @Query("users")
   @Roles(Role.Admin)
-  async users(): Promise<GqlUser[]> {
-    return (await this.user.getAllWithMainCharacter()).map(mapUser);
+  async users(@GetUser() user: User): Promise<GqlUser[]> {
+    return (await this.user.getAllWithMainCharacter()).map(u => mapUser(u, user));
   }
 
   @Mutation()

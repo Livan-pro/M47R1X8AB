@@ -1,6 +1,6 @@
 import { JwtService } from "@nestjs/jwt";
 import { Injectable } from "@nestjs/common";
-import { JwtPayload } from "./jwt-payload.interface";
+import { IJwtPayload } from "./jwt-payload.interface";
 import { UserService } from "user/user.service";
 import { compare, hash } from "bcryptjs";
 import { User } from "matrix-database";
@@ -21,7 +21,7 @@ export class AuthService {
     };
   }
 
-  async validateUser(payload: JwtPayload): Promise<User> {
+  async validateUser(payload: IJwtPayload): Promise<User> {
     try {
       const user = await this.user.getByEmailWithCharacter(payload.email);
       if (user.passwordChangedAt && (user.passwordChangedAt.getTime() / 1000 > payload.iat)) return null;
