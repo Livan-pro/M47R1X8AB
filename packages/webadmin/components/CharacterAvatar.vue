@@ -4,8 +4,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
-
-const dataUrl = process.env.NODE_ENV === "production" ? "https://cyberpunk2219.tech/data" : process.env.DATA_URL;
+import { dataUrl } from "@/utils";
 
 @Component
 export default class CharacterAvatar extends Vue {

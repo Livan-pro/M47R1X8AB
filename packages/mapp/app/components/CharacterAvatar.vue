@@ -6,7 +6,7 @@
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
 
-const dataUrl = TNS_ENV === "production" ? "https://cyberpunk2219.tech/data" : ENV_DATA_URL;
+const dataUrl = ENV_DATA_URL || "https://cyberpunk2219.tech/data";
 
 @Component
 export default class CharacterItem extends Vue {

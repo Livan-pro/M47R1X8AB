@@ -40,8 +40,7 @@ import IconBtn from "~/components/IconBtn.vue";
 import UploadQuentaButton from "~/components/UploadQuentaButton.vue";
 import MakeAdminButton from "~/components/MakeAdminButton.vue";
 import { Role } from "../gql/__generated__/globalTypes";
-
-const dataUrl = process.env.NODE_ENV === "production" ? "https://cyberpunk2219.tech/data" : process.env.DATA_URL;
+import { dataUrl } from "@/utils";
 
 @Component({
   components: { CharacterAvatar, IconBtn, UploadQuentaButton, MakeAdminButton },
