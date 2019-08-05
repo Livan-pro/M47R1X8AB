@@ -35,6 +35,12 @@ export class LoginInput {
     rememberMe?: boolean;
 }
 
+export class NewsInput {
+    title?: string;
+    text?: string;
+    datetime?: Date;
+}
+
 export class UserInput {
     email?: string;
     password?: string;
@@ -64,6 +70,12 @@ export abstract class IMutation {
 
     abstract uploadAvatar(id: number, avatar: string): Date | Promise<Date>;
 
+    abstract createNews(data: NewsInput): News | Promise<News>;
+
+    abstract updateNews(id: number, data: NewsInput): boolean | Promise<boolean>;
+
+    abstract deleteNews(ids: number[]): boolean | Promise<boolean>;
+
     abstract createUserWithCharacter(user: UserInput, character: CharacterInput): boolean | Promise<boolean>;
 
     abstract login(email: string, password: string, rememberMe?: boolean, admin?: boolean): LoginResult | Promise<LoginResult>;
@@ -78,6 +90,7 @@ export abstract class IMutation {
 }
 
 export class News {
+    id: number;
     title: string;
     text: string;
     datetime: Date;

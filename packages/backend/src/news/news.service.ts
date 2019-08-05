@@ -14,4 +14,18 @@ export class NewsService {
   async getAll(): Promise<News[]> {
     return await this.repo.find();
   }
+
+  async create(data: Partial<News>) {
+    const news = this.repo.create(data);
+    return await this.repo.save(news);
+  }
+
+  async update(id: number, data: Partial<News>) {
+    const news = this.repo.create(data);
+    await this.repo.update({id}, news);
+  }
+
+  async delete(ids: number[] | number) {
+    await this.repo.delete(ids);
+  }
 }

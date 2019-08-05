@@ -11,6 +11,12 @@ export enum Role {
   SuperAdmin = "SuperAdmin",
 }
 
+export interface NewsInput {
+  title?: string | null;
+  text?: string | null;
+  datetime?: any | null;
+}
+
 //==============================================================
 // END Enums and Input Objects
 //==============================================================
