@@ -1,6 +1,7 @@
 {
   "name": "deploy",
   "version": "0.0.0",
+  "description": "Matrix's deploy tool",
   "author": "Livan",
   "bin": {
     "deploy": "./bin/run"

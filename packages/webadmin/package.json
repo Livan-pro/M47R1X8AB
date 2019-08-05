@@ -1,7 +1,7 @@
 {
   "name": "webadmin",
   "version": "1.0.0",
-  "description": "My hunky-dory Nuxt.js project",
+  "description": "Matrix's web admin application",
   "author": "Livan",
   "private": true,
   "scripts": {

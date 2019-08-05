@@ -1,7 +1,7 @@
 {
   "name": "website",
   "version": "1.0.0",
-  "description": "Matrix2219 website frontend",
+  "description": "Matrix's website",
   "author": "Livan",
   "private": true,
   "scripts": {

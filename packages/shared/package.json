@@ -1,7 +1,7 @@
 {
   "name": "shared",
   "version": "1.0.0",
-  "description": "",
+  "description": "Matrix's shared stuff",
   "scripts": {
     "lint": "tslint -p tsconfig.json",
     "test": "echo No tests! && exit 0",

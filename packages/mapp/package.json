@@ -1,7 +1,7 @@
 {
   "name": "matrix-mobile-app",
   "version": "1.0.0",
-  "description": "A native application built with NativeScript-Vue",
+  "description": "Matrix's native mobile application",
   "author": "Livan <livanerror@gmail.com>",
   "license": "MIT",
   "nativescript": {
