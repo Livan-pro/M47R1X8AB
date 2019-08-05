@@ -29,6 +29,6 @@ export class CreateUser {
   @MaxLength(47, {message: "Должна быть короче 48 символов"}) // 47 = "https://vk.com/" + 32
   vkId: string | undefined = undefined;
 
-  @MaxLength(20, {message: "Максимальная длина - 1000 символов"})
+  @MaxLength(1000, {message: "Максимальная длина - 1000 символов"})
   medicalInfo: string | undefined = undefined;
 }
