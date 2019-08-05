@@ -26,7 +26,12 @@ mysql -uroot -p
 CREATE DATABASE matrix;
 CREATE USER 'matrix'@'localhost' IDENTIFIED BY 'my-strong-password-here';
 GRANT ALL ON matrix.* TO 'matrix'@'localhost';
+# Optional: create other users
 exit
+
+# Optional: allow external connections
+nano /etc/mysql/mysql.conf.d/mysqld.cnf # set bind-address = 0.0.0.0
+service mysql restart
 
 # Install Node.js
 curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
@@ -51,7 +56,6 @@ echo "vm.vfs_cache_pressure=50" >> /etc/sysctl.conf
 # Install nginx
 sudo apt install -y nginx
 sudo ufw allow 'Nginx Full'
-cp nginx-conf/app.conf /etc/nginx/conf.d/
 
 # Install certbot
 sudo add-apt-repository ppa:certbot/certbot
@@ -60,11 +64,28 @@ sudo apt install -y python-certbot-nginx
 # Install pm2
 npm install pm2 -g
 pm2 startup
+
+# Git config
+git config --global user.email "you@example.com"
+git config --global user.name "Your Name"
+
+# Allow access to /root for nginx
+chmod +x /root
 ```
 ### Deploy
 ```bash
 git clone git@github.com:xLivan/M47R1X8AB.git
 cd M47R1X8AB
+
+# Allow /deploy execution
+chmod +x ./deploy
+
+# Nginx config
+cp nginx-conf/.env-example nginx-conf/.env
+nano nginx-conf/.env # set BASE_DOMAIN
+chmod +x ./nginx-conf/generate-config.sh
+./nginx-conf/generate-config.sh
+mv nginx-conf/app.conf /etc/nginx/conf.d/
 
 # Request certificate
 chmod +x ./nginx-conf/init-letsencrypt.sh
@@ -75,7 +96,7 @@ npm run bootstrap-ci
 npm run build
 
 cp packages/database/.env-example packages/database/.env
-nano packages/database/.env # set DB_PASSWORD 
+nano packages/database/.env # set DB_PASSWORD
 
 cp packages/backend/.env-example packages/backend/.env
 nano packages/backend/.env # set DB_PASSWORD & JWT_SECRET

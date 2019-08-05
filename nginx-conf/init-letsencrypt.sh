@@ -1,4 +1,12 @@
 #!/bin/bash
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+if [ -f $DIR/.env ]
+then
+  export $(cat $DIR/.env | xargs)
+fi
+
+domains=("$BASE_DOMAIN" "www.$BASE_DOMAIN" "admin.$BASE_DOMAIN")
+echo "Domains: ${domains[@]}"
 
 echo -n "Enter email: "
 read email
@@ -13,7 +21,6 @@ else
   staging=0
 fi
 
-domains=(cyberpunk2219.tech www.cyberpunk2219.tech)
 rsa_key_size=4096
 letsencrypt_path="/etc/letsencrypt"
 

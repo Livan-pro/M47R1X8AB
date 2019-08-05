@@ -1,0 +1,67 @@
+@import './variables';
+// Global SCSS styling
+// @see https://docs.nativescript.org/ui/styling
+
+* {
+  font-family: 'Ignis et Glacies Sharp', 'Ignis_et_Glacies_Sharp';
+}
+
+ActionBar {
+  background-color: #002637;
+  color: white;
+}
+
+Page, .background {
+  // background-color: #002637;
+  background: url('~/assets/images/BACK11.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  background-attachment: fixed;
+  color: $primary;
+}
+
+TabView.nav {
+  tab-background-color: #002637;
+  tab-text-color: #c4ffdf;
+  selected-tab-text-color: #ffffff;
+}
+
+TextField {
+  background-color: change-color($primary-darker, $alpha: 0.3);
+  border-color: $primary-darker;
+  border-width: 4px;
+  border-radius: 8px;
+  color: $primary;
+  placeholder-color: $primary;
+  padding: 32px;
+}
+
+Button {
+  background-color: $primary-darker;
+  border-radius: 8px;
+}
+
+ActivityIndicator {
+  color: $primary;
+}
+
+ListView {
+  separator-color: white;
+}
+
+.hr {
+  border-top: 1px dashed $primary;
+}
+
+.far {
+  font-family: "Font Awesome 5 Free", "fa-regular-400";
+}
+
+.fab {
+  font-family: "Font Awesome 5 Brands", "fa-brands-400";
+}
+
+.fas {
+  font-family: "Font Awesome 5 Free", "fa-solid-900";
+}

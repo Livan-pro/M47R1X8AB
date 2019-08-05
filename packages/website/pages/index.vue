@@ -4,7 +4,7 @@
     <div style="width: 100%">
       <h2 class="yellow" id="standby">Please stand by<RollingDots/></h2>
       <hr>
-      <h2 id="countdown"><Countdown :timestamp="1569517200000"/></h2>
+      <h2 id="countdown"><Countdown :timestamp="1570125600000"/></h2>
       <hr>
     </div>
     <img id="main-logo" src="@/assets/img/Cyberpunk_2219_round.png" alt="Cyberpunk 2219">

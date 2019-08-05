@@ -1,0 +1,12 @@
+// NativeScript core theme
+// @see https://docs.nativescript.org/ui/theme
+@import '~nativescript-theme-core/scss/dark';
+
+$primary: #01CEFD;
+$primary-darker: darken($primary, 30%);
+$primary-dark: #002637;
+
+$secondary: #CF32FF;
+$yellow: #DBE285;
+
+@import '~nativescript-theme-core/scss/index';

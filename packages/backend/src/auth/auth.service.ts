@@ -1,6 +1,6 @@
 import { JwtService } from "@nestjs/jwt";
 import { Injectable } from "@nestjs/common";
-import { JwtPayload } from "./jwt-payload.interface";
+import { IJwtPayload } from "./jwt-payload.interface";
 import { UserService } from "user/user.service";
 import { compare, hash } from "bcryptjs";
 import { User } from "matrix-database";
@@ -13,7 +13,7 @@ export class AuthService {
   ) {}
 
   createToken(email: string, rememberMe: boolean): {token: string, expires: Date} {
-    const expiresIn = rememberMe ? 604800 : 3600;
+    const expiresIn = rememberMe ? 2592000 : 3600; // 30 days / 1 hour
     const token = this.jwt.sign({email}, {expiresIn});
     return {
       token,
@@ -21,9 +21,9 @@ export class AuthService {
     };
   }
 
-  async validateUser(payload: JwtPayload): Promise<User> {
+  async validateUser(payload: IJwtPayload): Promise<User> {
     try {
-      const user = await this.user.getByEmail(payload.email);
+      const user = await this.user.getByEmailWithCharacter(payload.email);
       if (user.passwordChangedAt && (user.passwordChangedAt.getTime() / 1000 > payload.iat)) return null;
       return user;
     } catch (err) {

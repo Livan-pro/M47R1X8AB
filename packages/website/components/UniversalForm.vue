@@ -1,42 +1,52 @@
 <template>
   <component :is="tag">
-    <b-form-group
-      v-for="(input, i) in normalizedInputs"
-      :key="i"
-      :label="input.label"
-      :label-for="'input' + input.name"
-      :state="state[input.name]"
-      :invalid-feedback="errors[input.name]"
-    >
-      <input-date v-if="input.type === 'date'"
+    <template v-for="(input, i) in normalizedInputs">
+      <b-checkbox
+        v-if="input.type === 'checkbox'"
+        :key="i"
         :id="'input' + input.name"
         v-model="form[input.name]"
         :state="state[input.name]"
         @blur="update(input.name)"
-      />
-      <b-form-input v-else-if="input.type === 'number'"
-        :id="'input' + input.name"
-        :type="input.type"
-        v-model.number="form[input.name]"
+      >{{ input.label }}</b-checkbox>
+      <b-form-group
+        v-else
+        :key="i"
+        :label="input.label"
+        :label-for="'input' + input.name"
         :state="state[input.name]"
-        @blur="update(input.name)"
-      />
-      <b-form-file v-else-if="input.type === 'file'"
-        :id="'input' + input.name"
-        :state="state[input.name]"
-        @change="onFileChanged(input.name, $event)"
-        @blur="update(input.name)"
-        placeholder="Выберите файл..."
-        drop-placeholder="Перетащите файл сюда..."
-      />
-      <b-form-input v-else
-        :id="'input' + input.name"
-        :type="input.type"
-        v-model="form[input.name]"
-        :state="state[input.name]"
-        @blur="update(input.name)"
-      />
-    </b-form-group>
+        :invalid-feedback="errors[input.name]"
+      >
+        <input-date v-if="input.type === 'date'"
+          :id="'input' + input.name"
+          v-model="form[input.name]"
+          :state="state[input.name]"
+          @blur="update(input.name)"
+        />
+        <b-form-input v-else-if="input.type === 'number'"
+          :id="'input' + input.name"
+          :type="input.type"
+          v-model.number="form[input.name]"
+          :state="state[input.name]"
+          @blur="update(input.name)"
+        />
+        <b-form-file v-else-if="input.type === 'file'"
+          :id="'input' + input.name"
+          :state="state[input.name]"
+          @change="onFileChanged(input.name, $event)"
+          @blur="update(input.name)"
+          placeholder="Выберите файл..."
+          drop-placeholder="Перетащите файл сюда..."
+        />
+        <b-form-input v-else
+          :id="'input' + input.name"
+          :type="input.type"
+          v-model="form[input.name]"
+          :state="state[input.name]"
+          @blur="update(input.name)"
+        />
+      </b-form-group>
+    </template>
   </component>
 </template>
 
@@ -59,26 +69,45 @@ export default class UniversalForm extends Vue {
   @Prop({type: String, default: "div"}) tag!: string;
   @Prop() form!: any;
   @Prop({default: []}) inputs!: any;
+  @Prop({type: Boolean, default: true}) validation!: boolean;
+  @Prop({type: Boolean, default: true}) hideUndefined!: boolean;
+  @Prop({type: Boolean, default: true}) showSuccess!: boolean;
   dirty: {[key: string]: boolean} = Object.keys(this.form).map(k => [k, false]).reduce(objectify, {});
   errors: {[key: string]: string} = Object.keys(this.form).map(k => [k, ""]).reduce(objectify, {});
   state: {[key: string]: boolean | null} = Object.keys(this.form).map(k => [k, null]).reduce(objectify, {});
 
   get normalizedInputs(): IInputDefinition[] {
-    return Object.keys(this.form).map(key => {
-      let obj = {
-        name: key,
-        label: key,
-        type: "text",
-      };
-      if (this.inputs[key]) {
+    if (this.hideUndefined) {
+      return Object.keys(this.inputs).map(key => {
+        let obj = {
+          name: key,
+          label: key,
+          type: "text",
+        };
         if (typeof this.inputs[key] === "string") {
           obj.label = this.inputs[key];
         } else {
           obj = {...obj, ...this.inputs[key]};
         }
-      }
-      return obj;
-    });
+        return obj;
+      });
+    } else {
+      return Object.keys(this.form).map(key => {
+        let obj = {
+          name: key,
+          label: key,
+          type: "text",
+        };
+        if (this.inputs[key]) {
+          if (typeof this.inputs[key] === "string") {
+            obj.label = this.inputs[key];
+          } else {
+            obj = {...obj, ...this.inputs[key]};
+          }
+        }
+        return obj;
+      });
+    }
   }
 
   onFileChanged(name: string, event: any) {
@@ -100,12 +129,13 @@ export default class UniversalForm extends Vue {
   }
 
   async validateForm(): Promise<boolean> {
+    if (!this.validation) return true;
     const errors = await validate(this.form);
     // Clear previous errors
     for (const key in this.errors) {
       if (!this.errors.hasOwnProperty(key)) continue;
       this.errors[key] = "";
-      this.state[key] = this.dirty[key] || null;
+      this.state[key] = this.showSuccess ? this.dirty[key] || null : null;
     }
     // Set errors
     for (const err of errors) {

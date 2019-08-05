@@ -2,3 +2,22 @@ input CharacterInput {
   name: String
   quenta: Upload
 }
+
+type Character {
+  id: Int!
+  name: String!
+  quenta: String
+  own: Boolean!
+  avatarUploadedAt: Date
+}
+
+type Query {
+  characters: [Character!]!
+  character(id: Int!): Character
+}
+
+type Mutation {
+  editCharacter(id: Int!, character: CharacterInput!): Boolean
+  """avatar - base64-encoded image (200x200, png)"""
+  uploadAvatar(id: Int!, avatar: String!): Date!
+}

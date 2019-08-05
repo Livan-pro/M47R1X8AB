@@ -29,4 +29,7 @@ export class Character {
 
   @Column({nullable: true})
   quenta: string;
+
+  @Column({nullable: true})
+  avatarUploadedAt: Date;
 }

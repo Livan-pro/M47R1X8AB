@@ -1,3 +1,8 @@
+enum Role {
+  Admin
+  SuperAdmin
+}
+
 input UserInput {
   email: String
   password: String
@@ -9,6 +14,55 @@ input UserInput {
   medicalInfo: String
 }
 
+input EditUserInput {
+  firstName: String
+  lastName: String
+  phone: String
+  vkId: String
+  medicalInfo: String
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+  rememberMe: Boolean
+}
+
+input ChangePasswordInput {
+  currentPassword: String!
+  password: String!
+  passwordConfirmation: String!
+}
+
+type User {
+  id: Int!
+  email: String
+  firstName: String
+  lastName: String
+  phone: String
+  vkId: String
+  medicalInfo: String
+  characters: [Character]
+  mainCharacter: Character
+  roles: [Role!]
+  createdAt: Date
+}
+
+type LoginResult {
+  email: String!
+  token: String!
+}
+
+type Query {
+  me: User
+  users: [User!]!
+}
+
 type Mutation {
   createUserWithCharacter(user: UserInput!, character: CharacterInput!): Boolean
+  login(email: String!, password: String!, rememberMe: Boolean, admin: Boolean): LoginResult!
+  logout: Boolean
+  editUser(user: EditUserInput!): Boolean
+  changePassword(data: ChangePasswordInput!): Boolean
+  setUserRole(id: Int!, role: Role!, value: Boolean): Boolean
 }

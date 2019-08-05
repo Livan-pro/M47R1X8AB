@@ -1,0 +1,45 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "lib": [
+            "dom",
+            "es2015",
+            "es2016.array.include",
+            "es2017.string",
+            "esnext",
+            "es6"
+        ],
+        "noEmitHelpers": true,
+        "importHelpers": true,
+        "moduleResolution": "node",
+        "baseUrl": ".",
+        "paths": {
+            "@/*": [
+                "app/*"
+            ],
+            "~/*": [
+                "app/*"
+            ]
+        },
+        "typeRoots": [
+            "types"
+        ],
+        "types": [
+            "node"
+        ],
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "skipLibCheck": true
+    },
+    "include": [
+        "app",
+        "types"
+    ],
+    "exclude": [
+        "node_modules",
+        "platforms"
+    ]
+}

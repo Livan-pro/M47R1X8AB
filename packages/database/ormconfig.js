@@ -24,6 +24,7 @@ module.exports = {
   synchronize: toBoolean(process.env.DB_SYNC),
   entities: [`${baseUrl}/entities/*.js`],
   logging: toBoolean(process.env.DB_LOG),
+  charset: "utf8mb4_unicode_ci",
   migrations: [`${baseUrl}/migrations/*.js`],
   cli: {
     migrationsDir: "src/migrations"

@@ -10,6 +10,10 @@ import { CharacterModule } from "character/character.module";
 import { UserModule } from "./user/user.module";
 import { DateScalar } from "./date.scalar";
 import { AppResolvers } from "./app.resolvers";
+import { NewsModule } from "./news/news.module";
+import { APP_GUARD } from "@nestjs/core";
+import { RolesGuard } from "auth/roles.guard";
+import { GqlAuthGuard } from "auth/gql-auth.guard";
 
 @Module({
   imports: [
@@ -30,9 +34,17 @@ import { AppResolvers } from "./app.resolvers";
     TypeOrmModule.forRoot(),
     AuthModule,
     CharacterModule,
+    NewsModule,
     UserModule,
   ],
-  providers: [DateScalar, AppResolvers],
+  providers: [
+    DateScalar,
+    AppResolvers,
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
   controllers: [AppController],
 })
 export class AppModule {}

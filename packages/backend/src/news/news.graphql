@@ -1,0 +1,22 @@
+type News {
+  id: Int!
+  title: String!
+  text: String!
+  datetime: Date!
+}
+
+input NewsInput {
+  title: String
+  text: String
+  datetime: Date
+}
+
+type Query {
+  news: [News!]!
+}
+
+type Mutation {
+  createNews(data: NewsInput!): News!
+  updateNews(id: Int!, data: NewsInput!): Boolean
+  deleteNews(ids: [Int!]!): Boolean
+}

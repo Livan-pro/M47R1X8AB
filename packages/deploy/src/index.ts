@@ -3,6 +3,7 @@ import * as Listr from "listr";
 import * as inquirer from "inquirer";
 import * as execa from "execa";
 import * as execao from "execa-output";
+import * as micromatch from "micromatch";
 import { access as accessCb, readFile as readFileCb } from "fs";
 import { join, parse, resolve } from "path";
 import { promisify } from "util";
@@ -45,6 +46,11 @@ const findSelf = (packages: IPackage[]) => {
   return packages.find(p => p.location === path);
 };
 
+const requireUncached = (module: string) => {
+  delete require.cache[require.resolve(module)];
+  return require(module);
+};
+
 const objectify: (obj: any, [k, v]: any[]) => any = (obj: any, [k, v]: any[]) => (obj[k] = v, obj);
 
 class Deploy extends Command {
@@ -55,6 +61,9 @@ class Deploy extends Command {
     version: Flags.version({char: "v"}),
     help: Flags.help({char: "h"}),
     directory: Flags.string({char: "d"}),
+    yes: Flags.boolean({char: "y"}),
+    actions: Flags.string({char: "a"}),
+    skipPull: Flags.boolean({char: "p"}),
   };
 
   cwd = __dirname;
@@ -66,7 +75,7 @@ class Deploy extends Command {
     );
   }
 
-  async prepare(directory: string | undefined) {
+  async prepare(directory: string | undefined, skipPull: boolean, skipDetect: boolean) {
     return await new Listr([
       {
         title: "Looking for project root",
@@ -92,6 +101,7 @@ class Deploy extends Command {
       },
       {
         title: "Pulling",
+        enabled: () => !skipPull,
         task: async (ctx, task) => {
           ctx.updatedFiles = [];
           const git = SimpleGit(this.cwd);
@@ -131,6 +141,7 @@ class Deploy extends Command {
       },
       {
         title: "Detecting changes",
+        enabled: () => !(skipPull || skipDetect),
         task: async (ctx, task) => {
           const updatedPackages = ctx.updatedFiles.reduce((acc, v) => {
             const path = resolve(this.cwd, v);
@@ -191,32 +202,40 @@ class Deploy extends Command {
   async run() {
     const {flags} = this.parse(Deploy);
     try {
-      const ctx = await this.prepare(flags.directory);
+      const ctx = await this.prepare(flags.directory, flags.skipPull, !!flags.actions);
 
-      if (!ctx.updatedFiles.length) this.log("No files updated. Select what you want to do.");
-      else this.log("Updated files:\n" + ctx.updatedFiles.join("\n") + "\n");
+      const defaultActions = flags.actions ? micromatch(ctx.actions, flags.actions.split(",")) : ctx.defaults;
 
-      const self = findSelf(ctx.packages);
-      if (self && ctx.updatedPackages.includes(self.name)) {
-        const {restart} = await inquirer.prompt({
-          type: "confirm",
-          name: "restart",
-          message: "This deploy tool updated. Do you want to rebuild and restart it now?",
-          default: true,
-        });
-        if (restart) {
-          await execa("npm", ["run", "--silent", "build"], {cwd: self.location});
-          require("../lib").run().catch(require("@oclif/errors/handle"));
-          return;
+      if (!flags.skipPull) {
+        if (!ctx.updatedFiles.length) this.log("No files updated. Select what you want to do.");
+        else this.log("Updated files:\n" + ctx.updatedFiles.join("\n") + "\n");
+
+        const self = findSelf(ctx.packages);
+        if (self && ctx.updatedPackages.includes(self.name)) {
+          const {restart} = flags.yes ? {restart: true} : await inquirer.prompt({
+            type: "confirm",
+            name: "restart",
+            message: "This deploy tool updated. Do you want to rebuild and restart it now?",
+            default: true,
+          });
+          if (restart) {
+            if (flags.yes) this.log("Deploy tool updated. Restarting...");
+            await execa("npm", ["run", "--silent", "build"], {cwd: self.location});
+            const args = ["--skipPull", "--actions=" + defaultActions.join(",")];
+            if (flags.yes) args.push("--yes");
+            if (flags.directory) args.push("--directory=" + flags.directory);
+            await requireUncached("../lib").run(args).catch(requireUncached("@oclif/errors/handle"));
+            return;
+          }
         }
       }
 
-      const {actions}: {actions: string[]} = await inquirer.prompt([{
+      const {actions}: {actions: string[]} = flags.yes ? {actions: defaultActions} : await inquirer.prompt([{
         type: "checkbox",
         name: "actions",
         message: "Actions:",
         choices: ctx.actions,
-        default: ctx.defaults,
+        default: defaultActions,
       }]);
 
       if (!actions.length) {

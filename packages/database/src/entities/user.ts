@@ -1,5 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany} from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany, OneToOne, JoinColumn} from "typeorm";
 import { Character } from "./character";
+import { RolesTransformer } from "../utils/role-transformer";
+import { Roles } from "../utils/roles";
 
 @Entity("users")
 export class User {
@@ -40,6 +42,16 @@ export class User {
 
   @Column({length: 1000, nullable: true})
   medicalInfo: string;
+
+  @Column({type: "int", default: 0, transformer: new RolesTransformer()})
+  roles: Roles;
+
+  @OneToOne(type => Character, character => character.user)
+  @JoinColumn({name: "mainCharacterId"})
+  mainCharacter: Character;
+
+  @Column({nullable: true, unique: true})
+  mainCharacterId: number;
 
   @OneToMany(type => Character, character => character.user)
   characters: Character[];
