@@ -59,7 +59,7 @@ export default class DefaultLayout extends Vue {
       to: "/users",
     },
     {
-      icon: "mdi-text-subject",
+      icon: "mdi-newspaper",
       title: "Новости",
       to: "/news",
     },
