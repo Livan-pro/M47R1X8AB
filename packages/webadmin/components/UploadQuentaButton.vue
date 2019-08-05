@@ -1,5 +1,5 @@
 <template>
-  <icon-btn tooltip="Загрузить квенту" icon="cloud_upload" :loading="loading" @click="uploadQuenta(id)" />
+  <icon-btn tooltip="Загрузить квенту" icon="mdi-cloud-upload" :loading="loading" @click="uploadQuenta(id)" />
 </template>
 
 <script lang="ts">

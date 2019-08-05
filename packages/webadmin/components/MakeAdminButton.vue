@@ -1,7 +1,7 @@
 <template>
   <icon-btn
     :tooltip="value ? 'Сделать НЕ администратором' : 'Сделать администратором'"
-    icon="supervisor_account"
+    icon="mdi-account-supervisor"
     :color="value ? 'green' : 'red'"
     :loading="loading"
     @click="makeAdmin"

@@ -5,7 +5,7 @@
       <v-card>
         <v-card-title>
           Новости
-          <icon-btn class="ml-2" icon="add" color="green" tooltip="Создать" @click="createNews" />
+          <icon-btn class="ml-2" icon="mdi-plus" color="green" tooltip="Создать" @click="createNews" />
           <v-spacer></v-spacer>
           <v-text-field v-model="search" append-icon="search" label="Поиск" single-line hide-details></v-text-field>
         </v-card-title>
@@ -21,8 +21,8 @@
                 <v-list-item-subtitle>{{ item.date }}</v-list-item-subtitle>
                 <v-list-item-subtitle class="text--primary ws-pre-line">{{ item.text }}</v-list-item-subtitle>
               </v-list-item-content>
-              <icon-btn icon="edit" color="orange" tooltip="Редактировать" @click="updateNews(item)" />
-              <icon-btn icon="delete" color="red" tooltip="Удалить" @click="deleteNews(item)" />
+              <icon-btn icon="mdi-pencil" color="orange" tooltip="Редактировать" @click="updateNews(item)" />
+              <icon-btn icon="mdi-delete" color="red" tooltip="Удалить" @click="deleteNews(item)" />
             </v-list-item>
           </template>
         </v-list>
