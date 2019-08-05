@@ -124,5 +124,4 @@ export class User {
     createdAt?: Date;
 }
 
-export type Date = any;
 export type Upload = any;
