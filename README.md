@@ -68,11 +68,17 @@ pm2 startup
 # Git config
 git config --global user.email "you@example.com"
 git config --global user.name "Your Name"
+
+# Allow access to /root for nginx
+chmod +x /root
 ```
 ### Deploy
 ```bash
 git clone git@github.com:xLivan/M47R1X8AB.git
 cd M47R1X8AB
+
+# Allow /deploy execution
+chmod +x ./deploy
 
 # Nginx config
 cp nginx-conf/.env-example nginx-conf/.env
