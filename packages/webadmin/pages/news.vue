@@ -60,8 +60,8 @@ export default class NewsPage extends Vue {
   newsData: News | null = null;
   dialog = false;
 
-  get lowerCaseSearch() {
-    return this.search.toLowerCase();
+  get normalizedSearch() {
+    return this.search.toLowerCase().trim();
   }
 
   get items() {
@@ -71,7 +71,7 @@ export default class NewsPage extends Vue {
       return { ...item, datetime, date: datetime.toLocaleDateString() };
     });
     if (!this.search) return news;
-    return news.filter(item => ["title", "text", "date"].some(key => item[key].toLowerCase().includes(this.lowerCaseSearch)));
+    return news.filter(item => ["title", "text", "date"].some(key => item[key].toLowerCase().includes(this.normalizedSearch)));
   }
 
   get isSuperAdmin() {
