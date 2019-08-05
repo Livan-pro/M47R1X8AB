@@ -12,7 +12,7 @@
       <template v-slot:item.vkId="{ value }">
         <a :href="'https://vk.com/' + value">{{ value }}</a>
       </template>
-      <template v-slot:item.mainCharacter="{ value }">
+      <template v-slot:item.mainCharacter.name="{ item: { mainCharacter: value } }">
         <v-layout align-center>
           <CharacterAvatar :id="value.id" class="mr-1" :size="50" :avatar-uploaded-at="value.avatarUploadedAt" />
           {{ value.name }}
@@ -33,7 +33,7 @@
 import { Vue, Component } from "nuxt-property-decorator";
 import users from "~/gql/Users";
 import me from "~/gql/MyRoles";
-import { Users_users as User, Users_users_mainCharacter as Character } from "~/gql/__generated__/Users";
+import { Users_users as User } from "~/gql/__generated__/Users";
 import { MyRoles_me as Me } from "~/gql/__generated__/MyRoles";
 import CharacterAvatar from "~/components/CharacterAvatar.vue";
 import IconBtn from "~/components/IconBtn.vue";
@@ -69,13 +69,7 @@ export default class UsersPage extends Vue {
       { text: "Мед. информация", value: "medicalInfo" },
       {
         text: "Персонаж",
-        value: "mainCharacter",
-        filter: (value: Character, search: string) => value.name.toLowerCase().includes(search.toLowerCase()),
-        sort: (a: Character, b: Character) => {
-          const aName = a.name.toLowerCase();
-          const bName = b.name.toLowerCase();
-          return aName < bName ? -1 : aName > bName ? 1 : 0;
-        },
+        value: "mainCharacter.name",
       },
       { value: "actions", sortable: false }, // width: 42 * buttons + 34
     ];
