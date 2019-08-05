@@ -1,5 +1,5 @@
 <template>
-  <v-btn text color="secondary" :loading="loading" @click="logout">
+  <v-btn text :loading="loading" @click="logout">
     Выход
   </v-btn>
 </template>
