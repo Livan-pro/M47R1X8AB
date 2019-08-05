@@ -3,7 +3,7 @@
     <v-card-title>
       Пользователи
       <v-spacer></v-spacer>
-      <v-text-field v-model="search" append-icon="search" label="Поиск" single-line hide-details></v-text-field>
+      <v-text-field v-model="search" append-icon="mdi-search" label="Поиск" single-line hide-details></v-text-field>
     </v-card-title>
     <v-data-table :headers="headers" :items="users" :search="search" sort-by="id" class="elevation-1" multi-sort>
       <template v-slot:item.createdAt="{ value }">

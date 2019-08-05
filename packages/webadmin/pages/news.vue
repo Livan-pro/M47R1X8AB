@@ -7,7 +7,7 @@
           Новости
           <icon-btn class="ml-2" icon="mdi-plus" color="green" tooltip="Создать" @click="createNews" />
           <v-spacer></v-spacer>
-          <v-text-field v-model="search" append-icon="search" label="Поиск" single-line hide-details></v-text-field>
+          <v-text-field v-model="search" append-icon="mdi-search" label="Поиск" single-line hide-details></v-text-field>
         </v-card-title>
         <v-alert v-if="!items.length" type="warning" class="mx-2">
           Новости не найдены
