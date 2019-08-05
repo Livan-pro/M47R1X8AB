@@ -1,13 +1,12 @@
 #!/bin/bash
-
-if [ ! -f .env ]
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+if [ -f $DIR/.env ]
 then
-  export $(cat .env | xargs)
+  export $(cat $DIR/.env | xargs)
 fi
 
-domains=$BASE_DOMAIN www.$BASE_DOMAIN admin.$BASE_DOMAIN
-echo -n "Domains: "
-echo $domains
+domains=("$BASE_DOMAIN" "www.$BASE_DOMAIN" "admin.$BASE_DOMAIN")
+echo "Domains: ${domains[@]}"
 
 echo -n "Enter email: "
 read email
