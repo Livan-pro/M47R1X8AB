@@ -135,7 +135,7 @@ class Deploy extends Command {
       },
       {
         title: "Detecting changes",
-        enabled: () => !skipDetect,
+        enabled: () => !(skipPull || skipDetect),
         task: async (ctx, task) => {
           const updatedPackages = ctx.updatedFiles.reduce((acc, v) => {
             const path = resolve(this.cwd, v);
@@ -200,25 +200,27 @@ class Deploy extends Command {
 
       const defaultActions = flags.actions ? flags.actions.split(",") : ctx.defaults;
 
-      if (!ctx.updatedFiles.length) this.log("No files updated. Select what you want to do.");
-      else this.log("Updated files:\n" + ctx.updatedFiles.join("\n") + "\n");
+      if (!flags.skipPull) {
+        if (!ctx.updatedFiles.length) this.log("No files updated. Select what you want to do.");
+        else this.log("Updated files:\n" + ctx.updatedFiles.join("\n") + "\n");
 
-      const self = findSelf(ctx.packages);
-      if (self && ctx.updatedPackages.includes(self.name)) {
-        const {restart} = flags.yes ? {restart: true} : await inquirer.prompt({
-          type: "confirm",
-          name: "restart",
-          message: "This deploy tool updated. Do you want to rebuild and restart it now?",
-          default: true,
-        });
-        if (restart) {
-          if (flags.yes) this.log("Deploy tool updated. Restarting...");
-          await execa("npm", ["run", "--silent", "build"], {cwd: self.location});
-          const args = ["--skipPull", "--actions=" + defaultActions.join(",")];
-          if (flags.yes) args.push("--yes");
-          if (flags.directory) args.push("--directory=" + flags.directory);
-          await require("../lib").run(args).catch(require("@oclif/errors/handle"));
-          return;
+        const self = findSelf(ctx.packages);
+        if (self && ctx.updatedPackages.includes(self.name)) {
+          const {restart} = flags.yes ? {restart: true} : await inquirer.prompt({
+            type: "confirm",
+            name: "restart",
+            message: "This deploy tool updated. Do you want to rebuild and restart it now?",
+            default: true,
+          });
+          if (restart) {
+            if (flags.yes) this.log("Deploy tool updated. Restarting...");
+            await execa("npm", ["run", "--silent", "build"], {cwd: self.location});
+            const args = ["--skipPull", "--actions=" + defaultActions.join(",")];
+            if (flags.yes) args.push("--yes");
+            if (flags.directory) args.push("--directory=" + flags.directory);
+            await require("../lib").run(args).catch(require("@oclif/errors/handle"));
+            return;
+          }
         }
       }
 
