@@ -1,5 +1,14 @@
 #!/bin/bash
 
+if [ ! -f .env ]
+then
+  export $(cat .env | xargs)
+fi
+
+domains=$BASE_DOMAIN www.$BASE_DOMAIN admin.$BASE_DOMAIN
+echo -n "Domains: "
+echo $domains
+
 echo -n "Enter email: "
 read email
 
@@ -13,7 +22,6 @@ else
   staging=0
 fi
 
-domains=(cyberpunk2219.tech www.cyberpunk2219.tech admin.cyberpunk2219.tech)
 rsa_key_size=4096
 letsencrypt_path="/etc/letsencrypt"
 

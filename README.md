@@ -51,7 +51,6 @@ echo "vm.vfs_cache_pressure=50" >> /etc/sysctl.conf
 # Install nginx
 sudo apt install -y nginx
 sudo ufw allow 'Nginx Full'
-cp nginx-conf/app.conf /etc/nginx/conf.d/
 
 # Install certbot
 sudo add-apt-repository ppa:certbot/certbot
@@ -65,6 +64,13 @@ pm2 startup
 ```bash
 git clone git@github.com:xLivan/M47R1X8AB.git
 cd M47R1X8AB
+
+# Nginx config
+cp nginx-conf/.env-example nginx-conf/.env
+nano nginx-conf/.env # set BASE_DOMAIN
+chmod +x ./nginx-conf/generate-config.sh
+./generate-config.sh
+mv nginx-conf/app.conf /etc/nginx/conf.d/
 
 # Request certificate
 chmod +x ./nginx-conf/init-letsencrypt.sh
