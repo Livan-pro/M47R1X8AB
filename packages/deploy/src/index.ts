@@ -204,9 +204,9 @@ class Deploy extends Command {
     try {
       const ctx = await this.prepare(flags.directory, flags.skipPull, !!flags.actions);
 
-      const defaultActions = flags.actions ? micromatch(ctx.actions, flags.actions.split(",")) : ctx.defaults;
+      const defaultActions = flags.actions ? micromatch(ctx.actions.map(a => a.value), flags.actions.split(",")) : ctx.defaults;
 
-      if (!flags.skipPull) {
+      if (!flags.skipPull && !flags.actions) {
         if (!ctx.updatedFiles.length) this.log("No files updated. Select what you want to do.");
         else this.log("Updated files:\n" + ctx.updatedFiles.join("\n") + "\n");
 
