@@ -3,6 +3,7 @@ import * as Listr from "listr";
 import * as inquirer from "inquirer";
 import * as execa from "execa";
 import * as execao from "execa-output";
+import * as micromatch from "micromatch";
 import { access as accessCb, readFile as readFileCb } from "fs";
 import { join, parse, resolve } from "path";
 import { promisify } from "util";
@@ -43,6 +44,11 @@ const getPackageFiles = async (packages: IPackage[]) => {
 const findSelf = (packages: IPackage[]) => {
   const path = resolve(__dirname, "..");
   return packages.find(p => p.location === path);
+};
+
+const requireUncached = (module: string) => {
+  delete require.cache[require.resolve(module)];
+  return require(module);
 };
 
 const objectify: (obj: any, [k, v]: any[]) => any = (obj: any, [k, v]: any[]) => (obj[k] = v, obj);
@@ -218,7 +224,7 @@ class Deploy extends Command {
             const args = ["--skipPull", "--actions=" + defaultActions.join(",")];
             if (flags.yes) args.push("--yes");
             if (flags.directory) args.push("--directory=" + flags.directory);
-            await require("../lib").run(args).catch(require("@oclif/errors/handle"));
+            await requireUncached("../lib").run(args).catch(requireUncached("@oclif/errors/handle"));
             return;
           }
         }
