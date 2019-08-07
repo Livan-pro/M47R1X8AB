@@ -12,6 +12,7 @@ input UserInput {
   phone: String
   vkId: String
   medicalInfo: String
+  city: String
 }
 
 input EditUserInput {
@@ -20,6 +21,7 @@ input EditUserInput {
   phone: String
   vkId: String
   medicalInfo: String
+  city: String
 }
 
 input LoginInput {
@@ -42,6 +44,7 @@ type User {
   phone: String
   vkId: String
   medicalInfo: String
+  city: String
   characters: [Character]
   mainCharacter: Character
   roles: [UserRole!]

@@ -42,6 +42,7 @@ export class EditUserInput {
     phone?: string;
     vkId?: string;
     medicalInfo?: string;
+    city?: string;
 }
 
 export class LoginInput {
@@ -65,6 +66,7 @@ export class UserInput {
     phone?: string;
     vkId?: string;
     medicalInfo?: string;
+    city?: string;
 }
 
 export class Character {
@@ -134,6 +136,7 @@ export class User {
     phone?: string;
     vkId?: string;
     medicalInfo?: string;
+    city?: string;
     characters?: Character[];
     mainCharacter?: Character;
     roles?: UserRole[];
