@@ -44,7 +44,8 @@ export class Roles<Role extends RoleEnum> implements Iterable<string> {
   }
 
   toArray(): number[] {
-    return (Object.values(this.roleEnum) as number[]).filter(role => typeof role === "number" && (this.number & (role as number)) === role);
+    return (Object.values(this.roleEnum) as number[])
+      .filter(role => typeof role === "number" && role !== 0 && (this.number & (role as number)) === role);
   }
 
   toStringArray(): string[] {

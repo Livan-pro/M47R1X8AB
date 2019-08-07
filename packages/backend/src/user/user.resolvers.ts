@@ -20,7 +20,7 @@ export class UserResolvers {
 
   @ResolveProperty()
   roles(@Parent() user: User) {
-    return user.roles.toStringArray(Role as any).filter(v => v !== "LoggedIn");
+    return user.roles.toStringArray();
   }
 
   @Mutation()
