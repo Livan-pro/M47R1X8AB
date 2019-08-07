@@ -7,10 +7,7 @@ export default {
    */
   head: {
     title: "Webadmin",
-    meta: [
-      { charset: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-    ],
+    meta: [{ charset: "utf-8" }, { name: "viewport", content: "width=device-width, initial-scale=1" }],
     link: [
       { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
       { rel: "stylesheet", href: "https://cdn.jsdelivr.net/npm/@mdi/font@3.x/css/materialdesignicons.min.css" },
@@ -33,7 +30,7 @@ export default {
    */
   devModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
-    "@nuxtjs/eslint-module",
+    // "@nuxtjs/eslint-module",
     "@nuxtjs/vuetify",
   ],
   /*

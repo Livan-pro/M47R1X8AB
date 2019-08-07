@@ -17,7 +17,8 @@
     "@nuxtjs/apollo": "^4.0.0-rc9",
     "graphql-tag": "^2.10.1",
     "nuxt": "^2.0.0",
-    "nuxt-property-decorator": "^2.3.0"
+    "nuxt-property-decorator": "^2.3.0",
+    "shared": "^1.1.0"
   },
   "devDependencies": {
     "@nuxt/typescript": "^2.8.1",

@@ -5,7 +5,7 @@
       <v-spacer></v-spacer>
       <v-text-field v-model="search" append-icon="mdi-search" label="Поиск" single-line hide-details></v-text-field>
     </v-card-title>
-    <v-data-table :headers="headers" :items="users" :search="search" sort-by="id" class="elevation-1" multi-sort>
+    <v-data-table :headers="headers" :items="items" :search="search" sort-by="id" class="elevation-1" multi-sort>
       <template v-slot:item.createdAt="{ value }">
         {{ formatDate(value) }}
       </template>
@@ -41,6 +41,7 @@ import UploadQuentaButton from "~/components/UploadQuentaButton.vue";
 import MakeAdminButton from "~/components/MakeAdminButton.vue";
 import { Role } from "../gql/__generated__/globalTypes";
 import { dataUrl } from "@/utils";
+import { characterRoleToText } from "shared/browser";
 
 @Component({
   components: { CharacterAvatar, IconBtn, UploadQuentaButton, MakeAdminButton },
@@ -71,8 +72,19 @@ export default class UsersPage extends Vue {
         text: "Персонаж",
         value: "mainCharacter.name",
       },
+      {
+        text: "Профессия",
+        value: "mainCharacter.roleText",
+      },
       { value: "actions", sortable: false }, // width: 42 * buttons + 34
     ];
+  }
+
+  get items() {
+    return this.users.map(u => ({
+      ...u,
+      mainCharacter: { ...u.mainCharacter, roleText: u.mainCharacter && u.mainCharacter.roles.map(r => characterRoleToText(r)).join(", ") },
+    }));
   }
 
   get dataUrl() {
