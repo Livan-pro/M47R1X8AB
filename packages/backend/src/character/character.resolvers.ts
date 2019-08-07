@@ -44,6 +44,10 @@ export class CharacterResolvers {
     @GetUser() user: User,
   ): Promise<boolean> {
     if (user.mainCharacterId !== id && !user.roles.has(Role.Admin)) await this.character.getByIdAndOwner(id, user.id);
+    if (data.role) {
+      data = Object.assign(data, {roles: [data.role]});
+      delete data.role;
+    }
     await this.character.update(id, data);
     return true;
   }

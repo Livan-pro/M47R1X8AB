@@ -14,7 +14,7 @@
     Квента:
     <a v-if="me.mainCharacter.quenta" :href="quentaLink" download>скачать</a>
     <span v-else>не загружена</span><br>
-    Роль: {{ rolesToText(me.mainCharacter.roles) }}
+    Профессия: {{ rolesToText(me.mainCharacter.roles) }}
     <br>
   </div>
 </template>

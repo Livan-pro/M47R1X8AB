@@ -8,7 +8,7 @@ const roles: {
   Marshal: "Маршал",
   Hitman: "Боевик",
   Biotechnician: "Биотехник",
-  Employee: "Корпоратирный работник",
+  Employee: "Корпоративный работник",
   Engineer: "Инженер",
   Stalker: "Сталкер",
   Mutant: "Мутант",
