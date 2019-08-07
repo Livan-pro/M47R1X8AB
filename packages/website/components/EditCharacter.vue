@@ -20,7 +20,7 @@
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from "nuxt-property-decorator";
 import UniversalForm from "@/components/UniversalForm.vue";
-import { CreateCharacter, InitForm } from "shared/browser";
+import { CreateCharacter, InitForm, characterRoleOptions as options } from "shared/browser";
 import gql from "graphql-tag";
 
 const characterFieldsToTrim: (keyof CreateCharacter)[] = ["name"];
@@ -42,6 +42,7 @@ export default class EditCharacter extends Vue {
   onLoadingChanged(loading: boolean) {
     if (loading) return;
     this.form.name = this.initData.name;
+    this.form.role = this.initData.role;
   }
 
   trimSpaces() {
@@ -84,6 +85,7 @@ export default class EditCharacter extends Vue {
     return {
       name: "Имя и фамилия",
       quenta: {label: "Квента", type: "file"},
+      role: {label: "Профессия", type: "select", options}
     };
   }
 }

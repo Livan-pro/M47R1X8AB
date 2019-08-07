@@ -38,6 +38,12 @@
           placeholder="Выберите файл..."
           drop-placeholder="Перетащите файл сюда..."
         />
+        <b-form-select v-else-if="input.type === 'select'"
+          :id="'input' + input.name"
+          :options="input.options"
+          v-model="form[input.name]"
+          :state="state[input.name]"
+          @blur="update(input.name)"></b-form-select>
         <b-form-input v-else
           :id="'input' + input.name"
           :type="input.type"
