@@ -23,8 +23,8 @@ export class CharacterService {
     return await this.repo.find({select: fields});
   }
 
-  async findById(id: number): Promise<Character | undefined> {
-    return await this.repo.findOne(id);
+  async findById(id: number, fields?: Array<keyof Character>): Promise<Character | undefined> {
+    return await this.repo.findOne(id, {select: fields});
   }
 
   @Transaction()

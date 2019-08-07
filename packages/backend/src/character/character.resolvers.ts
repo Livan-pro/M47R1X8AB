@@ -32,6 +32,8 @@ export class CharacterResolvers {
 
   @Query("character")
   async getCharacter(@GetUser() user: User, @Args("id") id: number): Promise<Character | undefined> {
+    const fields: Array<keyof Character> = ["id", "name", "avatarUploadedAt"];
+    if (user.roles.has(Role.Admin)) fields.push("quenta", "roles");
     return await this.character.findById(id);
   }
 
