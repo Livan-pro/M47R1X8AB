@@ -34,6 +34,7 @@ import ChangePassword from "@/components/ChangePassword.vue";
           phone
           vkId
           medicalInfo
+          city
           mainCharacter {
             id
             name
