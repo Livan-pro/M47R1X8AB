@@ -53,7 +53,7 @@ export default class EditProfile extends Vue {
   loading = true;
 
   get mainCharacter() {
-    return {...this.me.mainCharacter, role: this.me.mainCharacter.roles && this.me.mainCharacter.roles.length > 0 ? this.me.mainCharacter.roles[0] : ""};
+    return {...this.me.mainCharacter, role: this.me.mainCharacter.roles && this.me.mainCharacter.roles.length > 0 ? this.me.mainCharacter.roles[0] : "None"};
   }
 }
 </script>

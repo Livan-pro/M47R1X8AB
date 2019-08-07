@@ -14,7 +14,7 @@
     Квента:
     <a v-if="me.mainCharacter.quenta" :href="quentaLink" download>скачать</a>
     <span v-else>не загружена</span><br>
-    Роль: {{ me.mainCharacter.roles.map(r => roleToText(r)).join(",") }}
+    Роль: {{ rolesToText(me.mainCharacter.roles) }}
     <br>
   </div>
 </template>
@@ -62,6 +62,9 @@ export default class Profile extends Vue {
     return `/data/quenta/${this.me.mainCharacter.id}/${this.me.mainCharacter.quenta}`;
   }
 
-  roleToText = characterRoleToText;
+  rolesToText(roles) {
+    if (roles && roles.length > 0) return roles.map(r => characterRoleToText(r)).join(",");
+    else return characterRoleToText("None");
+  };
 }
 </script>
