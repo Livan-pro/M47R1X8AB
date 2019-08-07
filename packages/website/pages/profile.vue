@@ -7,6 +7,7 @@
     Телефон: {{ me.phone }}<br>
     ID Вконтакте: {{ me.vkId }}<br>
     Аллергии, мед. показания: {{ me.medicalInfo }}<br>
+    Город: {{ me.city }}<br>
     <br><br>
     <h2 class="text-center">Информация о персонаже</h2>
     Имя персонажа: {{ me.mainCharacter.name }}<br>
@@ -41,6 +42,7 @@ import {} from "@/vue-meta";
           phone
           vkId
           medicalInfo
+          city
           mainCharacter {
             id
             name

@@ -3,7 +3,7 @@
   <div v-else-if="me">
     <edit-user :init-data="me" :loading="loading" />
     <br><br>
-    <edit-character :init-data="me.mainCharacter" :loading="loading" />
+    <edit-character :init-data="mainCharacter" :loading="loading" />
     <br><br>
     <change-password />
   </div>
@@ -34,11 +34,12 @@ import ChangePassword from "@/components/ChangePassword.vue";
           phone
           vkId
           medicalInfo
+          city
           mainCharacter {
             id
             name
             quenta
-            role
+            roles
           }
         }
       }`,
@@ -50,5 +51,9 @@ import ChangePassword from "@/components/ChangePassword.vue";
 export default class EditProfile extends Vue {
   me: any;
   loading = true;
+
+  get mainCharacter() {
+    return {...this.me.mainCharacter, role: this.me.mainCharacter.roles && this.me.mainCharacter.roles.length > 0 ? this.me.mainCharacter.roles[0] : ""};
+  }
 }
 </script>

@@ -121,6 +121,7 @@ export default class Register extends Vue {
       phone: "Телефон",
       vkId: "Ссылка или ID Вконтакте",
       medicalInfo: "Аллергии, медицинские показания",
+      city: "Город"
     };
   }
 
