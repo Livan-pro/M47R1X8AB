@@ -19,8 +19,8 @@ export class CharacterService {
     return await this.repo.findOneOrFail({id, userId});
   }
 
-  async getAll(): Promise<Character[]> {
-    return await this.repo.find();
+  async getAll(fields: Array<keyof Character>): Promise<Character[]> {
+    return await this.repo.find({select: fields});
   }
 
   async findById(id: number): Promise<Character | undefined> {

@@ -25,7 +25,9 @@ export class CharacterResolvers {
 
   @Query()
   async characters(@GetUser() user: User): Promise<Character[]> {
-    return (await this.character.getAll());
+    const fields: Array<keyof Character> = ["id", "name", "avatarUploadedAt"];
+    if (user.roles.has(Role.Admin)) fields.push("quenta", "roles");
+    return await this.character.getAll(fields);
   }
 
   @Query("character")
