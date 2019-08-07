@@ -1,41 +1,41 @@
-import { Role } from "./role.enum";
+import { CharacterRole } from "./character-role.enum";
+import { UserRole } from "./user-role.enum";
+export type RoleEnum = UserRole | CharacterRole;
 
 // tslint:disable no-bitwise
-const reduceRoles: (roles: Role[] | number[]) => number =
-  (roles: Role[] | number[]) =>
-    (roles.reduce as (callbackfn: (previousValue: number, currentValue: Role | number) => number, initialValue: number) => number)
-      ((acc, v) => acc | v, Role.LoggedIn as number);
+const reduceRoles: (roles: number[]) => number =
+  (roles: number[]) => roles.reduce((acc, v) => acc | v as number, 0);
 
-export class Roles {
+export class Roles<Role extends RoleEnum> {
   private number: number;
-  constructor(role: number | Role | Roles) {
+  constructor(role: number | Roles<Role>) {
     if (role instanceof Roles) this.number = role.toNumber();
     else this.number = role;
   }
 
-  has(role: Role | Roles | number | Role[] | number[]): boolean {
+  has(role: Roles<Role> | number | number[]): boolean {
     if (Array.isArray(role)) role = reduceRoles(role);
     if (role instanceof Roles) role = role.toNumber();
     return (this.number & (role as number)) === role;
   }
 
-  intersects(role: Role | Roles | number | Role[] | number[]): boolean {
+  intersects(role: Roles<Role> | number | number[]): boolean {
     if (Array.isArray(role)) role = reduceRoles(role);
     if (role instanceof Roles) role = role.toNumber();
     return (this.number & (role as number)) > 0;
   }
 
-  add(role: Role | Roles | number | Role[] | number[]): Roles {
+  add(role: Roles<Role> | number | number[]): Roles<Role> {
     if (Array.isArray(role)) role = reduceRoles(role);
     if (role instanceof Roles) role = role.toNumber();
-    if (!this.has(role)) return new Roles(this.number | (role as number));
+    if (!this.has(role)) return new Roles<Role>(this.number | (role as number));
     return this;
   }
 
-  remove(role: Role | Roles | number | Role[] | number[]): Roles {
+  remove(role: Roles<Role> | number | number[]): Roles<Role> {
     if (Array.isArray(role)) role = reduceRoles(role);
     if (role instanceof Roles) role = role.toNumber();
-    if (this.has(role)) return new Roles(this.number & ~(role as number));
+    if (this.has(role)) return new Roles<Role>(this.number & ~(role as number));
     return this;
   }
 
@@ -43,7 +43,11 @@ export class Roles {
     return this.number;
   }
 
-  toArray(): Role[] {
-    return Object.values(Role).filter(role => (this.number & (role as number)) === role);
+  toArray(RoleClass: {[key in Role]: number}): number[] {
+    return (Object.values(RoleClass) as number[]).filter(role => typeof role === "number" && (this.number & (role as number)) === role);
+  }
+
+  toStringArray(RoleClass: {[value: number]: Role}): string[] {
+    return this.toArray(RoleClass).map(v => RoleClass[v]) as unknown[] as string[];
   }
 }

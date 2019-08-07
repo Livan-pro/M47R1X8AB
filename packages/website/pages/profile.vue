@@ -12,7 +12,8 @@
     Имя персонажа: {{ me.mainCharacter.name }}<br>
     Квента:
     <a v-if="me.mainCharacter.quenta" :href="quentaLink" download>скачать</a>
-    <span v-else>не загружена</span>
+    <span v-else>не загружена</span><br>
+    Роль: {{ me.mainCharacter.roles.map(r => roleToText(r)).join(",") }}
     <br>
   </div>
 </template>
@@ -21,6 +22,7 @@
 import { Component, Vue } from "nuxt-property-decorator";
 import UniversalForm from "@/components/UniversalForm.vue";
 import gql from "graphql-tag";
+import { characterRoleToText } from "shared/browser";
 import {} from "vue-apollo/types/vue";
 import {} from "@/vue-meta";
 
@@ -43,6 +45,7 @@ import {} from "@/vue-meta";
             id
             name
             quenta
+            roles
           }
         }
       }`,
@@ -56,5 +59,7 @@ export default class Profile extends Vue {
   get quentaLink() {
     return `/data/quenta/${this.me.mainCharacter.id}/${this.me.mainCharacter.quenta}`;
   }
+
+  roleToText = characterRoleToText;
 }
 </script>

@@ -1,12 +1,9 @@
-import { Resolver, Mutation, Args, Query } from "@nestjs/graphql";
-import { Logger, UseGuards } from "@nestjs/common";
+import { Resolver, Mutation, Args, Query, Parent, ResolveProperty } from "@nestjs/graphql";
+import { Logger } from "@nestjs/common";
 import { CharacterService } from "./character.service";
 import { CreateCharacter } from "shared/node";
-import { ntob } from "number-to-base64";
-import { GqlAuthGuard } from "auth/gql-auth.guard";
 import { GetUser } from "user/get-user.decorator";
-import { User, Role } from "matrix-database";
-import { Character } from "graphql.schema";
+import { User, UserRole as Role, Character } from "matrix-database";
 import { FileService } from "file/file.service";
 import * as imageSizeSync from "image-size";
 import { CustomError } from "CustomError";
@@ -21,15 +18,19 @@ export class CharacterResolvers {
     private readonly file: FileService,
   ) {}
 
+  @ResolveProperty()
+  own(@Parent() character, @GetUser() user) {
+    return character.userId === user.id;
+  }
+
   @Query()
   async characters(@GetUser() user: User): Promise<Character[]> {
-    return (await this.character.getAll()).map(c => ({...c, own: c.userId === user.id}));
+    return (await this.character.getAll());
   }
 
   @Query("character")
   async getCharacter(@GetUser() user: User, @Args("id") id: number): Promise<Character | undefined> {
-    const c = await this.character.findById(id);
-    return {...c, own: c.userId === user.id};
+    return await this.character.findById(id);
   }
 
   @Mutation()

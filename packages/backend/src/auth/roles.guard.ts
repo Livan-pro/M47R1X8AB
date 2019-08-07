@@ -1,7 +1,6 @@
 import { Injectable, CanActivate, ExecutionContext } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { GqlExecutionContext } from "@nestjs/graphql";
-import { User, Role } from "matrix-database";
+import { User, UserRole } from "matrix-database";
 import { GqlAuthGuard } from "./gql-auth.guard";
 
 @Injectable()
@@ -11,8 +10,8 @@ export class RolesGuard extends GqlAuthGuard implements CanActivate {
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const rolesClass = this.reflector.get<Role[]>("roles", context.getClass());
-    const rolesHandler = this.reflector.get<Role[]>("roles", context.getHandler());
+    const rolesClass = this.reflector.get<UserRole[]>("roles", context.getClass());
+    const rolesHandler = this.reflector.get<UserRole[]>("roles", context.getHandler());
     if (!rolesClass && !rolesHandler) return true;
     const roles = [];
     if (Array.isArray(rolesClass)) roles.push(rolesClass);

@@ -6,7 +6,21 @@
 // START Enums and Input Objects
 //==============================================================
 
-export enum Role {
+export enum CharacterRole {
+  Biotechnician = "Biotechnician",
+  Chemist = "Chemist",
+  Employee = "Employee",
+  Engineer = "Engineer",
+  Hitman = "Hitman",
+  Marshal = "Marshal",
+  Medic = "Medic",
+  Mutant = "Mutant",
+  Netrunner = "Netrunner",
+  None = "None",
+  Stalker = "Stalker",
+}
+
+export enum UserRole {
   Admin = "Admin",
   SuperAdmin = "SuperAdmin",
 }

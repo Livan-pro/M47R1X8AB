@@ -1,4 +1,4 @@
-enum Role {
+enum UserRole {
   Admin
   SuperAdmin
 }
@@ -44,7 +44,7 @@ type User {
   medicalInfo: String
   characters: [Character]
   mainCharacter: Character
-  roles: [Role!]
+  roles: [UserRole!]
   createdAt: Date
 }
 
@@ -64,5 +64,5 @@ type Mutation {
   logout: Boolean
   editUser(user: EditUserInput!): Boolean
   changePassword(data: ChangePasswordInput!): Boolean
-  setUserRole(id: Int!, role: Role!, value: Boolean): Boolean
+  setUserRole(id: Int!, role: UserRole!, value: Boolean): Boolean
 }

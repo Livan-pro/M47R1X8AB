@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 import { DataProxy } from "apollo-cache";
-import { Role } from "./__generated__/globalTypes";
+import { UserRole as Role } from "./__generated__/globalTypes";
 
 export default {
   mutation: gql`

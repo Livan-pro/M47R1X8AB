@@ -2,13 +2,14 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { UserRole } from "./globalTypes";
-
 // ====================================================
-// GraphQL fragment: roles
+// GraphQL mutation operation: DeleteNews
 // ====================================================
 
-export interface roles {
-  __typename: "User";
-  roles: UserRole[] | null;
+export interface DeleteNews {
+  deleteNews: boolean | null;
+}
+
+export interface DeleteNewsVariables {
+  ids: number[];
 }

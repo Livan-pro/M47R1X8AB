@@ -1,12 +1,28 @@
+enum CharacterRole {
+  None,
+  Netrunner,
+  Medic,
+  Chemist,
+  Marshal,
+  Hitman,
+  Biotechnician,
+  Employee,
+  Engineer,
+  Stalker,
+  Mutant,
+}
+
 input CharacterInput {
   name: String
   quenta: Upload
+  role: CharacterRole
 }
 
 type Character {
   id: Int!
   name: String!
   quenta: String
+  roles: [CharacterRole!]
   own: Boolean!
   avatarUploadedAt: Date
 }

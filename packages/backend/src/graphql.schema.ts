@@ -5,7 +5,21 @@
  */
 
 /* tslint:disable */
-export enum Role {
+export enum CharacterRole {
+    None = "None",
+    Netrunner = "Netrunner",
+    Medic = "Medic",
+    Chemist = "Chemist",
+    Marshal = "Marshal",
+    Hitman = "Hitman",
+    Biotechnician = "Biotechnician",
+    Employee = "Employee",
+    Engineer = "Engineer",
+    Stalker = "Stalker",
+    Mutant = "Mutant"
+}
+
+export enum UserRole {
     Admin = "Admin",
     SuperAdmin = "SuperAdmin"
 }
@@ -19,6 +33,7 @@ export class ChangePasswordInput {
 export class CharacterInput {
     name?: string;
     quenta?: Upload;
+    role?: CharacterRole;
 }
 
 export class EditUserInput {
@@ -56,6 +71,7 @@ export class Character {
     id: number;
     name: string;
     quenta?: string;
+    roles?: CharacterRole[];
     own: boolean;
     avatarUploadedAt?: Date;
 }
@@ -86,7 +102,7 @@ export abstract class IMutation {
 
     abstract changePassword(data: ChangePasswordInput): boolean | Promise<boolean>;
 
-    abstract setUserRole(id: number, role: Role, value?: boolean): boolean | Promise<boolean>;
+    abstract setUserRole(id: number, role: UserRole, value?: boolean): boolean | Promise<boolean>;
 }
 
 export class News {
@@ -120,7 +136,7 @@ export class User {
     medicalInfo?: string;
     characters?: Character[];
     mainCharacter?: Character;
-    roles?: Role[];
+    roles?: UserRole[];
     createdAt?: Date;
 }
 

@@ -38,6 +38,7 @@ import ChangePassword from "@/components/ChangePassword.vue";
             id
             name
             quenta
+            role
           }
         }
       }`,
