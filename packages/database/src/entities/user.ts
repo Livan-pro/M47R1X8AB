@@ -44,7 +44,7 @@ export class User {
   @Column({length: 1000, nullable: true})
   medicalInfo: string;
 
-  @Column({type: "int", default: 0, transformer: new RolesTransformer<UserRole>()})
+  @Column({type: "int", default: 0, transformer: new RolesTransformer<UserRole>(UserRole)})
   roles: Roles<UserRole>;
 
   @OneToOne(type => Character, character => character.user)

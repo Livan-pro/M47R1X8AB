@@ -36,6 +36,6 @@ export class Character {
   @Column({nullable: true})
   avatarUploadedAt: Date;
 
-  @Column({type: "int", default: 0, transformer: new RolesTransformer<CharacterRole>()})
+  @Column({type: "int", default: 0, transformer: new RolesTransformer<CharacterRole>(CharacterRole)})
   roles: Roles<CharacterRole>;
 }

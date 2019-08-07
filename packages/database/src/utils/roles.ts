@@ -6,9 +6,9 @@ export type RoleEnum = UserRole | CharacterRole;
 const reduceRoles: (roles: number[]) => number =
   (roles: number[]) => roles.reduce((acc, v) => acc | v as number, 0);
 
-export class Roles<Role extends RoleEnum> {
+export class Roles<Role extends RoleEnum> implements Iterable<string> {
   private number: number;
-  constructor(role: number | Roles<Role>) {
+  constructor(role: number | Roles<Role>, private roleEnum: {[key in Role]: number}) {
     if (role instanceof Roles) this.number = role.toNumber();
     else this.number = role;
   }
@@ -28,14 +28,14 @@ export class Roles<Role extends RoleEnum> {
   add(role: Roles<Role> | number | number[]): Roles<Role> {
     if (Array.isArray(role)) role = reduceRoles(role);
     if (role instanceof Roles) role = role.toNumber();
-    if (!this.has(role)) return new Roles<Role>(this.number | (role as number));
+    if (!this.has(role)) return new Roles<Role>(this.number | (role as number), this.roleEnum);
     return this;
   }
 
   remove(role: Roles<Role> | number | number[]): Roles<Role> {
     if (Array.isArray(role)) role = reduceRoles(role);
     if (role instanceof Roles) role = role.toNumber();
-    if (this.has(role)) return new Roles<Role>(this.number & ~(role as number));
+    if (this.has(role)) return new Roles<Role>(this.number & ~(role as number), this.roleEnum);
     return this;
   }
 
@@ -43,11 +43,31 @@ export class Roles<Role extends RoleEnum> {
     return this.number;
   }
 
-  toArray(RoleClass: {[key in Role]: number}): number[] {
-    return (Object.values(RoleClass) as number[]).filter(role => typeof role === "number" && (this.number & (role as number)) === role);
+  toArray(): number[] {
+    return (Object.values(this.roleEnum) as number[]).filter(role => typeof role === "number" && (this.number & (role as number)) === role);
   }
 
-  toStringArray(RoleClass: {[value: number]: Role}): string[] {
-    return this.toArray(RoleClass).map(v => RoleClass[v]) as unknown[] as string[];
+  toStringArray(): string[] {
+    return this.toArray().map(v => (this.roleEnum as any)[v]);
+  }
+
+  [Symbol.iterator](): Iterator<string> {
+    let pointer = 0;
+    const roles = this.toStringArray();
+    return {
+      next(): IteratorResult<string> {
+        if (pointer < roles.length) {
+          return {
+            done: false,
+            value: roles[pointer++],
+          };
+        } else {
+          return {
+            done: true,
+            value: null as any,
+          };
+        }
+      },
+    };
   }
 }
