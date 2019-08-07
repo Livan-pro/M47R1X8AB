@@ -5,8 +5,8 @@ import { AuthService } from "auth/auth.service";
 import { CreateUser, CreateCharacter, EditUser, ChangePassword } from "shared/node";
 import { Response } from "express";
 import { GetUser } from "./get-user.decorator";
-import { User, UserRole as Role, UserRole } from "matrix-database";
-import { LoginResult, User as GqlUser, Role as GqlRole } from "graphql.schema";
+import { User, UserRole as Role } from "matrix-database";
+import { LoginResult, UserRole as GqlRole } from "graphql.schema";
 import { CustomError } from "CustomError";
 import { Roles } from "auth/roles.decorator";
 
