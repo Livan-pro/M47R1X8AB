@@ -47,6 +47,9 @@ export class User {
   @Column({type: "int", default: 0, transformer: new RolesTransformer<UserRole>(UserRole)})
   roles: Roles<UserRole>;
 
+  @Column({length: 32, nullable: true})
+  city: string;
+
   @OneToOne(type => Character, character => character.user)
   @JoinColumn({name: "mainCharacterId"})
   mainCharacter: Character;
