@@ -62,7 +62,7 @@ export default class Profile extends Vue {
     return `/data/quenta/${this.me.mainCharacter.id}/${this.me.mainCharacter.quenta}`;
   }
 
-  rolesToText(roles) {
+  rolesToText(roles: string[]) {
     if (roles && roles.length > 0) return roles.map(r => characterRoleToText(r)).join(",");
     else return characterRoleToText("None");
   };
