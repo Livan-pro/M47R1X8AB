@@ -31,4 +31,7 @@ export class CreateUser {
 
   @MaxLength(1000, {message: "Максимальная длина - 1000 символов"})
   medicalInfo: string | undefined = undefined;
+
+  @MaxLength(32, {message: "Должен быть короче 33 символов"})
+  city: string | undefined = undefined;
 }
