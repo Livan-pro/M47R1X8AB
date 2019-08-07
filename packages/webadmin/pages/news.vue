@@ -37,7 +37,7 @@ import news from "~/gql/News";
 import me from "~/gql/MyRoles";
 import { News_news as News } from "~/gql/__generated__/News";
 import { MyRoles_me as Me } from "~/gql/__generated__/MyRoles";
-import { Role } from "../gql/__generated__/globalTypes";
+import { UserRole as Role } from "../gql/__generated__/globalTypes";
 import IconBtn from "@/components/IconBtn.vue";
 import NewsDialog from "@/components/NewsDialog.vue";
 

@@ -20,7 +20,7 @@ export enum CharacterRole {
   Stalker = "Stalker",
 }
 
-export enum Role {
+export enum UserRole {
   Admin = "Admin",
   SuperAdmin = "SuperAdmin",
 }

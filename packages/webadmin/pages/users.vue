@@ -39,7 +39,7 @@ import CharacterAvatar from "~/components/CharacterAvatar.vue";
 import IconBtn from "~/components/IconBtn.vue";
 import UploadQuentaButton from "~/components/UploadQuentaButton.vue";
 import MakeAdminButton from "~/components/MakeAdminButton.vue";
-import { Role } from "../gql/__generated__/globalTypes";
+import { UserRole as Role } from "../gql/__generated__/globalTypes";
 import { dataUrl } from "@/utils";
 import { characterRoleToText } from "shared/browser";
 
@@ -83,7 +83,10 @@ export default class UsersPage extends Vue {
   get items() {
     return this.users.map(u => ({
       ...u,
-      mainCharacter: { ...u.mainCharacter, roleText: u.mainCharacter && u.mainCharacter.roles.map(r => characterRoleToText(r)).join(", ") },
+      mainCharacter: {
+        ...u.mainCharacter,
+        roleText: u.mainCharacter && u.mainCharacter.roles && u.mainCharacter.roles.map(r => characterRoleToText(r)).join(", "),
+      },
     }));
   }
 

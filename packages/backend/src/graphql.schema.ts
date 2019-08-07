@@ -19,7 +19,7 @@ export enum CharacterRole {
     Mutant = "Mutant"
 }
 
-export enum Role {
+export enum UserRole {
     Admin = "Admin",
     SuperAdmin = "SuperAdmin"
 }
@@ -102,7 +102,7 @@ export abstract class IMutation {
 
     abstract changePassword(data: ChangePasswordInput): boolean | Promise<boolean>;
 
-    abstract setUserRole(id: number, role: Role, value?: boolean): boolean | Promise<boolean>;
+    abstract setUserRole(id: number, role: UserRole, value?: boolean): boolean | Promise<boolean>;
 }
 
 export class News {
@@ -136,7 +136,7 @@ export class User {
     medicalInfo?: string;
     characters?: Character[];
     mainCharacter?: Character;
-    roles?: Role[];
+    roles?: UserRole[];
     createdAt?: Date;
 }
 
