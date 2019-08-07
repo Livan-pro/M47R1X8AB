@@ -26,6 +26,7 @@ export interface Users_users {
   phone: string | null;
   vkId: string | null;
   medicalInfo: string | null;
+  city: string | null;
   roles: UserRole[] | null;
   createdAt: any | null;
   mainCharacter: Users_users_mainCharacter | null;

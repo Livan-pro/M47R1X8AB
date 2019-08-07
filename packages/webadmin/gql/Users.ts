@@ -11,6 +11,7 @@ export default {
         phone
         vkId
         medicalInfo
+        city
         roles
         createdAt
         mainCharacter {

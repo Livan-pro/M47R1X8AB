@@ -68,6 +68,7 @@ export default class UsersPage extends Vue {
       { text: "Телефон", value: "phone" },
       { text: "VK", value: "vkId" },
       { text: "Мед. информация", value: "medicalInfo" },
+      { text: "Город", value: "city" },
       {
         text: "Персонаж",
         value: "mainCharacter.name",
