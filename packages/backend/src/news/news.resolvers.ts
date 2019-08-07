@@ -2,7 +2,7 @@ import { Resolver, Query, Mutation, Args } from "@nestjs/graphql";
 import { Logger } from "@nestjs/common";
 import { NewsService } from "./news.service";
 import { News } from "graphql.schema";
-import { Role } from "matrix-database";
+import { UserRole as Role } from "matrix-database";
 import { Roles } from "auth/roles.decorator";
 
 @Resolver()

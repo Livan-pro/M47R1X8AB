@@ -1,5 +1,5 @@
 import { SetMetadata } from "@nestjs/common";
-import { Role } from "matrix-database";
+import { UserRole } from "matrix-database";
 
 // tslint:disable-next-line: variable-name
-export const Roles = (...roles: Role[]) => SetMetadata("roles", roles);
+export const Roles = (...roles: UserRole[]) => SetMetadata("roles", roles);

@@ -5,6 +5,20 @@
  */
 
 /* tslint:disable */
+export enum CharacterRole {
+    None = "None",
+    Netrunner = "Netrunner",
+    Medic = "Medic",
+    Chemist = "Chemist",
+    Marshal = "Marshal",
+    Hitman = "Hitman",
+    Biotechnician = "Biotechnician",
+    Employee = "Employee",
+    Engineer = "Engineer",
+    Stalker = "Stalker",
+    Mutant = "Mutant"
+}
+
 export enum Role {
     Admin = "Admin",
     SuperAdmin = "SuperAdmin"
@@ -19,6 +33,7 @@ export class ChangePasswordInput {
 export class CharacterInput {
     name?: string;
     quenta?: Upload;
+    role?: CharacterRole;
 }
 
 export class EditUserInput {
@@ -56,6 +71,7 @@ export class Character {
     id: number;
     name: string;
     quenta?: string;
+    roles?: CharacterRole[];
     own: boolean;
     avatarUploadedAt?: Date;
 }

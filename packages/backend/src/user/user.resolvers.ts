@@ -1,23 +1,27 @@
-import { Resolver, Mutation, Args, Context, Query } from "@nestjs/graphql";
-import { Logger, ValidationPipe, UseGuards } from "@nestjs/common";
+import { Resolver, Mutation, Args, Context, Query, ResolveProperty, Parent } from "@nestjs/graphql";
+import { Logger, ValidationPipe } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { AuthService } from "auth/auth.service";
 import { CreateUser, CreateCharacter, EditUser, ChangePassword } from "shared/node";
 import { Response } from "express";
 import { GetUser } from "./get-user.decorator";
-import { User, Role } from "matrix-database";
+import { User, UserRole as Role, UserRole } from "matrix-database";
 import { LoginResult, User as GqlUser, Role as GqlRole } from "graphql.schema";
 import { CustomError } from "CustomError";
 import { Roles } from "auth/roles.decorator";
-import { mapUser } from "utils";
 
-@Resolver()
+@Resolver("User")
 export class UserResolvers {
   private readonly log = new Logger(UserResolvers.name);
   constructor(
     private readonly user: UserService,
     private readonly auth: AuthService,
   ) {}
+
+  @ResolveProperty()
+  roles(@Parent() user: User) {
+    return user.roles.toStringArray(Role as any).filter(v => v !== "LoggedIn");
+  }
 
   @Mutation()
   async createUserWithCharacter(
@@ -68,15 +72,15 @@ export class UserResolvers {
 
   @Query("me")
   @Roles(Role.LoggedIn)
-  async me(@GetUser() user: User): Promise<GqlUser> {
+  async me(@GetUser() user: User): Promise<User> {
     this.log.log(`Me: ${user.email}`);
-    return mapUser(user, user);
+    return user;
   }
 
   @Query("users")
   @Roles(Role.Admin)
-  async users(@GetUser() user: User): Promise<GqlUser[]> {
-    return (await this.user.getAllWithMainCharacter()).map(u => mapUser(u, user));
+  async users(@GetUser() user: User): Promise<User[]> {
+    return await this.user.getAllWithMainCharacter();
   }
 
   @Mutation()

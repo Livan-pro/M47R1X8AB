@@ -1,5 +1,8 @@
 import { Column, Entity, JoinColumn, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne } from "typeorm";
 import { User } from "./user";
+import { CharacterRole } from "../utils/character-role.enum";
+import { Roles } from "../utils/roles";
+import { RolesTransformer } from "../utils/role-transformer";
 
 @Entity("characters")
 export class Character {
@@ -32,4 +35,7 @@ export class Character {
 
   @Column({nullable: true})
   avatarUploadedAt: Date;
+
+  @Column({type: "int", default: 0, transformer: new RolesTransformer<CharacterRole>()})
+  roles: Roles<CharacterRole>;
 }

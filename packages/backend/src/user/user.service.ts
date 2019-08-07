@@ -1,7 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, Transaction, TransactionManager, EntityManager, TransactionRepository } from "typeorm";
-import { User, Role } from "matrix-database";
+import { User } from "matrix-database";
 import { Character } from "matrix-database";
 import { FileUpload } from "graphql-upload";
 import { FileService } from "file/file.service";

@@ -1,12 +1,12 @@
 import { ValueTransformer } from "typeorm";
-import { Roles } from "../utils/roles";
+import { Roles, RoleEnum } from "../utils/roles";
 
-export class RolesTransformer implements ValueTransformer {
-  to(value: Roles | number | any): number {
+export class RolesTransformer<T extends RoleEnum> implements ValueTransformer {
+  to(value: Roles<T> | number | any): number {
     return value instanceof Roles ? value.toNumber() : typeof value === "number" ? value : 0;
   }
 
-  from(value: number): Roles {
-    return new Roles(value);
+  from(value: number): Roles<T> {
+    return new Roles<T>(value);
   }
 }
