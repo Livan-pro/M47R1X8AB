@@ -1,4 +1,4 @@
-import {MinLength, MaxLength, Min, Max} from "class-validator";
+import {MinLength, MaxLength} from "class-validator";
 
 export class CreateCharacter {
   @MinLength(2, {message: "Имя должно быть длиннее 1 символа"})
@@ -6,4 +6,6 @@ export class CreateCharacter {
   name: string | undefined = undefined;
 
   quenta: any | undefined = undefined;
+
+  role: any | undefined = undefined;
 }
