@@ -23,7 +23,7 @@ sudo apt install -y mysql-server
 sudo mysql_secure_installation
 mysql -uroot -p
 # Enter password...
-CREATE DATABASE matrix;
+CREATE DATABASE matrix CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER 'matrix'@'localhost' IDENTIFIED BY 'my-strong-password-here';
 GRANT ALL ON matrix.* TO 'matrix'@'localhost';
 # Optional: create other users
