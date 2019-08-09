@@ -18,12 +18,13 @@
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
 import { ImageSource } from "tns-core-modules/image-source";
-import gql from "graphql-tag";
 import * as imagepicker from "nativescript-imagepicker";
 import * as camera from "nativescript-camera";
 import { ImageCropper } from "nativescript-imagecropper";
 import CharacterAvatar from "@/components/CharacterAvatar.vue";
 import { ImageAsset } from "tns-core-modules/image-asset/image-asset";
+
+import UploadAvatarM, { createUpdate } from "@/gql/UploadAvatar";
 
 @Component({
   components: { CharacterAvatar },
@@ -82,25 +83,12 @@ export default class UploadAvatar extends Vue {
   async upload() {
     try {
       await this.$apollo.mutate({
-        mutation: gql`mutation($id: Int!, $avatar: String!) {
-          uploadAvatar(id: $id, avatar: $avatar)
-        }`,
+        ...UploadAvatarM,
         variables: {
           id: this.id,
           avatar: this.source.toBase64String("png"),
         },
-        update: (store, { data: { uploadAvatar } }) => {
-          const query = gql`query($id: Int!) {
-            character(id: $id) {
-              id
-              avatarUploadedAt
-            }
-          }`;
-          const variables = { id: this.id };
-          const data = store.readQuery({ query, variables }) as { character: { avatarUploadedAt: number } };
-          data.character.avatarUploadedAt = uploadAvatar;
-          store.writeQuery({ query, variables, data });
-        },
+        update: createUpdate(this.id),
       });
       this.$navigateBack();
     } catch (error) {

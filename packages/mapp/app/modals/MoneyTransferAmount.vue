@@ -14,52 +14,46 @@
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
-import gql from "graphql-tag";
 import CharacterItem from "@/components/CharacterItem.vue";
+
+import CharacterById from "@/gql/CharacterById";
+import MoneyTransfer, { createUpdate } from "@/gql/MoneyTransfer";
+import { CharacterById_character as Character } from "@/gql/__generated__/CharacterById";
 
 @Component({
   components: { CharacterItem },
   apollo: {
     character: {
-      query: gql`query($id: Int!) {
-        character(id: $id) {
-          id
-          name
-          own
-          avatarUploadedAt
-        }
-      }`,
+      ...CharacterById,
       variables() {
         return {
           id: (this as any).id,
         };
       },
-      fetchPolicy: "cache-and-network",
     },
   },
 })
 export default class MoneyTransferAmountModal extends Vue {
   @Prop({type: Number, default: -1}) id!: number;
   amount = "";
-  character: any = {};
+  character: Character | {} = {};
   loading = false;
 
   async doTransfer() {
     this.loading = true;
     const amount = parseInt(this.amount, 10);
     try {
-      const result = await this.$apollo.mutate({
-        mutation: gql`mutation($id: Int!, $amount: Int!) {
-          moneyTransfer(id: $id, amount: $amount)
-        }`,
+      await this.$apollo.mutate({
+        ...MoneyTransfer,
         variables: {
           id: this.id,
           amount,
         },
+        update: createUpdate(amount),
       });
       await alert({
         title: "Успех",
-        message: `Вы перевели ${amount} кредитов пользователю ${this.character.name}`,
+        message: `Вы перевели ${amount} кредитов пользователю ${(this.character as any).name}`,
         okButtonText: "ОК",
       });
     } catch (error) {

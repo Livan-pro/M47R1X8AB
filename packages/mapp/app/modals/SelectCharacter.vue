@@ -16,27 +16,19 @@
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
-import gql from "graphql-tag";
 import CharacterItem from "@/components/CharacterItem.vue";
+
+import Characters from "@/gql/Characters";
+import { Characters_characters as Character } from "@/gql/__generated__/Characters";
 
 @Component({
   components: { CharacterItem },
   apollo: {
-    characters: {
-      query: gql`{
-        characters {
-          id
-          name
-          own
-          avatarUploadedAt
-        }
-      }`,
-      fetchPolicy: "cache-and-network",
-    },
+    characters: Characters,
   },
 })
 export default class SelectCharacterModal extends Vue {
-  characters = [];
+  characters: Character[] = [];
 
   onTap({id}: {id: number}) {
     this.$modal.close(id);

@@ -16,27 +16,19 @@
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
-import gql from "graphql-tag";
 import CharacterItem from "@/components/CharacterItem.vue";
+
+import characters from "@/gql/Characters";
+import { Characters_characters as Character } from "@/gql/__generated__/Characters";
 
 @Component({
   components: { CharacterItem },
   apollo: {
-    characters: {
-      query: gql`{
-        characters {
-          id
-          name
-          own
-          avatarUploadedAt
-        }
-      }`,
-      fetchPolicy: "cache-and-network",
-    },
+    characters,
   },
 })
-export default class Characters extends Vue {
-  characters = [];
+export default class CharactersPage extends Vue {
+  characters: Character[] = [];
 }
 </script>
 

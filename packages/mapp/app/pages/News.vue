@@ -13,26 +13,19 @@
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
-import gql from "graphql-tag";
 import NewsItem from "@/components/NewsItem.vue";
+
+import news from "@/gql/News";
+import { News_news as NewsItemType } from "@/gql/__generated__/News";
 
 @Component({
   components: { NewsItem },
   apollo: {
-    news: {
-      query: gql`{
-        news {
-          title
-          datetime
-          text
-        }
-      }`,
-      fetchPolicy: "cache-and-network",
-    },
+    news,
   },
 })
 export default class News extends Vue {
-  news = [];
+  news: NewsItemType[] = [];
 }
 </script>
 

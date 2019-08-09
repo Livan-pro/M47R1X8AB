@@ -16,14 +16,16 @@ import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
 import * as appSettings from "tns-core-modules/application-settings";
 import App from "./App.vue";
-import gql from "graphql-tag";
 import { query } from "@/graphql/me";
 import { login } from "@/vue-apollo";
+
+import Login from "@/gql/Login";
+import { Login_login as LoginType } from "@/gql/__generated__/Login";
 
 const sleep = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms));
 
 @Component
-export default class Login extends Vue {
+export default class LoginPage extends Vue {
   form = {
     email: "",
     password: "",
@@ -41,22 +43,9 @@ export default class Login extends Vue {
     this.loading = false;
 
     try {
-      const result = await this.$apollo.mutate({
-        mutation: gql`mutation($email: String!, $password: String!, $rememberMe: Boolean) {
-          login(email: $email, password: $password, rememberMe: $rememberMe) {
-            email
-            token
-          }
-        }`,
+      const result = await this.$apollo.mutate<LoginType>({
+        ...Login,
         variables: this.form,
-        update: (proxy: any, res: any) => {
-          proxy.writeQuery({query, data: {
-            me: {
-              __typename: "User",
-              email: res.data.login.email,
-            },
-          }});
-        },
       });
       login(result.data.login.token);
     } catch (error) {

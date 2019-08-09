@@ -12,37 +12,31 @@
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
-import gql from "graphql-tag";
 import CharacterAvatar from "@/components/CharacterAvatar.vue";
 import UploadAvatar from "@/pages/UploadAvatar.vue";
+
+import CharacterById from "@/gql/CharacterById";
+import { CharacterById_character as Character } from "@/gql/__generated__/CharacterById";
 
 @Component({
   components: { CharacterAvatar },
   apollo: {
     character: {
-      query: gql`query($id: Int!) {
-        character(id: $id) {
-          id
-          name
-          own
-          avatarUploadedAt
-        }
-      }`,
+      ...CharacterById,
       variables() {
         return {
           id: (this as any).id,
         };
       },
-      fetchPolicy: "cache-and-network",
     },
   },
 })
-export default class Character extends Vue {
+export default class CharacterPage extends Vue {
   @Prop({type: Number, default: -1}) id!: number;
-  character: any = {};
+  character: Character | {} = {};
 
   onTap() {
-    if (!this.character.own) return;
+    if (!(this.character as any).own) return;
     this.$navigateTo(UploadAvatar, {frame: this.$root.currentFrame, props: {id: this.id}} as any);
   }
 }

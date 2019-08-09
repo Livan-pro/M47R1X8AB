@@ -3,7 +3,10 @@
   "version": "1.1.0",
   "description": "Matrix's native mobile application",
   "author": "Livan <livanerror@gmail.com>",
-  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "codegen": "apollo codegen:generate --target typescript --queries \"app/gql/*.ts\" --outputFlat app/gql/__generated__/"
+  },
   "nativescript": {
     "id": "pro.livan.matrix8ab",
     "tns-ios": {
@@ -39,6 +42,7 @@
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
+    "apollo": "^2.17.2",
     "babel-loader": "^8.0.2",
     "babel-traverse": "6.26.0",
     "babel-types": "6.26.0",
