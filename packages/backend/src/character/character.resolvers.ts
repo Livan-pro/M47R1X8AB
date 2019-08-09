@@ -72,16 +72,4 @@ export class CharacterResolvers {
     await this.character.update(id, {avatarUploadedAt: date});
     return date;
   }
-
-  @Mutation()
-  async moneyTransfer(
-    @Args("id") id: number,
-    @Args("amount") amount: number,
-    @GetUser() user: User,
-  ): Promise<boolean> {
-    if (user.mainCharacterId === id) throw new CustomError("Вы не можете перевести деньги себе");
-    if (amount <= 0) throw new CustomError("Неверная сумма перевода");
-    await this.character.moneyTransfer(user.mainCharacterId, id, amount);
-    return true;
-  }
 }

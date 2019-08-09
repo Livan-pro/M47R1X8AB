@@ -14,6 +14,7 @@ import { NewsModule } from "./news/news.module";
 import { APP_GUARD } from "@nestjs/core";
 import { RolesGuard } from "auth/roles.guard";
 import { GqlAuthGuard } from "auth/gql-auth.guard";
+import { BalanceModule } from "balance/balance.module";
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { GqlAuthGuard } from "auth/gql-auth.guard";
     }),
     TypeOrmModule.forRoot(),
     AuthModule,
+    BalanceModule,
     CharacterModule,
     NewsModule,
     UserModule,

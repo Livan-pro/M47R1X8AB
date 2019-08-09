@@ -37,5 +37,4 @@ type Mutation {
   editCharacter(id: Int!, character: CharacterInput!): Boolean
   """avatar - base64-encoded image (200x200, png)"""
   uploadAvatar(id: Int!, avatar: String!): Date!
-  moneyTransfer(id: Int!, amount: Int!): Boolean
 }

@@ -1,11 +1,9 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, Transaction, EntityManager, TransactionManager } from "typeorm";
-import { User, BalanceTransfer } from "matrix-database";
 import { Character } from "matrix-database";
 import { FileUpload } from "graphql-upload";
 import { FileService } from "file/file.service";
-import { CustomError } from "CustomError";
 
 @Injectable()
 export class CharacterService {
@@ -45,22 +43,5 @@ export class CharacterService {
       await this.file.upload(quenta, ["quenta", id.toString(), quenta.filename]);
       this.log.log("Done!");
     }
-  }
-
-  @Transaction()
-  async moneyTransfer(
-    fromId: number,
-    toId: number,
-    amount: number,
-    @TransactionManager() manager?: EntityManager,
-  ): Promise<void> {
-    const repo = manager.getRepository(Character);
-    await repo.decrement({id: fromId}, "balance", amount);
-    const char = await repo.findOneOrFail({id: fromId});
-    if (char.balance < 0) throw new CustomError("Недостаточно средств!");
-    await repo.increment({id: toId}, "balance", amount);
-    const historyRepo = manager.getRepository(BalanceTransfer);
-    const transfer = historyRepo.create({fromId, toId, amount});
-    await historyRepo.save(transfer);
   }
 }

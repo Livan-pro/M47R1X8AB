@@ -1,0 +1,3 @@
+type Mutation {
+  moneyTransfer(id: Int!, amount: Int!): Boolean
+}
