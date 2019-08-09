@@ -38,4 +38,7 @@ export class Character {
 
   @Column({type: "int", default: 0, transformer: new RolesTransformer<CharacterRole>(CharacterRole)})
   roles: Roles<CharacterRole>;
+
+  @Column({type: "int", default: 0})
+  balance: number;
 }
