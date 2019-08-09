@@ -10,20 +10,20 @@
 import { Component, Prop } from "vue-property-decorator";
 import Vue, { NativeScriptVueConstructor } from "nativescript-vue";
 
-export interface IMenuItem {
+export interface MenuItem {
   title: string;
   action?: () => void;
   open?: NativeScriptVueConstructor;
-  props?: any;
+  props?: object;
 }
 
 @Component
 export default class Menu extends Vue {
-  @Prop({type: Array, default: []}) items: IMenuItem[];
+  @Prop({ type: Array, default: [] }) items: MenuItem[];
 
   async onItemTap({ item }) {
     if (item.action) await item.action.call(this);
-    if (item.open) this.$navigateTo(item.open, {frame: this.$root.currentFrame, props: item.props} as any);
+    if (item.open) this.$navigateTo(item.open, { frame: this.$root.currentFrame, props: item.props });
   }
 }
 </script>

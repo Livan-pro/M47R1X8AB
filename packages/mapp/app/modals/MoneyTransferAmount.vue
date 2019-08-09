@@ -1,10 +1,10 @@
 <template>
-  <Page actionBarHidden="true">
+  <Page action-bar-hidden="true">
     <ScrollView>
       <StackLayout class="p-x-20 p-y-10">
         <Label text="Перевод денег" dock="left" class="h2" />
-        <CharacterItem :id="id" :avatarUploadedAt="character.avatarUploadedAt" :name="character.name" :own="character.own" @tap.prevent="" />
-        <TextField v-model="amount" hint="Сумма" keyboardType="number" returnKeyType="done" @returnPress="doTransfer" />
+        <CharacterItem :id="id" :avatar-uploaded-at="character.avatarUploadedAt" :name="character.name" :own="character.own" @tap.prevent="" />
+        <TextField v-model="amount" hint="Сумма" keyboard-type="number" return-key-type="done" @returnPress="doTransfer" />
         <Button text="Перевести" @tap="doTransfer" />
       </StackLayout>
     </ScrollView>
@@ -14,52 +14,46 @@
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
-import gql from "graphql-tag";
 import CharacterItem from "@/components/CharacterItem.vue";
+
+import CharacterById from "@/gql/CharacterById";
+import MoneyTransfer, { createUpdate } from "@/gql/MoneyTransfer";
+import { CharacterById_character as Character } from "@/gql/__generated__/CharacterById";
 
 @Component({
   components: { CharacterItem },
   apollo: {
     character: {
-      query: gql`query($id: Int!) {
-        character(id: $id) {
-          id
-          name
-          own
-          avatarUploadedAt
-        }
-      }`,
+      ...CharacterById,
       variables() {
         return {
-          id: (this as any).id,
+          id: (this as MoneyTransferAmountModal).id,
         };
       },
-      fetchPolicy: "cache-and-network",
     },
   },
 })
 export default class MoneyTransferAmountModal extends Vue {
-  @Prop({type: Number, default: -1}) id!: number;
+  @Prop({ type: Number, default: -1 }) id!: number;
   amount = "";
-  character: any = {};
+  character: Character | {} = {};
   loading = false;
 
   async doTransfer() {
     this.loading = true;
     const amount = parseInt(this.amount, 10);
     try {
-      const result = await this.$apollo.mutate({
-        mutation: gql`mutation($id: Int!, $amount: Int!) {
-          moneyTransfer(id: $id, amount: $amount)
-        }`,
+      await this.$apollo.mutate({
+        ...MoneyTransfer,
         variables: {
           id: this.id,
           amount,
         },
+        update: createUpdate(amount),
       });
       await alert({
         title: "Успех",
-        message: `Вы перевели ${amount} кредитов пользователю ${this.character.name}`,
+        message: `Вы перевели ${amount} кредитов пользователю ${(this.character as Character).name}`,
         okButtonText: "ОК",
       });
     } catch (error) {
@@ -79,7 +73,7 @@ export default class MoneyTransferAmountModal extends Vue {
 </script>
 
 <style scoped>
-Button {
+button {
   margin: 16px 0;
 }
 </style>

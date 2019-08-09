@@ -20,7 +20,27 @@ const httpLink = createHttpLink({
 
 let token = appSettings.getString("token");
 
-const authLink = setContext((_, { headers }) => {
+export function setToken(newToken: string): void {
+  token = newToken;
+  appSettings.setString("token", token);
+}
+
+export function unsetToken(): void {
+  token = undefined;
+  appSettings.remove("token");
+}
+
+export function login(newToken: string): void {
+  setToken(newToken);
+  vue.$navigateTo(App);
+}
+
+export function logout(): void {
+  unsetToken();
+  vue.$navigateTo(Login);
+}
+
+const authLink = setContext((_, { headers }): unknown => {
   return {
     headers: {
       ...headers,
@@ -29,7 +49,7 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
-const logoutLink = onError(({ graphQLErrors }) => {
+const logoutLink = onError(({ graphQLErrors }): void => {
   if (graphQLErrors && graphQLErrors.length >= 1 && graphQLErrors[0].message && graphQLErrors[0].message.statusCode === 401) logout();
 });
 
@@ -45,23 +65,3 @@ export const apolloClient = new ApolloClient({
 export const apolloProvider = new VueApollo({
   defaultClient: apolloClient,
 });
-
-export function setToken(newToken: string) {
-  token = newToken;
-  appSettings.setString("token", token);
-}
-
-export function unsetToken() {
-  token = undefined;
-  appSettings.remove("token");
-}
-
-export function login(newToken: string) {
-  setToken(newToken);
-  vue.$navigateTo(App);
-}
-
-export function logout() {
-  unsetToken();
-  vue.$navigateTo(Login);
-}

@@ -1,5 +1,5 @@
 <template>
-  <Page actionBarHidden="true">
+  <Page action-bar-hidden="true">
     <GridLayout class="p-x-20 p-y-10" rows="*" columns="*">
       <ActivityIndicator v-if="loading" busy="true" />
       <ConfirmQRMoneyTransfer v-else-if="type === 'mt'" :id="id" :amount="amount" />
@@ -17,8 +17,8 @@ import ConfirmQRMoneyTransfer from "@/components/ConfirmQRMoneyTransfer.vue";
   components: { ConfirmQRMoneyTransfer },
 })
 export default class ScanResult extends Vue {
-  @Prop({type: Boolean}) loading!: boolean;
-  @Prop({type: String}) result!: string;
+  @Prop({ type: Boolean }) loading!: boolean;
+  @Prop({ type: String }) result!: string;
   type = "unknown";
   id = -1;
   amount = -1;
@@ -28,25 +28,27 @@ export default class ScanResult extends Vue {
     this.type = "unknown";
     if (result.startsWith("cbrpnk://")) {
       const data = result.substring(9).split("/");
-      if (!this.parsers[data[0]]) await alert({
-        title: "Ошибка",
-        message: "Неизвестный формат QR-кода",
-        okButtonText: "ОК",
-      });
+      if (!this.parsers[data[0]])
+        await alert({
+          title: "Ошибка",
+          message: "Неизвестный формат QR-кода",
+          okButtonText: "ОК",
+        });
       let success = false;
       try {
         success = this.parsers[data[0]](data);
-      } catch(e) {}
-      if (!success) await alert({
-        title: "Ошибка",
-        message: "Неверный QR-код",
-        okButtonText: "ОК",
-      });
+      } catch (e) {}
+      if (!success)
+        await alert({
+          title: "Ошибка",
+          message: "Неверный QR-код",
+          okButtonText: "ОК",
+        });
     }
   }
 
   parsers = {
-    "mt": this.parseMT,
+    mt: this.parseMT,
   };
 
   parseMT(data) {

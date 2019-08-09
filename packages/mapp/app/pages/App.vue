@@ -1,12 +1,12 @@
 <template>
   <Page>
-    <ActionBar title="Матрица 2219" android:flat="true"/>
+    <ActionBar title="Матрица 2219" android:flat="true" />
     <TabView
       class="nav"
-      androidTabsPosition="bottom"
-      androidSelectedTabHighlightColor="#ffffff"
-      :tabTextFontSize="20"
-      :selectedIndex="selectedIndex"
+      android-tabs-position="bottom"
+      android-selected-tab-highlight-color="#ffffff"
+      :tab-text-font-size="20"
+      :selected-index="selectedIndex"
       @selectedIndexChange="onSelectedIndexChange"
     >
       <TabViewItem class="fas" :title="'\uf1ea'">
@@ -34,9 +34,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop } from "vue-property-decorator";
+import { Component } from "vue-property-decorator";
 import Vue from "nativescript-vue";
-import * as appSettings from "tns-core-modules/application-settings";
 import { BarcodeScanner } from "nativescript-barcodescanner";
 
 import News from "./News.vue";
@@ -56,7 +55,7 @@ export default class App extends Vue {
 
   async onSelectedIndexChange({ value, oldValue }) {
     this.$root.currentFrame = "f" + value;
-    if (value === 2) if (!await this.scan()) this.selectedIndex = oldValue;
+    if (value === 2) if (!(await this.scan())) this.selectedIndex = oldValue;
   }
 
   async scan(): Promise<boolean> {
@@ -77,7 +76,7 @@ export default class App extends Vue {
         await alert({
           title: "Доступ к камере",
           message: "Вы должны разрешить доступ к камере, чтобы иметь возможность сканировать QR-код",
-          okButtonText:  "OK",
+          okButtonText: "OK",
         });
       }
       console.log("Scan error. " + err);
@@ -87,5 +86,4 @@ export default class App extends Vue {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -10,9 +10,9 @@ const dataUrl = ENV_DATA_URL || "https://cyberpunk2219.tech/data";
 
 @Component
 export default class CharacterItem extends Vue {
-  @Prop({type: Number, default: -1}) id!: number;
-  @Prop({type: Number}) avatarUploadedAt!: number;
-  @Prop({type: Number, default: 100}) size!: number;
+  @Prop({ type: Number, default: -1 }) id!: number;
+  @Prop({ type: Number }) avatarUploadedAt!: number;
+  @Prop({ type: Number, default: 100 }) size!: number;
 
   get avatarUrl() {
     if (this.id < 0 || !this.avatarUploadedAt) return `${dataUrl}/avatar/no-avatar.png`;
@@ -21,5 +21,4 @@ export default class CharacterItem extends Vue {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

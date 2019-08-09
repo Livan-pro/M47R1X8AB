@@ -1,5 +1,5 @@
 <template>
-  <Page actionBarHidden="true">
+  <Page action-bar-hidden="true">
     <ScrollView>
       <StackLayout class="p-x-20 p-y-10">
         <Label text="Загрузка аватара" class="h1 text-center" />
@@ -18,24 +18,24 @@
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
 import { ImageSource } from "tns-core-modules/image-source";
-import gql from "graphql-tag";
 import * as imagepicker from "nativescript-imagepicker";
 import * as camera from "nativescript-camera";
 import { ImageCropper } from "nativescript-imagecropper";
 import CharacterAvatar from "@/components/CharacterAvatar.vue";
 import { ImageAsset } from "tns-core-modules/image-asset/image-asset";
 
+import UploadAvatarM, { createUpdate } from "@/gql/UploadAvatar";
+
 @Component({
   components: { CharacterAvatar },
 })
 export default class UploadAvatar extends Vue {
-  @Prop({type: Number, default: -1}) id!: number;
-  character: any = {};
+  @Prop({ type: Number, default: -1 }) id!: number;
   context: imagepicker.ImagePicker;
   source: ImageSource | null = null;
 
   created() {
-    this.context = imagepicker.create({mode: "single"});
+    this.context = imagepicker.create({ mode: "single" });
   }
 
   async select() {
@@ -45,7 +45,7 @@ export default class UploadAvatar extends Vue {
       await alert({
         title: "Доступ к изображениям",
         message: "Вы должны разрешить доступ к изображениям, чтобы выбрать аватар для загрузки",
-        okButtonText:  "OK",
+        okButtonText: "OK",
       });
     }
 
@@ -61,7 +61,7 @@ export default class UploadAvatar extends Vue {
       await alert({
         title: "Доступ к камере",
         message: "Вы должны разрешить доступ к камере, чтобы сделать фото",
-        okButtonText:  "OK",
+        okButtonText: "OK",
       });
     }
 
@@ -75,32 +75,19 @@ export default class UploadAvatar extends Vue {
     const source = new ImageSource();
     await source.fromAsset(asset);
     const imageCropper = new ImageCropper();
-    const args = await imageCropper.show(source, {width: 200, height: 200});
+    const args = await imageCropper.show(source, { width: 200, height: 200 });
     if (args.image !== null) this.source = args.image;
   }
 
   async upload() {
     try {
       await this.$apollo.mutate({
-        mutation: gql`mutation($id: Int!, $avatar: String!) {
-          uploadAvatar(id: $id, avatar: $avatar)
-        }`,
+        ...UploadAvatarM,
         variables: {
           id: this.id,
           avatar: this.source.toBase64String("png"),
         },
-        update: (store, { data: { uploadAvatar } }) => {
-          const query = gql`query($id: Int!) {
-            character(id: $id) {
-              id
-              avatarUploadedAt
-            }
-          }`;
-          const variables = { id: this.id };
-          const data = store.readQuery({ query, variables }) as { character: { avatarUploadedAt: number } };
-          data.character.avatarUploadedAt = uploadAvatar;
-          store.writeQuery({ query, variables, data });
-        },
+        update: createUpdate(this.id),
       });
       this.$navigateBack();
     } catch (error) {
@@ -117,5 +104,4 @@ export default class UploadAvatar extends Vue {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

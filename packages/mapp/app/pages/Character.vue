@@ -1,9 +1,9 @@
 <template>
-  <Page actionBarHidden="true">
+  <Page action-bar-hidden="true">
     <ScrollView>
       <StackLayout class="p-x-20 p-y-10">
-        <CharacterAvatar :id="id" :avatarUploadedAt="character.avatarUploadedAt" :size="200" @tap="onTap" />
-        <Label :text="character.name" class="h1 text-center" :class="{own: character.own}" />
+        <CharacterAvatar :id="id" :avatar-uploaded-at="character.avatarUploadedAt" :size="200" @tap="onTap" />
+        <Label :text="character.name" class="h1 text-center" :class="{ own: character.own }" />
       </StackLayout>
     </ScrollView>
   </Page>
@@ -12,38 +12,32 @@
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
-import gql from "graphql-tag";
 import CharacterAvatar from "@/components/CharacterAvatar.vue";
 import UploadAvatar from "@/pages/UploadAvatar.vue";
+
+import CharacterById from "@/gql/CharacterById";
+import { CharacterById_character as Character } from "@/gql/__generated__/CharacterById";
 
 @Component({
   components: { CharacterAvatar },
   apollo: {
     character: {
-      query: gql`query($id: Int!) {
-        character(id: $id) {
-          id
-          name
-          own
-          avatarUploadedAt
-        }
-      }`,
+      ...CharacterById,
       variables() {
         return {
-          id: (this as any).id,
+          id: (this as CharacterPage).id,
         };
       },
-      fetchPolicy: "cache-and-network",
     },
   },
 })
-export default class Character extends Vue {
-  @Prop({type: Number, default: -1}) id!: number;
-  character: any = {};
+export default class CharacterPage extends Vue {
+  @Prop({ type: Number, default: -1 }) id!: number;
+  character: Character | {} = {};
 
   onTap() {
-    if (!this.character.own) return;
-    this.$navigateTo(UploadAvatar, {frame: this.$root.currentFrame, props: {id: this.id}} as any);
+    if (!(this.character as Character).own) return;
+    this.$navigateTo(UploadAvatar, { frame: this.$root.currentFrame, props: { id: this.id } });
   }
 }
 </script>
