@@ -76,6 +76,7 @@ export class Character {
     roles?: CharacterRole[];
     own: boolean;
     avatarUploadedAt?: Date;
+    balance?: number;
 }
 
 export class LoginResult {
@@ -87,6 +88,8 @@ export abstract class IMutation {
     abstract editCharacter(id: number, character: CharacterInput): boolean | Promise<boolean>;
 
     abstract uploadAvatar(id: number, avatar: string): Date | Promise<Date>;
+
+    abstract moneyTransfer(id: number, amount: number): boolean | Promise<boolean>;
 
     abstract createNews(data: NewsInput): News | Promise<News>;
 
