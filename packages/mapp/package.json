@@ -31,6 +31,7 @@
     "nativescript-toasty": "^1.4.0",
     "nativescript-vue": "^2.0.0",
     "nativescript-vue-devtools": "^1.2.0",
+    "qrcode": "^1.4.1",
     "tns-core-modules": "^5.4.3",
     "vue-apollo": "^3.0.0-rc.1",
     "vue-property-decorator": "^8.2.1"

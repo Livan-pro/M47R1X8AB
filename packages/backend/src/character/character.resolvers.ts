@@ -9,7 +9,7 @@ import * as imageSizeSync from "image-size";
 import { CustomError } from "CustomError";
 import { Roles } from "auth/roles.decorator";
 
-@Resolver()
+@Resolver("Character")
 @Roles(Role.LoggedIn)
 export class CharacterResolvers {
   private readonly log = new Logger(CharacterResolvers.name);

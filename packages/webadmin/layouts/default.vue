@@ -63,6 +63,11 @@ export default class DefaultLayout extends Vue {
       title: "Новости",
       to: "/news",
     },
+    {
+      icon: "mdi-bank-transfer",
+      title: "Транзакции",
+      to: "/transactions",
+    },
   ];
   title = "Matrix Webadmin";
 

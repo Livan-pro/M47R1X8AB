@@ -69,6 +69,14 @@ export class UserInput {
     city?: string;
 }
 
+export class BalanceTransfer {
+    id: number;
+    createdAt: Date;
+    from: Character;
+    to: Character;
+    amount: number;
+}
+
 export class Character {
     id: number;
     name: string;
@@ -76,6 +84,7 @@ export class Character {
     roles?: CharacterRole[];
     own: boolean;
     avatarUploadedAt?: Date;
+    balance?: number;
 }
 
 export class LoginResult {
@@ -84,6 +93,8 @@ export class LoginResult {
 }
 
 export abstract class IMutation {
+    abstract moneyTransfer(id: number, amount: number): boolean | Promise<boolean>;
+
     abstract editCharacter(id: number, character: CharacterInput): boolean | Promise<boolean>;
 
     abstract uploadAvatar(id: number, avatar: string): Date | Promise<Date>;
@@ -116,6 +127,8 @@ export class News {
 
 export abstract class IQuery {
     abstract none(): boolean | Promise<boolean>;
+
+    abstract allBalanceHistory(): BalanceTransfer[] | Promise<BalanceTransfer[]>;
 
     abstract characters(): Character[] | Promise<Character[]>;
 

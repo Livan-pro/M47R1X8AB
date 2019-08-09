@@ -25,6 +25,7 @@ type Character {
   roles: [CharacterRole!]
   own: Boolean!
   avatarUploadedAt: Date
+  balance: Int
 }
 
 type Query {
