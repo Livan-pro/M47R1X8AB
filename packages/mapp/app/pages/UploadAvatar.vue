@@ -1,5 +1,5 @@
 <template>
-  <Page actionBarHidden="true">
+  <Page action-bar-hidden="true">
     <ScrollView>
       <StackLayout class="p-x-20 p-y-10">
         <Label text="Загрузка аватара" class="h1 text-center" />
@@ -30,13 +30,12 @@ import UploadAvatarM, { createUpdate } from "@/gql/UploadAvatar";
   components: { CharacterAvatar },
 })
 export default class UploadAvatar extends Vue {
-  @Prop({type: Number, default: -1}) id!: number;
-  character: any = {};
+  @Prop({ type: Number, default: -1 }) id!: number;
   context: imagepicker.ImagePicker;
   source: ImageSource | null = null;
 
   created() {
-    this.context = imagepicker.create({mode: "single"});
+    this.context = imagepicker.create({ mode: "single" });
   }
 
   async select() {
@@ -46,7 +45,7 @@ export default class UploadAvatar extends Vue {
       await alert({
         title: "Доступ к изображениям",
         message: "Вы должны разрешить доступ к изображениям, чтобы выбрать аватар для загрузки",
-        okButtonText:  "OK",
+        okButtonText: "OK",
       });
     }
 
@@ -62,7 +61,7 @@ export default class UploadAvatar extends Vue {
       await alert({
         title: "Доступ к камере",
         message: "Вы должны разрешить доступ к камере, чтобы сделать фото",
-        okButtonText:  "OK",
+        okButtonText: "OK",
       });
     }
 
@@ -76,7 +75,7 @@ export default class UploadAvatar extends Vue {
     const source = new ImageSource();
     await source.fromAsset(asset);
     const imageCropper = new ImageCropper();
-    const args = await imageCropper.show(source, {width: 200, height: 200});
+    const args = await imageCropper.show(source, { width: 200, height: 200 });
     if (args.image !== null) this.source = args.image;
   }
 
@@ -105,5 +104,4 @@ export default class UploadAvatar extends Vue {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

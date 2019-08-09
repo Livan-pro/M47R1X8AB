@@ -1,20 +1,20 @@
 <template>
-  <Page actionBarHidden="true">
+  <Page action-bar-hidden="true">
     <ScrollView>
       <StackLayout class="p-x-20 p-y-10">
         <Label text="Персонажи" class="h1 text-center" />
         <template v-for="(item, i) in characters">
           <StackLayout :key="'hr-' + i" class="hr-light m-b-10" />
-          <CharacterItem :key="i" :id="item.id" :avatarUploadedAt="item.avatarUploadedAt" :name="item.name" :own="item.own" />
+          <CharacterItem :id="item.id" :key="i" :avatar-uploaded-at="item.avatarUploadedAt" :name="item.name" :own="item.own" />
         </template>
-        <StackLayout class="hr-light"></StackLayout>
+        <StackLayout class="hr-light" />
       </StackLayout>
     </ScrollView>
   </Page>
 </template>
 
 <script lang="ts">
-import { Component, Prop } from "vue-property-decorator";
+import { Component } from "vue-property-decorator";
 import Vue from "nativescript-vue";
 import CharacterItem from "@/components/CharacterItem.vue";
 
@@ -32,5 +32,4 @@ export default class CharactersPage extends Vue {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

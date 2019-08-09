@@ -1,15 +1,15 @@
 <template>
-  <Page actionBarHidden="true">
+  <Page action-bar-hidden="true">
     <StackLayout class="p-x-20 p-y-10">
-      <CharacterItem :id="characterId" :avatarUploadedAt="avatarUploadedAt" :name="name" :avatarSize="50" />
+      <CharacterItem :id="characterId" :avatar-uploaded-at="avatarUploadedAt" :name="name" :avatar-size="50" />
       <StackLayout class="hr-light m-y-10" />
-      <Menu :items="items"/>
+      <Menu :items="items" />
     </StackLayout>
   </Page>
 </template>
 
 <script lang="ts">
-import { Component, Prop } from "vue-property-decorator";
+import { Component } from "vue-property-decorator";
 import Vue from "nativescript-vue";
 import { logout } from "@/vue-apollo";
 
@@ -30,11 +30,11 @@ export default class MenuPage extends Vue {
   me: MainCharacter | {} = {};
   get items() {
     return [
-      {title: `Баланс: ${this.balance}`, open: MoneyPage},
-      {title: "Сообщения"},
-      {title: "Инвентарь"},
-      {title: "Свойства"},
-      {title: "Выход", action: logout},
+      { title: `Баланс: ${this.balance}`, open: MoneyPage },
+      { title: "Сообщения" },
+      { title: "Инвентарь" },
+      { title: "Свойства" },
+      { title: "Выход", action: logout },
     ];
   }
 

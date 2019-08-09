@@ -13,7 +13,7 @@ export default {
 
 export const createUpdate = (amount: number): ((proxy: DataProxy) => void) => {
   return (proxy: DataProxy): void => {
-    const data = proxy.readQuery<MyBalanceType>({query: MyBalance.query});
+    const data = proxy.readQuery<MyBalanceType>({ query: MyBalance.query });
     if (!data) return;
     const balance = data.me.mainCharacter.balance - amount;
     proxy.writeQuery({

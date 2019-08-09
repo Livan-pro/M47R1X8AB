@@ -1,22 +1,19 @@
 <template>
-  <Page backgroundSpanUnderStatusBar="true">
+  <Page background-span-under-status-bar="true">
     <ActionBar title="Вход в Матрицу" android:flat="true" />
-    <StackLayout class="p-x-20" verticalAlignment="center">
+    <StackLayout class="p-x-20" vertical-alignment="center">
       <Label :text="url" />
       <ActivityIndicator :busy="loading" />
-      <TextField v-model="form.email" hint="Email" returnKeyType="next" />
-      <TextField v-model="form.password" hint="Пароль" returnKeyType="done" secure="true" @returnPress="doLogin" />
+      <TextField v-model="form.email" hint="Email" return-key-type="next" />
+      <TextField v-model="form.password" hint="Пароль" return-key-type="done" secure="true" @returnPress="doLogin" />
       <Button text="Вход" @tap="doLogin" />
     </StackLayout>
   </Page>
 </template>
 
 <script lang="ts">
-import { Component, Prop } from "vue-property-decorator";
+import { Component } from "vue-property-decorator";
 import Vue from "nativescript-vue";
-import * as appSettings from "tns-core-modules/application-settings";
-import App from "./App.vue";
-import { query } from "@/graphql/me";
 import { login } from "@/vue-apollo";
 
 import Login from "@/gql/Login";
@@ -63,11 +60,12 @@ export default class LoginPage extends Vue {
 </script>
 
 <style lang="scss" scoped>
-TextField, Button {
+TextField,
+button {
   margin: 16px 0;
 }
 
-Button {
+button {
   font-size: 24px;
   // background-color: change-color(darken($primary, 30%), $alpha: 0.5);
   // android-elevation: 0;

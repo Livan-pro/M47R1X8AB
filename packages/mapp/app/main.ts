@@ -6,15 +6,16 @@ import { apolloProvider } from "./vue-apollo";
 
 import App from "./pages/App.vue";
 import Login from "./pages/Login.vue";
+import { VNode } from "vue";
 
 if (TNS_ENV !== "production") {
-  Vue.use(VueDevtools, {host: ENV_DEV_HOST});
+  Vue.use(VueDevtools, { host: ENV_DEV_HOST });
 }
 
 Vue.use(VueApollo);
 
 // prints Vue logs when --env.production is *NOT* set while building
-Vue.config.silent = (TNS_ENV === "production");
+Vue.config.silent = TNS_ENV === "production";
 
 const isLoggedIn = appSettings.hasKey("token");
 
@@ -23,7 +24,7 @@ export const vue = new Vue({
   data: {
     currentFrame: "",
   },
-  render: h => h("frame", [isLoggedIn ? h(App) : h(Login)]),
+  render: (h): VNode => h("frame", [isLoggedIn ? h(App) : h(Login)]),
 });
 
 vue.$start();

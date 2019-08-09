@@ -9,8 +9,8 @@ import QRCodeLib from "qrcode";
 
 @Component
 export default class QRCode extends Vue {
-  @Prop({type: String, default: ""}) text!: string;
-  @Prop({type: Number, default: 250}) size!: number;
+  @Prop({ type: String, default: "" }) text!: string;
+  @Prop({ type: Number, default: 250 }) size!: number;
 
   dataUrl = "";
 
@@ -25,5 +25,4 @@ export default class QRCode extends Vue {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

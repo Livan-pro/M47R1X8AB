@@ -1,17 +1,16 @@
 <template>
-  <Page actionBarHidden="true">
+  <Page action-bar-hidden="true">
     <StackLayout class="p-x-20 p-y-10">
       <Label :text="`Ваш баланс: ${balance}`" dock="left" class="h2" />
       <StackLayout class="hr-light m-y-10" />
-      <Menu :items="items"/>
+      <Menu :items="items" />
     </StackLayout>
   </Page>
 </template>
 
 <script lang="ts">
-import { Component, Prop } from "vue-property-decorator";
+import { Component } from "vue-property-decorator";
 import Vue from "nativescript-vue";
-import { logout } from "@/vue-apollo";
 
 import Menu from "@/components/Menu.vue";
 import SelectCharacter from "@/modals/SelectCharacter.vue";
@@ -31,12 +30,15 @@ export default class MoneyPage extends Vue {
   me: MeType | {} = {};
   get items() {
     return [
-      {title: "Перевод", action: async () => {
-        const id = await this.$showModal(SelectCharacter, {fullscreen: true});
-        console.log(`Selected ID: ${id}`);
-        await this.$showModal(MoneyTransferAmount, {props: {id}});
-      }},
-      {title: "Создать QR-код", open: MoneyTransferQRPage, props: {id: this.characterId}},
+      {
+        title: "Перевод",
+        action: async () => {
+          const id = await this.$showModal(SelectCharacter, { fullscreen: true });
+          console.log(`Selected ID: ${id}`);
+          await this.$showModal(MoneyTransferAmount, { props: { id } });
+        },
+      },
+      { title: "Создать QR-код", open: MoneyTransferQRPage, props: { id: this.characterId } },
     ];
   }
 

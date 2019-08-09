@@ -1,10 +1,10 @@
 <template>
-  <Page actionBarHidden="true">
+  <Page action-bar-hidden="true">
     <ScrollView>
       <StackLayout class="p-x-20 p-y-10">
         <Label text="Перевод денег" dock="left" class="h2" />
-        <CharacterItem :id="id" :avatarUploadedAt="character.avatarUploadedAt" :name="character.name" :own="character.own" @tap.prevent="" />
-        <TextField v-model="amount" hint="Сумма" keyboardType="number" returnKeyType="done" @returnPress="doTransfer" />
+        <CharacterItem :id="id" :avatar-uploaded-at="character.avatarUploadedAt" :name="character.name" :own="character.own" @tap.prevent="" />
+        <TextField v-model="amount" hint="Сумма" keyboard-type="number" return-key-type="done" @returnPress="doTransfer" />
         <Button text="Перевести" @tap="doTransfer" />
       </StackLayout>
     </ScrollView>
@@ -27,14 +27,14 @@ import { CharacterById_character as Character } from "@/gql/__generated__/Charac
       ...CharacterById,
       variables() {
         return {
-          id: (this as any).id,
+          id: (this as MoneyTransferAmountModal).id,
         };
       },
     },
   },
 })
 export default class MoneyTransferAmountModal extends Vue {
-  @Prop({type: Number, default: -1}) id!: number;
+  @Prop({ type: Number, default: -1 }) id!: number;
   amount = "";
   character: Character | {} = {};
   loading = false;
@@ -53,7 +53,7 @@ export default class MoneyTransferAmountModal extends Vue {
       });
       await alert({
         title: "Успех",
-        message: `Вы перевели ${amount} кредитов пользователю ${(this.character as any).name}`,
+        message: `Вы перевели ${amount} кредитов пользователю ${(this.character as Character).name}`,
         okButtonText: "ОК",
       });
     } catch (error) {
@@ -73,7 +73,7 @@ export default class MoneyTransferAmountModal extends Vue {
 </script>
 
 <style scoped>
-Button {
+button {
   margin: 16px 0;
 }
 </style>
