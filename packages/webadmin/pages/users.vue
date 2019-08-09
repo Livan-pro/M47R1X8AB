@@ -6,9 +6,6 @@
       <v-text-field v-model="search" append-icon="mdi-search" label="Поиск" single-line hide-details></v-text-field>
     </v-card-title>
     <v-data-table :headers="headers" :items="items" :search="search" sort-by="id" class="elevation-1" multi-sort>
-      <template v-slot:item.createdAt="{ value }">
-        {{ formatDate(value) }}
-      </template>
       <template v-slot:item.vkId="{ value }">
         <a :href="'https://vk.com/' + value">{{ value }}</a>
       </template>
@@ -61,7 +58,7 @@ export default class UsersPage extends Vue {
   get headers() {
     return [
       { text: "ID", value: "id" },
-      { text: "Дата регистрации", value: "createdAt" },
+      { text: "Дата регистрации", value: "date" },
       { text: "Email", value: "email" },
       { text: "Имя", value: "firstName" },
       { text: "Фамилия", value: "lastName" },
@@ -88,6 +85,7 @@ export default class UsersPage extends Vue {
         ...u.mainCharacter,
         roleText: u.mainCharacter && u.mainCharacter.roles && u.mainCharacter.roles.map(r => characterRoleToText(r)).join(", "),
       },
+      date: this.formatDate(u.createdAt),
     }));
   }
 
