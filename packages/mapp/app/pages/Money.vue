@@ -1,7 +1,7 @@
 <template>
   <Page actionBarHidden="true">
     <StackLayout class="p-x-20 p-y-10">
-      <CharacterItem :id="characterId" :avatarUploadedAt="avatarUploadedAt" :name="name" :avatarSize="50" />
+      <Label :text="`Ваш баланс: ${balance}`" dock="left" class="h2" />
       <StackLayout class="hr-light m-y-10" />
       <Menu :items="items"/>
     </StackLayout>
@@ -14,20 +14,19 @@ import Vue from "nativescript-vue";
 import gql from "graphql-tag";
 import { logout } from "@/vue-apollo";
 
-import CharacterItem from "@/components/CharacterItem.vue";
 import Menu from "@/components/Menu.vue";
-import MoneyPage from "./Money.vue";
+import SelectCharacter from "@/modals/SelectCharacter.vue";
+import MoneyTransferAmount from "@/modals/MoneyTransferAmount.vue";
+import MoneyTransferQRPage from './MoneyTransferQR.vue';
 
 @Component({
-  components: { CharacterItem, Menu },
+  components: { Menu },
   apollo: {
     me: {
       query: gql`{
         me {
           mainCharacter {
             id
-            name
-            avatarUploadedAt
             balance
           }
         }
@@ -36,15 +35,16 @@ import MoneyPage from "./Money.vue";
     },
   },
 })
-export default class MenuPage extends Vue {
+export default class MoneyPage extends Vue {
   me: any = {};
   get items() {
     return [
-      {title: `Баланс: ${this.balance}`, open: MoneyPage},
-      {title: "Сообщения"},
-      {title: "Инвентарь"},
-      {title: "Свойства"},
-      {title: "Выход", action: logout},
+      {title: "Перевод", action: async () => {
+        const id = await this.$showModal(SelectCharacter, {fullscreen: true});
+        console.log(`Selected ID: ${id}`);
+        await this.$showModal(MoneyTransferAmount, {props: {id}});
+      }},
+      {title: "Создать QR-код", open: MoneyTransferQRPage, props: {id: this.characterId}},
     ];
   }
 
@@ -54,14 +54,6 @@ export default class MenuPage extends Vue {
 
   get balance() {
     return (this.me && this.me.mainCharacter && this.me.mainCharacter.balance) || 0;
-  }
-
-  get avatarUploadedAt() {
-    return (this.me && this.me.mainCharacter && this.me.mainCharacter.avatarUploadedAt) || null;
-  }
-
-  get name() {
-    return (this.me && this.me.mainCharacter && this.me.mainCharacter.name) || "unknown";
   }
 }
 </script>

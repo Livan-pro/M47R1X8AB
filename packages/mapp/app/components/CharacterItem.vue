@@ -24,6 +24,12 @@ export default class CharacterItem extends Vue {
   @Prop({type: Number, default: 100}) avatarSize!: number;
 
   onTap() {
+    let navigate = true
+    this.$emit("tap", {
+      id: this.id,
+      preventDefault: () => navigate = false,
+    });
+    if (!navigate) return;
     this.$navigateTo(Character, {frame: this.$root.currentFrame, props: {id: this.id}} as any);
   }
 }
