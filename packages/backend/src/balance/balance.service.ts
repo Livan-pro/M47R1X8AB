@@ -12,6 +12,12 @@ export class BalanceService {
     private readonly repo: Repository<BalanceTransfer>,
   ) {}
 
+  async getAllHistory(): Promise<BalanceTransfer[]> {
+    return await this.repo.find({
+      relations: ["from", "to"],
+    });
+  }
+
   @Transaction()
   async moneyTransfer(
     fromId: number,

@@ -69,6 +69,14 @@ export class UserInput {
     city?: string;
 }
 
+export class BalanceTransfer {
+    id: number;
+    createdAt: Date;
+    from: Character;
+    to: Character;
+    amount: number;
+}
+
 export class Character {
     id: number;
     name: string;
@@ -119,6 +127,8 @@ export class News {
 
 export abstract class IQuery {
     abstract none(): boolean | Promise<boolean>;
+
+    abstract allBalanceHistory(): BalanceTransfer[] | Promise<BalanceTransfer[]>;
 
     abstract characters(): Character[] | Promise<Character[]>;
 

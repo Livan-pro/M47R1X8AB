@@ -1,8 +1,8 @@
-import { Resolver, Mutation, Args } from "@nestjs/graphql";
+import { Resolver, Mutation, Args, Query } from "@nestjs/graphql";
 import { Logger } from "@nestjs/common";
 import { BalanceService } from "./balance.service";
 import { GetUser } from "user/get-user.decorator";
-import { User, UserRole as Role } from "matrix-database";
+import { User, UserRole as Role, BalanceTransfer } from "matrix-database";
 import { CustomError } from "CustomError";
 import { Roles } from "auth/roles.decorator";
 
@@ -24,5 +24,11 @@ export class BalanceResolvers {
     if (amount <= 0) throw new CustomError("Неверная сумма перевода");
     await this.balance.moneyTransfer(user.mainCharacterId, id, amount);
     return true;
+  }
+
+  @Query()
+  @Roles(Role.Admin)
+  async allBalanceHistory(): Promise<BalanceTransfer[]> {
+    return await this.balance.getAllHistory();
   }
 }

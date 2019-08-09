@@ -1,3 +1,15 @@
+type BalanceTransfer {
+  id: Int!
+  createdAt: Date!
+  from: Character!
+  to: Character!
+  amount: Int!
+}
+
+type Query {
+  allBalanceHistory: [BalanceTransfer!]!
+}
+
 type Mutation {
   moneyTransfer(id: Int!, amount: Int!): Boolean
 }
