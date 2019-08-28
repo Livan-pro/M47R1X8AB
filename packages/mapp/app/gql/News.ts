@@ -7,6 +7,11 @@ export default {
         title
         datetime
         text
+        attachment {
+          id
+          name
+          type
+        }
       }
     }
   `,

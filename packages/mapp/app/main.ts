@@ -23,6 +23,11 @@ Vue.use(VueApollo);
 // prints Vue logs when --env.production is *NOT* set while building
 Vue.config.silent = TNS_ENV === "production";
 
+// Custom elements
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+Vue.registerElement("VideoPlayer", () => require("nativescript-videoplayer").Video);
+/* eslint-enable @typescript-eslint/explicit-function-return-type */
+
 const isLoggedIn = appSettings.hasKey("token");
 
 export const vue = new Vue({
