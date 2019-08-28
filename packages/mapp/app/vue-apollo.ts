@@ -50,7 +50,13 @@ const authLink = setContext((_, { headers }): unknown => {
 });
 
 const logoutLink = onError(({ graphQLErrors }): void => {
-  if (graphQLErrors && graphQLErrors.length >= 1 && graphQLErrors[0].message && graphQLErrors[0].message.statusCode === 401) logout();
+  if (
+    graphQLErrors &&
+    graphQLErrors.length >= 1 &&
+    graphQLErrors[0].message &&
+    ((graphQLErrors[0].message as unknown) as { statusCode: number }).statusCode === 401
+  )
+    logout();
 });
 
 // Cache implementation
@@ -60,6 +66,14 @@ const cache = new InMemoryCache();
 export const apolloClient = new ApolloClient({
   link: logoutLink.concat(authLink.concat(httpLink)),
   cache,
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: "cache-and-network",
+    },
+    query: {
+      fetchPolicy: "network-only",
+    },
+  },
 });
 
 export const apolloProvider = new VueApollo({

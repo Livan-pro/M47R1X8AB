@@ -15,6 +15,7 @@ import { APP_GUARD } from "@nestjs/core";
 import { RolesGuard } from "auth/roles.guard";
 import { GqlAuthGuard } from "auth/gql-auth.guard";
 import { BalanceModule } from "balance/balance.module";
+import { AttachmentModule } from "attachment/attachment.module";
 
 @Module({
   imports: [
@@ -22,7 +23,10 @@ import { BalanceModule } from "balance/balance.module";
       context: ({ req, res }: {req: Request, res: Response}) => ({ req, res }),
       tracing: Config.getBoolean("GRAPHQL_TRACING", false),
       typePaths: ["./**/*.graphql"],
-      uploads: true,
+      uploads: {
+        maxFileSize: 100 * 1024 * 1024, // 100 MiB
+        maxFiles: 10,
+      },
       definitions: {
         path: join(Config.getRoot(), "src/graphql.schema.ts"),
         outputAs: "class",
@@ -33,6 +37,7 @@ import { BalanceModule } from "balance/balance.module";
       // installSubscriptionHandlers: true,
     }),
     TypeOrmModule.forRoot(),
+    AttachmentModule,
     AuthModule,
     BalanceModule,
     CharacterModule,

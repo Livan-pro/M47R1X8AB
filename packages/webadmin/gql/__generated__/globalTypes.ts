@@ -6,6 +6,12 @@
 // START Enums and Input Objects
 //==============================================================
 
+export enum AttachmentType {
+  Audio = "Audio",
+  Image = "Image",
+  Video = "Video",
+}
+
 export enum CharacterRole {
   Biotechnician = "Biotechnician",
   Chemist = "Chemist",
@@ -25,10 +31,16 @@ export enum UserRole {
   SuperAdmin = "SuperAdmin",
 }
 
+export interface AttachmentInput {
+  file: any;
+  type: AttachmentType;
+}
+
 export interface NewsInput {
   title?: string | null;
   text?: string | null;
   datetime?: any | null;
+  attachment?: AttachmentInput | null;
 }
 
 //==============================================================

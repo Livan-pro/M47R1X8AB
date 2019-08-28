@@ -1,5 +1,5 @@
 <template>
-  <Page action-bar-hidden="true">
+  <Page actionBarHidden="true">
     <GridLayout class="p-x-20 p-y-10" rows="*" columns="*">
       <ActivityIndicator v-if="loading" busy="true" />
       <ConfirmQRMoneyTransfer v-else-if="type === 'mt'" :id="id" :amount="amount" />

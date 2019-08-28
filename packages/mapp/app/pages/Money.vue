@@ -1,5 +1,5 @@
 <template>
-  <Page action-bar-hidden="true">
+  <Page actionBarHidden="true">
     <StackLayout class="p-x-20 p-y-10">
       <Label :text="`Ваш баланс: ${balance}`" dock="left" class="h2" />
       <StackLayout class="hr-light m-y-10" />

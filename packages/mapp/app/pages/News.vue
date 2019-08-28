@@ -1,9 +1,9 @@
 <template>
-  <Page action-bar-hidden="true">
+  <Page actionBarHidden="true">
     <ScrollView>
       <StackLayout class="p-x-20 p-y-10">
         <Label text="Новости" class="h1 text-center" />
-        <NewsItem v-for="(item, i) in news" :key="i" :title="item.title" :time="item.datetime" :text="item.text" />
+        <NewsItem v-for="(item, i) in news" :key="i" :title="item.title" :time="item.datetime" :text="item.text" :attachment="item.attachment" />
         <StackLayout class="hr-light" />
       </StackLayout>
     </ScrollView>

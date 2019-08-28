@@ -9,6 +9,8 @@
           <v-text-field label="Заголовок" required v-model="form.title" :readonly="isEditDisabled" />
           <input-date label="Дата" v-model="form.datetime" :readonly="isEditDisabled" />
           <v-textarea label="Текст" v-model="form.text" :readonly="isEditDisabled" />
+          <v-select v-model="attachment.type" :items="attachmentTypes" label="Тип вложения" />
+          <v-file-input v-model="attachment.file" label="Файл вложения" />
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -27,6 +29,7 @@ import UpdateNews, { createUpdate as createUUpdate } from "~/gql/UpdateNews";
 import DeleteNews, { createUpdate as createDUpdate } from "~/gql/DeleteNews";
 import { News_news as News } from "../gql/__generated__/News";
 import InputDate from "~/components/InputDate.vue";
+import { NewsInput } from "../gql/__generated__/globalTypes";
 
 @Component({
   components: { InputDate },
@@ -37,11 +40,19 @@ export default class NewsDialog extends Vue {
   @Prop({ type: String, default: "create" }) type!: "create" | "update" | "delete";
   @Prop({ type: Boolean }) value!: boolean;
   loading = false;
-  form = {
+  form: NewsInput = {
     title: "",
     datetime: new Date(),
     text: "",
   };
+  attachment = {
+    file: null,
+    type: null,
+  };
+
+  get attachmentTypes() {
+    return [{ text: "Картинка", value: "Image" }, { text: "Видео", value: "Video" }, { text: "Аудио", value: "Audio" }];
+  }
 
   get title() {
     return {
@@ -66,27 +77,37 @@ export default class NewsDialog extends Vue {
   @Watch("value")
   onValueChanged(value) {
     if (!value) return;
-    if (this.type === "create")
+    if (this.type === "create") {
       this.form = {
         title: "",
         datetime: new Date(),
         text: "",
       };
-    else {
+      this.attachment = {
+        file: null,
+        type: null,
+      };
+    } else {
       this.form.title = this.data.title || "";
       this.form.datetime = this.data.datetime || new Date();
       this.form.text = this.data.text || "";
+      this.attachment = {
+        file: null,
+        type: null,
+      };
     }
   }
 
   async save() {
     this.loading = true;
     try {
+      let data = { ...this.form };
+      if (this.attachment.file && this.attachment.type) Object.assign(data, { attachment: this.attachment });
       if (this.type === "create") {
-        await this.$apollo.mutate({ ...CreateNews, variables: { data: this.form } });
+        await this.$apollo.mutate({ ...CreateNews, variables: { data } });
         this.$root.$emit("snackbar", { text: "Новость создана!", color: "success" });
       } else if (this.type === "update") {
-        await this.$apollo.mutate({ ...UpdateNews, variables: { id: this.id, data: this.form }, update: createUUpdate(this.id, this.form) });
+        await this.$apollo.mutate({ ...UpdateNews, variables: { id: this.id, data }, update: createUUpdate(this.id, data) });
         this.$root.$emit("snackbar", { text: "Новость отредактирована!", color: "success" });
       } else if (this.type === "delete") {
         await this.$apollo.mutate({ ...DeleteNews, variables: { ids: [this.id] }, update: createDUpdate([this.id]) });

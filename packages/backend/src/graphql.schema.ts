@@ -5,6 +5,12 @@
  */
 
 /* tslint:disable */
+export enum AttachmentType {
+    Image = "Image",
+    Video = "Video",
+    Audio = "Audio"
+}
+
 export enum CharacterRole {
     None = "None",
     Netrunner = "Netrunner",
@@ -22,6 +28,11 @@ export enum CharacterRole {
 export enum UserRole {
     Admin = "Admin",
     SuperAdmin = "SuperAdmin"
+}
+
+export class AttachmentInput {
+    file: Upload;
+    type: AttachmentType;
 }
 
 export class ChangePasswordInput {
@@ -55,6 +66,7 @@ export class NewsInput {
     title?: string;
     text?: string;
     datetime?: Date;
+    attachment?: AttachmentInput;
 }
 
 export class UserInput {
@@ -67,6 +79,12 @@ export class UserInput {
     vkId?: string;
     medicalInfo?: string;
     city?: string;
+}
+
+export class Attachment {
+    id: string;
+    name: string;
+    type: AttachmentType;
 }
 
 export class BalanceTransfer {
@@ -101,7 +119,7 @@ export abstract class IMutation {
 
     abstract createNews(data: NewsInput): News | Promise<News>;
 
-    abstract updateNews(id: number, data: NewsInput): boolean | Promise<boolean>;
+    abstract updateNews(id: number, data: NewsInput): News | Promise<News>;
 
     abstract deleteNews(ids: number[]): boolean | Promise<boolean>;
 
@@ -123,6 +141,7 @@ export class News {
     title: string;
     text: string;
     datetime: Date;
+    attachment?: Attachment;
 }
 
 export abstract class IQuery {

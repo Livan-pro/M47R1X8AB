@@ -2,6 +2,7 @@ import gql from "graphql-tag";
 import { DataProxy } from "apollo-cache";
 import { FetchResult } from "apollo-link";
 import MyEmail from "./MyEmail";
+import { Login } from "./__generated__/Login";
 
 export default {
   mutation: gql`
@@ -12,7 +13,7 @@ export default {
       }
     }
   `,
-  update: (proxy: DataProxy, res: FetchResult<{ login: { email: string } }>): void => {
+  update: (proxy: DataProxy, res: FetchResult<Login>): void => {
     if (!res.data) return;
     proxy.writeQuery({
       query: MyEmail.query,
