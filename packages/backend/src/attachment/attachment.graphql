@@ -1,0 +1,16 @@
+enum AttachmentType {
+  Image
+  Video
+  Audio
+}
+
+type Attachment {
+  id: ID!
+  name: String!
+  type: AttachmentType!
+}
+
+input AttachmentInput {
+  file: Upload!
+  type: AttachmentType!
+}
