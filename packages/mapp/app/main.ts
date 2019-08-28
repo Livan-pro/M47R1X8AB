@@ -8,6 +8,12 @@ import App from "./pages/App.vue";
 import Login from "./pages/Login.vue";
 import { VNode } from "vue";
 
+// Fix for qrcode generation & potential fix for other libs
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+process.nextTick = (callback: () => any, ...args: any[]): void => {
+  setTimeout(callback, 0, ...args);
+};
+
 if (TNS_ENV !== "production") {
   Vue.use(VueDevtools, { host: ENV_DEV_HOST });
 }

@@ -15,12 +15,25 @@ export default class QRCode extends Vue {
   dataUrl = "";
 
   async created() {
+    console.log("created", this.text);
     this.updateQR();
   }
 
   @Watch("text")
   async updateQR() {
-    this.dataUrl = await QRCodeLib.toDataURL(this.text);
+    try {
+      console.log("text_", this.text);
+      QRCodeLib.toDataURL(this.text, (err, url) => {
+        if (err) {
+          console.error("qrcode generation error2", err);
+          return;
+        }
+        this.dataUrl = url;
+        console.log("dataUrl", this.dataUrl);
+      });
+    } catch (err) {
+      console.error("qrcode generation error", err);
+    }
   }
 }
 </script>

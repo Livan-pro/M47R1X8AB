@@ -1,11 +1,11 @@
 <template>
-  <Page background-span-under-status-bar="true">
+  <Page backgroundSpanUnderStatusBar="true">
     <ActionBar title="Вход в Матрицу" android:flat="true" />
-    <StackLayout class="p-x-20" vertical-alignment="center">
+    <StackLayout class="p-x-20" verticalAlignment="center">
       <Label :text="url" />
       <ActivityIndicator :busy="loading" />
-      <TextField v-model="form.email" hint="Email" return-key-type="next" />
-      <TextField v-model="form.password" hint="Пароль" return-key-type="done" secure="true" @returnPress="doLogin" />
+      <TextField v-model="form.email" hint="Email" returnKeyType="next" />
+      <TextField v-model="form.password" hint="Пароль" returnKeyType="done" secure="true" @returnPress="doLogin" />
       <Button text="Вход" @tap="doLogin" />
     </StackLayout>
   </Page>
@@ -17,7 +17,7 @@ import Vue from "nativescript-vue";
 import { login } from "@/vue-apollo";
 
 import Login from "@/gql/Login";
-import { Login_login as LoginType } from "@/gql/__generated__/Login";
+import { Login as LoginType } from "@/gql/__generated__/Login";
 
 const sleep = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms));
 

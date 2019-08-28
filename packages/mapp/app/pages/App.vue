@@ -3,10 +3,10 @@
     <ActionBar title="Матрица 2219" android:flat="true" />
     <TabView
       class="nav"
-      android-tabs-position="bottom"
-      android-selected-tab-highlight-color="#ffffff"
-      :tab-text-font-size="20"
-      :selected-index="selectedIndex"
+      androidTabsPosition="bottom"
+      androidSelectedTabHighlightColor="#ffffff"
+      :tabTextFontSize="20"
+      :selectedIndex="selectedIndex"
       @selectedIndexChange="onSelectedIndexChange"
     >
       <TabViewItem class="fas" :title="'\uf1ea'">

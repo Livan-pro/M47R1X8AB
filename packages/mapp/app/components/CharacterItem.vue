@@ -1,6 +1,6 @@
 <template>
   <StackLayout class="p-b-10" orientation="horizontal" @tap="onTap">
-    <CharacterAvatar :id="id" :avatar-uploaded-at="avatarUploadedAt" :size="avatarSize" />
+    <CharacterAvatar :id="id" :avatarUploadedAt="avatarUploadedAt" :size="avatarSize" />
     <StackLayout>
       <Label :text="name" dock="left" class="h2" :class="{ own }" />
     </StackLayout>

@@ -10,5 +10,4 @@ export default {
   `,
   error: (): void => {},
   errorPolicy: "ignore",
-  fetchPolicy: "cache-and-network",
 };

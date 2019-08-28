@@ -1,9 +1,9 @@
 <template>
-  <Page action-bar-hidden="true">
+  <Page actionBarHidden="true">
     <ScrollView>
       <StackLayout class="p-x-20 p-y-10">
-        <Label text="Создание QR-кода для перевода денег" dock="left" class="h2" text-wrap="true" />
-        <TextField v-model="amount" hint="Сумма" keyboard-type="number" return-key-type="done" @returnPress="createQR" />
+        <Label text="Создание QR-кода для перевода денег" dock="left" class="h2" textWrap="true" />
+        <TextField v-model="amount" hint="Сумма" keyboardType="number" returnKeyType="done" @returnPress="createQR" />
         <Button text="Создать" @tap="createQR" />
       </StackLayout>
     </ScrollView>
@@ -21,6 +21,7 @@ export default class MoneyTransferQRPage extends Vue {
   amount = "";
 
   async createQR() {
+    console.log("create", this.id, this.amount);
     this.$showModal(QRCode, { props: { text: `cbrpnk://mt/${this.id}/${this.amount}` } });
   }
 }

@@ -27,6 +27,7 @@ module.exports = {
         "allowFirstLine": false,
       },
     }],
+    "vue/attribute-hyphenation": ["error", "never"],
   },
   overrides: [
     {

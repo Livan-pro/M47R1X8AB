@@ -1,7 +1,7 @@
 <template>
-  <Page action-bar-hidden="true">
+  <Page actionBarHidden="true">
     <StackLayout class="p-x-20 p-y-10">
-      <CharacterItem :id="characterId" :avatar-uploaded-at="avatarUploadedAt" :name="name" :avatar-size="50" />
+      <CharacterItem :id="characterId" :avatarUploadedAt="avatarUploadedAt" :name="name" :avatarSize="50" />
       <StackLayout class="hr-light m-y-10" />
       <Menu :items="items" />
     </StackLayout>

@@ -1,8 +1,8 @@
 <template>
-  <Page action-bar-hidden="true">
+  <Page actionBarHidden="true">
     <ScrollView>
       <StackLayout class="p-x-20 p-y-10">
-        <CharacterAvatar :id="id" :avatar-uploaded-at="character.avatarUploadedAt" :size="200" @tap="onTap" />
+        <CharacterAvatar :id="id" :avatarUploadedAt="character.avatarUploadedAt" :size="200" @tap="onTap" />
         <Label :text="character.name" class="h1 text-center" :class="{ own: character.own }" />
       </StackLayout>
     </ScrollView>
