@@ -8,6 +8,11 @@ export default {
         title
         text
         datetime
+        attachment {
+          id
+          name
+          type
+        }
       }
     }
   `,

@@ -19,7 +19,17 @@
               <v-list-item-content>
                 <v-list-item-title>{{ item.title }}</v-list-item-title>
                 <v-list-item-subtitle>{{ item.date }}</v-list-item-subtitle>
-                <v-list-item-subtitle class="text--primary ws-pre-line">{{ item.text }}</v-list-item-subtitle>
+                <v-list-item-subtitle class="text--primary ws-pre-line">
+                  {{ item.text }}
+                  <img v-if="item.attachment && item.attachment.type === 'Image'" :src="getAttachmentUrl(item.attachment)" class="news-image" />
+                  <video
+                    v-else-if="item.attachment && item.attachment.type === 'Video'"
+                    :src="getAttachmentUrl(item.attachment)"
+                    controls
+                    class="news-video"
+                  />
+                  <audio v-else-if="item.attachment && item.attachment.type === 'Audio'" :src="getAttachmentUrl(item.attachment)" controls />
+                </v-list-item-subtitle>
               </v-list-item-content>
               <icon-btn icon="mdi-pencil" color="orange" tooltip="Редактировать" @click="updateNews(item)" />
               <icon-btn icon="mdi-delete" color="red" tooltip="Удалить" @click="deleteNews(item)" />
@@ -40,6 +50,7 @@ import { MyRoles_me as Me } from "~/gql/__generated__/MyRoles";
 import { UserRole as Role } from "../gql/__generated__/globalTypes";
 import IconBtn from "@/components/IconBtn.vue";
 import NewsDialog from "@/components/NewsDialog.vue";
+import { getAttachmentUrl } from "@/utils";
 
 @Component({
   components: { IconBtn, NewsDialog },
@@ -96,11 +107,14 @@ export default class NewsPage extends Vue {
     this.newsData = item;
     this.dialog = true;
   }
+
+  getAttachmentUrl = getAttachmentUrl;
 }
 </script>
 
 <style lang="sass">
-tr td:last-child
-  width: 1%
-  white-space: nowrap
+.news-image
+  max-height: 500px
+.news-video
+  width: 100%
 </style>
