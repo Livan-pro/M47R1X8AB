@@ -12,6 +12,7 @@
 import { Component, Prop, Watch } from "vue-property-decorator";
 import Vue from "nativescript-vue";
 import ConfirmQRMoneyTransfer from "@/components/ConfirmQRMoneyTransfer.vue";
+import CharacterPage from "./Character.vue";
 
 @Component({
   components: { ConfirmQRMoneyTransfer },
@@ -37,7 +38,9 @@ export default class ScanResult extends Vue {
       let success = false;
       try {
         success = this.parsers[data[0]](data);
-      } catch (e) {}
+      } catch (e) {
+        console.error("error parsing qr code", e);
+      }
       if (!success)
         await alert({
           title: "Ошибка",
@@ -49,6 +52,7 @@ export default class ScanResult extends Vue {
 
   parsers = {
     mt: this.parseMT,
+    c: this.parseC,
   };
 
   parseMT(data) {
@@ -56,6 +60,13 @@ export default class ScanResult extends Vue {
     this.id = parseInt(data[1]);
     this.amount = parseInt(data[2]);
     this.type = "mt";
+    return true;
+  }
+
+  parseC(data) {
+    if (data.length !== 2) return false;
+    const id = parseInt(data[1]);
+    this.$navigateTo(CharacterPage, { frame: this.$root.currentFrame, props: { id } });
     return true;
   }
 }

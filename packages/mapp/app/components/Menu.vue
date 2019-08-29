@@ -14,6 +14,7 @@ export interface MenuItem {
   title: string;
   action?: () => void;
   open?: NativeScriptVueConstructor;
+  modal?: NativeScriptVueConstructor;
   props?: object;
 }
 
@@ -24,6 +25,7 @@ export default class Menu extends Vue {
   async onItemTap({ item }) {
     if (item.action) await item.action.call(this);
     if (item.open) this.$navigateTo(item.open, { frame: this.$root.currentFrame, props: item.props });
+    if (item.modal) this.$showModal(item.modal, { props: item.props });
   }
 }
 </script>
