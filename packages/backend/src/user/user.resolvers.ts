@@ -5,10 +5,11 @@ import { AuthService } from "auth/auth.service";
 import { CreateUser, CreateCharacter, EditUser, ChangePassword } from "shared/node";
 import { Response } from "express";
 import { GetUser } from "./get-user.decorator";
-import { User, UserRole as Role } from "matrix-database";
+import { User, UserRole as Role, Character } from "matrix-database";
 import { LoginResult, UserRole as GqlRole } from "graphql.schema";
 import { CustomError } from "CustomError";
 import { Roles } from "auth/roles.decorator";
+import { CharacterService } from "character/character.service";
 
 @Resolver("User")
 export class UserResolvers {
@@ -16,11 +17,18 @@ export class UserResolvers {
   constructor(
     private readonly user: UserService,
     private readonly auth: AuthService,
+    private readonly character: CharacterService,
   ) {}
 
   @ResolveProperty()
   roles(@Parent() user: User) {
     return user.roles.toStringArray();
+  }
+
+  @ResolveProperty()
+  async characters(@Parent() user: User, @GetUser() me: User) {
+    if (user.id !== me.id && !me.roles.has(Role.Admin)) throw new CustomError("Доступ запрещён");
+    return await this.character.findByOwner(user.id);
   }
 
   @Mutation()
@@ -127,5 +135,23 @@ export class UserResolvers {
     }
     await this.user.update(id, {roles: u.roles});
     return true;
+  }
+
+  @Mutation()
+  @Roles(Role.LoggedIn)
+  async setMainCharacter(
+    @Args("characterId") characterId: number,
+    @GetUser() user: User,
+  ): Promise<Character> {
+    let character: Character;
+    try {
+      character = await this.character.getByIdAndOwner(characterId, user.id);
+    } catch (e) {
+      throw new CustomError("Этот персонаж не принадлежит вам");
+    }
+    await this.user.update(user.id, {
+      mainCharacterId: character.id,
+    });
+    return character;
   }
 }

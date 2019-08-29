@@ -134,6 +134,8 @@ export abstract class IMutation {
     abstract changePassword(data: ChangePasswordInput): boolean | Promise<boolean>;
 
     abstract setUserRole(id: number, role: UserRole, value?: boolean): boolean | Promise<boolean>;
+
+    abstract setMainCharacter(characterId: number): Character | Promise<Character>;
 }
 
 export class News {

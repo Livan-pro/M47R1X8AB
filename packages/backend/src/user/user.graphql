@@ -68,4 +68,5 @@ type Mutation {
   editUser(user: EditUserInput!): Boolean
   changePassword(data: ChangePasswordInput!): Boolean
   setUserRole(id: Int!, role: UserRole!, value: Boolean): Boolean
+  setMainCharacter(characterId: Int!): Character
 }

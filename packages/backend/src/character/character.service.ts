@@ -26,6 +26,10 @@ export class CharacterService {
     return await this.repo.findOne(id, {select: fields});
   }
 
+  async findByOwner(userId: number): Promise<Character[]> {
+    return await this.repo.find({userId});
+  }
+
   @Transaction()
   async update(
     id: number,
