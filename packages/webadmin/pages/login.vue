@@ -3,7 +3,7 @@
     <v-toolbar dark color="primary">
       <v-toolbar-title>Авторизация</v-toolbar-title>
     </v-toolbar>
-    <v-form>
+    <v-form @submit.prevent="login">
       <v-card-text>
         <v-alert v-if="errorMsg" value="true" type="error">
           {{ errorMsg }}
@@ -14,7 +14,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn color="primary" @click="login">
+        <v-btn color="primary" type="submit">
           Вход
         </v-btn>
       </v-card-actions>
