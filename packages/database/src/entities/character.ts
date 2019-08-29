@@ -3,6 +3,7 @@ import { User } from "./user";
 import { CharacterRole } from "../utils/character-role.enum";
 import { Roles } from "../utils/roles";
 import { RolesTransformer } from "../utils/role-transformer";
+import { Profession } from "../utils/profession.enum";
 
 @Entity("characters")
 export class Character {
@@ -38,6 +39,15 @@ export class Character {
 
   @Column({type: "int", default: 0, transformer: new RolesTransformer<CharacterRole>(CharacterRole)})
   roles: Roles<CharacterRole>;
+
+  @Column("enum", {enum: Profession})
+  registrationProfession: Profession;
+
+  @Column("enum", {enum: Profession})
+  profession: Profession;
+
+  @Column("int", {default: 0})
+  professionLevel: number;
 
   @Column({type: "int", default: 0})
   balance: number;
