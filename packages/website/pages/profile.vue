@@ -14,7 +14,7 @@
     Квента:
     <a v-if="me.mainCharacter.quenta" :href="quentaLink" download>скачать</a>
     <span v-else>не загружена</span><br>
-    Профессия: {{ rolesToText(me.mainCharacter.roles) }}
+    Профессия: {{ professionToText(me.mainCharacter.registrationProfession) }}
     <br>
   </div>
 </template>
@@ -23,7 +23,7 @@
 import { Component, Vue } from "nuxt-property-decorator";
 import UniversalForm from "@/components/UniversalForm.vue";
 import gql from "graphql-tag";
-import { characterRoleToText } from "shared/browser";
+import { professionToText } from "shared/browser";
 import {} from "vue-apollo/types/vue";
 import {} from "@/vue-meta";
 
@@ -47,7 +47,7 @@ import {} from "@/vue-meta";
             id
             name
             quenta
-            roles
+            registrationProfession
           }
         }
       }`,
@@ -62,9 +62,6 @@ export default class Profile extends Vue {
     return `/data/quenta/${this.me.mainCharacter.id}/${this.me.mainCharacter.quenta}`;
   }
 
-  rolesToText(roles: string[]) {
-    if (roles && roles.length > 0) return roles.map(r => characterRoleToText(r)).join(",");
-    else return characterRoleToText("None");
-  };
+  professionToText = professionToText;
 }
 </script>
