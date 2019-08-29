@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { UserRole, CharacterRole } from "./globalTypes";
+import { UserRole, Profession } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: Users
@@ -14,7 +14,7 @@ export interface Users_users_mainCharacter {
   name: string;
   quenta: string | null;
   avatarUploadedAt: any | null;
-  roles: CharacterRole[] | null;
+  registrationProfession: Profession | null;
 }
 
 export interface Users_users {

@@ -38,7 +38,7 @@ import UploadQuentaButton from "~/components/UploadQuentaButton.vue";
 import MakeAdminButton from "~/components/MakeAdminButton.vue";
 import { UserRole as Role } from "../gql/__generated__/globalTypes";
 import { dataUrl } from "@/utils";
-import { characterRoleToText } from "shared/browser";
+import { professionToText } from "shared/browser";
 
 @Component({
   components: { CharacterAvatar, IconBtn, UploadQuentaButton, MakeAdminButton },
@@ -72,7 +72,7 @@ export default class UsersPage extends Vue {
       },
       {
         text: "Профессия",
-        value: "mainCharacter.roleText",
+        value: "mainCharacter.registrationProfessionText",
       },
       { value: "actions", sortable: false }, // width: 42 * buttons + 34
     ];
@@ -83,7 +83,7 @@ export default class UsersPage extends Vue {
       ...u,
       mainCharacter: {
         ...u.mainCharacter,
-        roleText: u.mainCharacter && u.mainCharacter.roles && u.mainCharacter.roles.map(r => characterRoleToText(r)).join(", "),
+        registrationProfessionText: u.mainCharacter && professionToText(u.mainCharacter.registrationProfession),
       },
       date: this.formatDate(u.createdAt),
     }));

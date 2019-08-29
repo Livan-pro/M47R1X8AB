@@ -19,7 +19,7 @@ export default {
           name
           quenta
           avatarUploadedAt
-          roles
+          registrationProfession
         }
       }
     }

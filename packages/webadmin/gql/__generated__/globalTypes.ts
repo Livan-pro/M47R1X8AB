@@ -12,7 +12,7 @@ export enum AttachmentType {
   Video = "Video",
 }
 
-export enum CharacterRole {
+export enum Profession {
   Biotechnician = "Biotechnician",
   Chemist = "Chemist",
   Employee = "Employee",
