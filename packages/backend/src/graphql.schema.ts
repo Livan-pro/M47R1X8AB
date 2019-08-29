@@ -15,6 +15,16 @@ export enum CharacterRole {
     None = "None",
     Netrunner = "Netrunner",
     Medic = "Medic",
+    Technician = "Technician",
+    Replicant = "Replicant",
+    Android = "Android",
+    NPC = "NPC"
+}
+
+export enum Profession {
+    None = "None",
+    Netrunner = "Netrunner",
+    Medic = "Medic",
     Chemist = "Chemist",
     Marshal = "Marshal",
     Hitman = "Hitman",
@@ -44,7 +54,7 @@ export class ChangePasswordInput {
 export class CharacterInput {
     name?: string;
     quenta?: Upload;
-    role?: CharacterRole;
+    registrationProfession?: Profession;
 }
 
 export class EditUserInput {
@@ -100,6 +110,8 @@ export class Character {
     name: string;
     quenta?: string;
     roles?: CharacterRole[];
+    profession?: Profession;
+    registrationProfession?: Profession;
     own: boolean;
     avatarUploadedAt?: Date;
     balance?: number;

@@ -1,4 +1,4 @@
-enum CharacterRole {
+enum Profession {
   None,
   Netrunner,
   Medic,
@@ -12,10 +12,20 @@ enum CharacterRole {
   Mutant,
 }
 
+enum CharacterRole {
+  None,
+  Netrunner,
+  Medic,
+  Technician,
+  Replicant,
+  Android,
+  NPC,
+}
+
 input CharacterInput {
   name: String
   quenta: Upload
-  role: CharacterRole
+  registrationProfession: Profession
 }
 
 type Character {
@@ -23,6 +33,8 @@ type Character {
   name: String!
   quenta: String
   roles: [CharacterRole!]
+  profession: Profession
+  registrationProfession: Profession
   own: Boolean!
   avatarUploadedAt: Date
   balance: Int

@@ -3,7 +3,7 @@ import { Logger } from "@nestjs/common";
 import { CharacterService } from "./character.service";
 import { CreateCharacter } from "shared/node";
 import { GetUser } from "user/get-user.decorator";
-import { User, UserRole as Role, Character, CharacterRole, Roles as DRoles } from "matrix-database";
+import { User, UserRole as Role, Character } from "matrix-database";
 import { FileService } from "file/file.service";
 import * as imageSizeSync from "image-size";
 import { CustomError } from "CustomError";
@@ -25,14 +25,14 @@ export class CharacterResolvers {
 
   @Query()
   async characters(@GetUser() user: User): Promise<Character[]> {
-    const fields: Array<keyof Character> = ["id", "name", "avatarUploadedAt"];
+    const fields: Array<keyof Character> = ["id", "name", "avatarUploadedAt", "profession"];
     if (user.roles.has(Role.Admin)) fields.push("quenta", "roles");
     return await this.character.getAll(fields);
   }
 
   @Query("character")
   async getCharacter(@GetUser() user: User, @Args("id") id: number): Promise<Character | undefined> {
-    const fields: Array<keyof Character> = ["id", "name", "avatarUploadedAt"];
+    const fields: Array<keyof Character> = ["id", "name", "avatarUploadedAt", "profession"];
     if (user.roles.has(Role.Admin)) fields.push("quenta", "roles");
     return await this.character.findById(id);
   }
@@ -44,10 +44,6 @@ export class CharacterResolvers {
     @GetUser() user: User,
   ): Promise<boolean> {
     if (user.mainCharacterId !== id && !user.roles.has(Role.Admin)) await this.character.getByIdAndOwner(id, user.id);
-    if (data.role) {
-      data = Object.assign(data, {roles: new DRoles<CharacterRole>(CharacterRole[data.role] as unknown as number, CharacterRole as any)});
-      delete data.role;
-    }
     await this.character.update(id, data);
     return true;
   }
