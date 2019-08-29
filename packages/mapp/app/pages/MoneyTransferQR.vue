@@ -21,7 +21,6 @@ export default class MoneyTransferQRPage extends Vue {
   amount = "";
 
   async createQR() {
-    console.log("create", this.id, this.amount);
     this.$showModal(QRCode, { props: { text: `cbrpnk://mt/${this.id}/${this.amount}` } });
   }
 }
