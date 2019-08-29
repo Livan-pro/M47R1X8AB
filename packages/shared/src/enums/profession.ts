@@ -1,4 +1,4 @@
-const roles: {
+const professions: {
   [key: string]: string,
 } = Object.freeze({
   None: "Не выбрана",
@@ -14,10 +14,10 @@ const roles: {
   Mutant: "Мутант",
 });
 
-export const characterRoleOptions = Object.entries(roles).map(([k, v]) => ({value: k, text: v}));
+export const professionOptions = Object.entries(professions).map(([k, v]) => ({value: k, text: v}));
 
-export function characterRoleToText(role: string | any) {
-  const text = roles[role];
-  if (!text) return roles.None;
+export function professionToText(profession: string | any) {
+  const text = professions[profession];
+  if (!text) return professions.None;
   return text;
 }

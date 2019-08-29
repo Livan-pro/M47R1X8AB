@@ -7,5 +7,5 @@ export class CreateCharacter {
 
   quenta: any | undefined = undefined;
 
-  role: any | undefined = undefined;
+  registrationProfession: any | undefined = undefined;
 }

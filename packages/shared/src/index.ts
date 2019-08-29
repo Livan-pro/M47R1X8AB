@@ -1,4 +1,4 @@
-export * from "./enums/characterRole";
+export * from "./enums/profession";
 export * from "./validation/create-user";
 export * from "./validation/create-character";
 export * from "./validation/edit-user";
