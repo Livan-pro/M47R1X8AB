@@ -35,6 +35,7 @@ type Character {
   roles: [CharacterRole!]
   profession: Profession
   registrationProfession: Profession
+  professionLevel: Int
   own: Boolean!
   avatarUploadedAt: Date
   balance: Int

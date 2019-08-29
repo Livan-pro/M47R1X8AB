@@ -1,7 +1,7 @@
 <template>
   <Page actionBarHidden="true">
     <StackLayout class="p-x-20 p-y-10">
-      <CharacterItem :id="characterId" :avatarUploadedAt="avatarUploadedAt" :name="name" :avatarSize="50" />
+      <CharacterItem :data="character" :avatarSize="50" :hideBalance="true" />
       <StackLayout class="hr-light m-y-10" />
       <Menu :items="items" />
     </StackLayout>
@@ -29,37 +29,36 @@ import QRCode from "@/components/QRCode.vue";
   },
 })
 export default class MenuPage extends Vue {
-  me: MainCharacter | {} = {};
+  me: MainCharacter = {
+    __typename: "User",
+    mainCharacter: {
+      __typename: "Character",
+      id: -1,
+      name: "неизвестно",
+      avatarUploadedAt: null,
+      balance: 0,
+      profession: null,
+      professionLevel: null,
+    },
+  };
   get items() {
     return [
       { title: `Баланс: ${this.balance}`, open: MoneyPage },
       { title: "Сообщения" },
       { title: "Инвентарь" },
       { title: "Свойства" },
-      { title: "Мой QR-код", modal: QRCode, props: { text: `cbrpnk://c/${this.characterId}` } },
+      { title: "Мой QR-код", modal: QRCode, props: { text: `cbrpnk://c/${this.character.id}` } },
       { title: "Сменить персонажа", open: ChangeCharacterPage },
       { title: "Выход", action: logout },
     ];
   }
 
-  get characterId() {
-    const me = this.me as MainCharacter;
-    return (me && me.mainCharacter && me.mainCharacter.id) || -1;
+  get character() {
+    return this.me.mainCharacter;
   }
 
   get balance() {
-    const me = this.me as MainCharacter;
-    return (me && me.mainCharacter && me.mainCharacter.balance) || 0;
-  }
-
-  get avatarUploadedAt() {
-    const me = this.me as MainCharacter;
-    return (me && me.mainCharacter && me.mainCharacter.avatarUploadedAt) || null;
-  }
-
-  get name() {
-    const me = this.me as MainCharacter;
-    return (me && me.mainCharacter && me.mainCharacter.name) || "unknown";
+    return this.character.balance;
   }
 }
 </script>

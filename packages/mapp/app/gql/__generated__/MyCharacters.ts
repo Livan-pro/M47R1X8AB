@@ -2,6 +2,8 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
+import { Profession } from "./globalTypes";
+
 // ====================================================
 // GraphQL query operation: MyCharacters
 // ====================================================
@@ -13,6 +15,8 @@ export interface MyCharacters_me_characters {
   own: boolean;
   avatarUploadedAt: any | null;
   balance: number | null;
+  profession: Profession | null;
+  professionLevel: number | null;
 }
 
 export interface MyCharacters_me {

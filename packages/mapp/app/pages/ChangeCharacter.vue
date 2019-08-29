@@ -5,15 +5,7 @@
         <Label text="Ваши персонажи" class="h1 text-center" />
         <template v-for="(item, i) in me.characters">
           <StackLayout :key="'hr-' + i" class="hr-light m-b-10" />
-          <CharacterItem
-            :id="item.id"
-            :key="i"
-            :avatarUploadedAt="item.avatarUploadedAt"
-            :name="item.name"
-            :own="item.own"
-            :balance="item.balance"
-            @tap.prevent="selectCharacter(item.id)"
-          />
+          <CharacterItem :key="i" :data="item" @tap.prevent="selectCharacter(item.id)" />
         </template>
         <StackLayout class="hr-light" />
       </StackLayout>

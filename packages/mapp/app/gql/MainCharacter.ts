@@ -9,6 +9,8 @@ export default {
           name
           avatarUploadedAt
           balance
+          profession
+          professionLevel
         }
       }
     }

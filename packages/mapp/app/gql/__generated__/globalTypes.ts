@@ -12,6 +12,20 @@ export enum AttachmentType {
   Video = "Video",
 }
 
+export enum Profession {
+  Biotechnician = "Biotechnician",
+  Chemist = "Chemist",
+  Employee = "Employee",
+  Engineer = "Engineer",
+  Hitman = "Hitman",
+  Marshal = "Marshal",
+  Medic = "Medic",
+  Mutant = "Mutant",
+  Netrunner = "Netrunner",
+  None = "None",
+  Stalker = "Stalker",
+}
+
 //==============================================================
 // END Enums and Input Objects
 //==============================================================

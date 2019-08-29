@@ -5,7 +5,7 @@
         <Label text="Персонажи" class="h1 text-center" />
         <template v-for="(item, i) in characters">
           <StackLayout :key="'hr-' + i" class="hr-light m-b-10" />
-          <CharacterItem :id="item.id" :key="i" :avatarUploadedAt="item.avatarUploadedAt" :name="item.name" :own="item.own" />
+          <CharacterItem :key="i" :data="item" />
         </template>
         <StackLayout class="hr-light" />
       </StackLayout>

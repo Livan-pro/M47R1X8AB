@@ -112,6 +112,7 @@ export class Character {
     roles?: CharacterRole[];
     profession?: Profession;
     registrationProfession?: Profession;
+    professionLevel?: number;
     own: boolean;
     avatarUploadedAt?: Date;
     balance?: number;

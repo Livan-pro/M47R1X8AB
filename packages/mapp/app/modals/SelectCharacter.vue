@@ -1,11 +1,11 @@
 <template>
-  <Page action-bar-hidden="true">
+  <Page actionBarHidden="true">
     <ScrollView>
       <StackLayout class="p-x-20 p-y-10">
         <Label text="Выберите персонажа" class="h2 text-center" />
         <template v-for="(item, i) in characters">
           <StackLayout :key="'hr-' + i" class="hr-light m-b-10" />
-          <CharacterItem :id="item.id" :key="i" :avatar-uploaded-at="item.avatarUploadedAt" :name="item.name" :own="item.own" @tap.prevent="onTap" />
+          <CharacterItem :key="i" :data="item" @tap.prevent="onTap" />
         </template>
         <StackLayout class="hr-light" />
       </StackLayout>

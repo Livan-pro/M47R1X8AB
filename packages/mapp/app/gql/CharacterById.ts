@@ -8,6 +8,8 @@ export default {
         name
         own
         avatarUploadedAt
+        profession
+        professionLevel
       }
     }
   `,

@@ -1,7 +1,7 @@
 <template>
   <StackLayout class="p-b-10">
     <Label text="Вы действительно хотите перевести деньги?" textWrap="true" dock="left" class="h2" />
-    <CharacterItem :id="id" :avatarUploadedAt="character.avatarUploadedAt" :name="character.name" :own="character.own" @tap.prevent="" />
+    <CharacterItem :data="character" @tap.prevent="" />
     <Label :text="`Сумма: ${amount}`" textWrap="true" dock="left" class="h2" />
     <Button text="Перевести" @tap="doTransfer" />
   </StackLayout>
@@ -32,7 +32,15 @@ import { CharacterById_character as Character } from "@/gql/__generated__/Charac
 export default class ConfirmQRMoneyTransfer extends Vue {
   @Prop({ type: Number, default: -1 }) id!: number;
   @Prop({ type: Number, default: 0 }) amount!: number;
-  character: Character | {} = {};
+  character: Character = {
+    __typename: "Character",
+    id: -1,
+    name: "неизвестно",
+    own: false,
+    avatarUploadedAt: null,
+    profession: null,
+    professionLevel: null,
+  };
 
   loading = false;
 

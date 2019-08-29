@@ -27,7 +27,14 @@ import { MyIDAndBalance_me as MeType } from "@/gql/__generated__/MyIDAndBalance"
   },
 })
 export default class MoneyPage extends Vue {
-  me: MeType | {} = {};
+  me: MeType = {
+    __typename: "User",
+    mainCharacter: {
+      __typename: "Character",
+      id: -1,
+      balance: null,
+    },
+  };
   get items() {
     return [
       {

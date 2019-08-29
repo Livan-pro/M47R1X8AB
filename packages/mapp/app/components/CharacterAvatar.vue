@@ -8,7 +8,7 @@ import Vue from "nativescript-vue";
 import { dataUrl } from "@/utils";
 
 @Component
-export default class CharacterItem extends Vue {
+export default class CharacterAvatar extends Vue {
   @Prop({ type: Number, default: -1 }) id!: number;
   @Prop({ type: Number }) avatarUploadedAt!: number;
   @Prop({ type: Number, default: 100 }) size!: number;
