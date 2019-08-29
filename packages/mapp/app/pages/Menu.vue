@@ -19,6 +19,7 @@ import MoneyPage from "./Money.vue";
 
 import me from "@/gql/MainCharacter";
 import { MainCharacter_me as MainCharacter } from "@/gql/__generated__/MainCharacter";
+import ChangeCharacterPage from "./ChangeCharacter.vue";
 
 @Component({
   components: { CharacterItem, Menu },
@@ -34,6 +35,7 @@ export default class MenuPage extends Vue {
       { title: "Сообщения" },
       { title: "Инвентарь" },
       { title: "Свойства" },
+      { title: "Сменить персонажа", open: ChangeCharacterPage },
       { title: "Выход", action: logout },
     ];
   }

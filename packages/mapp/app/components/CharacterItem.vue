@@ -1,8 +1,9 @@
 <template>
-  <StackLayout class="p-b-10" orientation="horizontal" @tap="onTap">
+  <StackLayout class="p-b-10" orientation="horizontal" @tap="onTap" @longPress="$emit('longPress')">
     <CharacterAvatar :id="id" :avatarUploadedAt="avatarUploadedAt" :size="avatarSize" />
     <StackLayout>
       <Label :text="name" dock="left" class="h2" :class="{ own }" />
+      <Label v-if="balance" :text="'Баланс: ' + balance" dock="left" class="h2" />
     </StackLayout>
   </StackLayout>
 </template>
@@ -22,6 +23,7 @@ export default class CharacterItem extends Vue {
   @Prop({ type: Number }) avatarUploadedAt!: number;
   @Prop({ type: Boolean, default: false }) own!: boolean;
   @Prop({ type: Number, default: 100 }) avatarSize!: number;
+  @Prop({ type: Number, default: 0 }) balance!: number;
 
   onTap() {
     let navigate = true;
