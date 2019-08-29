@@ -36,8 +36,10 @@ export function login(newToken: string): void {
 }
 
 export function logout(): void {
-  unsetToken();
-  vue.$navigateTo(Login);
+  if (token) {
+    unsetToken();
+    vue.$navigateTo(Login);
+  }
 }
 
 const authLink = setContext((_, { headers }): unknown => {
