@@ -10,12 +10,10 @@ import { vue } from "./main";
 import App from "./pages/App.vue";
 import Login from "./pages/Login.vue";
 
-const production = TNS_ENV === "production";
-
 // HTTP connection to the API
 const httpLink = createHttpLink({
   // You should use an absolute URL here
-  uri: production ? "https://cyberpunk2219.tech/graphql" : ENV_GRAPHQL_URL,
+  uri: ENV_GRAPHQL_URL,
 });
 
 let token = appSettings.getString("token");
