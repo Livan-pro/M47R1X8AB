@@ -2,15 +2,9 @@ import gql from "graphql-tag";
 
 export default {
   query: gql`
-    query MainCharacter {
+    query MyState {
       me {
         mainCharacter {
-          id
-          name
-          avatarUploadedAt
-          balance
-          profession
-          professionLevel
           state
         }
       }

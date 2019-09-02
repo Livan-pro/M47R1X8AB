@@ -12,6 +12,13 @@ export enum AttachmentType {
   Video = "Video",
 }
 
+export enum CharacterState {
+  Death = "Death",
+  Normal = "Normal",
+  Pollution = "Pollution",
+  SevereWound = "SevereWound",
+}
+
 export enum Profession {
   Biotechnician = "Biotechnician",
   Chemist = "Chemist",

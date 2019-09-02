@@ -22,3 +22,5 @@ export const professions: {
 
 export const getProfessionText = (profession: string, professionLevel?: number): string =>
   professions[profession] ? professions[profession] + (professionLevel ? ` (${professionLevel})` : "") : "";
+
+export const month = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
