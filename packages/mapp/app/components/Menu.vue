@@ -1,7 +1,7 @@
 <template>
   <ListView for="item in items" @itemTap="onItemTap">
     <v-template>
-      <Label class="p-y-20 text-center item-title" :text="item.title" />
+      <Label class="p-y-20 text-center item-title" :class="{ 'item-disabled': item.disabled }" :text="item.title" />
     </v-template>
   </ListView>
 </template>
@@ -23,6 +23,7 @@ export default class Menu extends Vue {
   @Prop({ type: Array, default: [] }) items: MenuItem[];
 
   async onItemTap({ item }) {
+    if (item.disabled) return;
     if (item.action) await item.action.call(this);
     if (item.open) this.$navigateTo(item.open, { frame: this.$root.currentFrame, props: item.props });
     if (item.modal) this.$showModal(item.modal, { props: item.props });
@@ -33,5 +34,9 @@ export default class Menu extends Vue {
 <style scoped>
 .item-title {
   font-size: 24;
+}
+
+.item-disabled {
+  color: gray;
 }
 </style>

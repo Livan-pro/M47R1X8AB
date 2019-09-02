@@ -2,6 +2,7 @@
   <Page>
     <ActionBar title="Матрица 2219" android:flat="true" />
     <TabView
+      :key="tabsId"
       class="nav"
       androidTabsPosition="bottom"
       androidSelectedTabHighlightColor="#ffffff"
@@ -9,24 +10,9 @@
       :selectedIndex="selectedIndex"
       @selectedIndexChange="onSelectedIndexChange"
     >
-      <TabViewItem class="fas" :title="'\uf1ea'">
-        <Frame id="f0">
-          <News />
-        </Frame>
-      </TabViewItem>
-      <TabViewItem class="fas" :title="'\uf0c0'">
-        <Frame id="f1">
-          <Characters />
-        </Frame>
-      </TabViewItem>
-      <TabViewItem class="fas" :title="'\uf029'">
-        <Frame id="f2">
-          <ScanResult :loading="scanLoading" :result="scanResult" />
-        </Frame>
-      </TabViewItem>
-      <TabViewItem class="fas" :title="'\uf0c9'">
-        <Frame id="f3">
-          <Menu />
+      <TabViewItem v-for="tab in tabs" :key="tab.id" :class="tab.class" :title="tab.title">
+        <Frame :id="tab.id" :key="tab.id">
+          <component :is="tab.component" :ref="tab.ref" />
         </Frame>
       </TabViewItem>
     </TabView>
@@ -36,52 +22,78 @@
 <script lang="ts">
 import { Component } from "vue-property-decorator";
 import Vue from "nativescript-vue";
-import { BarcodeScanner } from "nativescript-barcodescanner";
 
+import State from "./State.vue";
 import News from "./News.vue";
 import Characters from "./Characters.vue";
-import ScanResult from "./ScanResult.vue";
+import Scan from "./Scan.vue";
 import Menu from "./Menu.vue";
 
-const barcodescanner = new BarcodeScanner();
+import me from "@/gql/MainCharacter";
+import { MainCharacter_me as Me } from "@/gql/__generated__/MainCharacter";
+import { CharacterState } from "@/gql/__generated__/globalTypes";
+
+const tabCreator = (tabs: { title: string; component: string; id: string; class: string; ref: string }[]) => {
+  let id = 0;
+  return (condition: boolean, tab: { title: string; component: string }) => {
+    if (condition) tabs.push({ ...tab, id: "f" + id, class: "fas", ref: tab.component.charAt(0).toLowerCase() + tab.component.slice(1) });
+    ++id;
+  };
+};
 
 @Component({
-  components: { News, Characters, ScanResult, Menu },
+  components: { State, News, Characters, Scan, Menu },
+  apollo: {
+    me,
+  },
 })
 export default class App extends Vue {
-  selectedIndex: number = 0;
-  scanResult: string = "";
-  scanLoading = true;
+  me: Me = {
+    __typename: "User",
+    mainCharacter: {
+      __typename: "Character",
+      id: -1,
+      name: "неизвестно",
+      avatarUploadedAt: null,
+      balance: 0,
+      profession: null,
+      professionLevel: null,
+      state: CharacterState.Normal,
+    },
+  };
 
-  async onSelectedIndexChange({ value, oldValue }) {
-    this.$root.currentFrame = "f" + value;
-    if (value === 2) if (!(await this.scan())) this.selectedIndex = oldValue;
+  selectedIndex: number = 0;
+
+  onSelectedIndexChange({ value, oldValue }) {
+    this.selectedIndex = value;
+    this.$root.currentFrame = this.tabs[value].id;
+    if (this.tabs[value].ref === "scan") this.scan(oldValue);
   }
 
-  async scan(): Promise<boolean> {
-    this.scanLoading = true;
-    try {
-      const result = await barcodescanner.scan({
-        formats: "QR_CODE",
-        cancelLabel: "Закрыть", // iOS only, default 'Close'
-        cancelLabelBackgroundColor: "#333333", // iOS only, default '#000000' (black)
-        beepOnScan: true, // Play or Suppress beep on scan (default true)
-        openSettingsIfPermissionWasPreviouslyDenied: true, // On iOS you can send the user to the settings app if access was previously denied
-      });
-      this.scanResult = result.text;
-      this.scanLoading = false;
-      return true;
-    } catch (err) {
-      if (err === "Please allow access to the Camera and try again.") {
-        await alert({
-          title: "Доступ к камере",
-          message: "Вы должны разрешить доступ к камере, чтобы иметь возможность сканировать QR-код",
-          okButtonText: "OK",
-        });
-      }
-      console.log("Scan error. " + err);
-      return false;
+  async scan(oldValue: number) {
+    if (!(await (this.$refs.scan[0] as Scan).scan())) {
+      process.nextTick(() => (this.selectedIndex = oldValue));
     }
+  }
+
+  get state() {
+    return this.me.mainCharacter.state;
+  }
+
+  get tabs() {
+    const tabs = [];
+    const tab = tabCreator(tabs);
+    const criticalState = this.state === CharacterState.SevereWound || this.state === CharacterState.Death;
+    tab(criticalState, { title: "\uf491", component: "State" });
+    tab(!criticalState, { title: "\uf1ea", component: "News" });
+    tab(!criticalState, { title: "\uf0c0", component: "Characters" });
+    tab(this.state !== CharacterState.Death, { title: "\uf029", component: "Scan" });
+    tab(!criticalState, { title: "\uf0c9", component: "Menu" });
+    return tabs;
+  }
+
+  get tabsId() {
+    return this.tabs.reduce((id, tab) => id + tab.id, "tabs_");
   }
 }
 </script>

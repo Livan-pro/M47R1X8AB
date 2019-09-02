@@ -21,6 +21,8 @@ import me from "@/gql/MainCharacter";
 import { MainCharacter_me as MainCharacter } from "@/gql/__generated__/MainCharacter";
 import ChangeCharacterPage from "./ChangeCharacter.vue";
 import QRCode from "@/components/QRCode.vue";
+import StatePage from "./State.vue";
+import { CharacterState } from "@/gql/__generated__/globalTypes";
 
 @Component({
   components: { CharacterItem, Menu },
@@ -39,6 +41,7 @@ export default class MenuPage extends Vue {
       balance: 0,
       profession: null,
       professionLevel: null,
+      state: CharacterState.Normal,
     },
   };
   get items() {
@@ -47,6 +50,7 @@ export default class MenuPage extends Vue {
       { title: "Сообщения" },
       { title: "Инвентарь" },
       { title: "Свойства" },
+      { title: "Состояние", open: StatePage },
       { title: "Мой QR-код", modal: QRCode, props: { text: `cbrpnk://c/${this.character.id}` } },
       { title: "Сменить персонажа", open: ChangeCharacterPage },
       { title: "Выход", action: logout },
