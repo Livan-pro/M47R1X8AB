@@ -21,6 +21,13 @@ export enum CharacterRole {
     NPC = "NPC"
 }
 
+export enum CharacterState {
+    Normal = "Normal",
+    Pollution = "Pollution",
+    SevereWound = "SevereWound",
+    Death = "Death"
+}
+
 export enum Profession {
     None = "None",
     Netrunner = "Netrunner",
@@ -116,6 +123,9 @@ export class Character {
     own: boolean;
     avatarUploadedAt?: Date;
     balance?: number;
+    state?: CharacterState;
+    pollution?: number;
+    deathTime?: Date;
 }
 
 export class LoginResult {
@@ -129,6 +139,8 @@ export abstract class IMutation {
     abstract editCharacter(id: number, character: CharacterInput): boolean | Promise<boolean>;
 
     abstract uploadAvatar(id: number, avatar: string): Date | Promise<Date>;
+
+    abstract suicide(): Date | Promise<Date>;
 
     abstract createNews(data: NewsInput): News | Promise<News>;
 

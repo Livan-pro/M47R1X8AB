@@ -22,6 +22,13 @@ enum CharacterRole {
   NPC,
 }
 
+enum CharacterState {
+  Normal,
+  Pollution,
+  SevereWound,
+  Death,
+}
+
 input CharacterInput {
   name: String
   quenta: Upload
@@ -39,6 +46,9 @@ type Character {
   own: Boolean!
   avatarUploadedAt: Date
   balance: Int
+  state: CharacterState
+  pollution: Int
+  deathTime: Date
 }
 
 type Query {
@@ -50,4 +60,5 @@ type Mutation {
   editCharacter(id: Int!, character: CharacterInput!): Boolean
   """avatar - base64-encoded image (200x200, png)"""
   uploadAvatar(id: Int!, avatar: String!): Date!
+  suicide: Date
 }

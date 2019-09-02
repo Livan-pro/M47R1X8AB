@@ -3,7 +3,7 @@ import { Logger } from "@nestjs/common";
 import { CharacterService } from "./character.service";
 import { CreateCharacter } from "shared/node";
 import { GetUser } from "user/get-user.decorator";
-import { User, UserRole as Role, Character } from "matrix-database";
+import { User, UserRole as Role, Character, CharacterState } from "matrix-database";
 import { FileService } from "file/file.service";
 import * as imageSizeSync from "image-size";
 import { CustomError } from "CustomError";
@@ -67,5 +67,15 @@ export class CharacterResolvers {
     await this.file.uploadFromBuffer(buffer, ["avatar", id.toString() + "_" + time + ".png"]);
     await this.character.update(id, {avatarUploadedAt: date});
     return date;
+  }
+
+  @Mutation()
+  async suicide(
+    @GetUser() user: User,
+  ): Promise<Date> {
+    if (user.mainCharacter.state === CharacterState.Death) return user.mainCharacter.deathTime;
+    const deathTime = new Date();
+    await this.character.update(user.mainCharacter.id, {state: CharacterState.Death, deathTime});
+    return deathTime;
   }
 }
