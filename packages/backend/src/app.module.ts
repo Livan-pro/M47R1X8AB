@@ -1,9 +1,10 @@
-import { Module } from "@nestjs/common";
-import { GraphQLModule, GraphQLFactory } from "@nestjs/graphql";
+import { Module, Global } from "@nestjs/common";
+import { GraphQLModule } from "@nestjs/graphql";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { join } from "path";
 import { Config } from "config";
 import { Request, Response } from "express";
+import * as NATS from "nats";
 import { AppController } from "./app.controller";
 import { AuthModule } from "./auth/auth.module";
 import { CharacterModule } from "character/character.module";
@@ -13,10 +14,10 @@ import { AppResolvers } from "./app.resolvers";
 import { NewsModule } from "./news/news.module";
 import { APP_GUARD } from "@nestjs/core";
 import { RolesGuard } from "auth/roles.guard";
-import { GqlAuthGuard } from "auth/gql-auth.guard";
 import { BalanceModule } from "balance/balance.module";
 import { AttachmentModule } from "attachment/attachment.module";
 
+@Global()
 @Module({
   imports: [
     GraphQLModule.forRoot({
@@ -51,7 +52,12 @@ import { AttachmentModule } from "attachment/attachment.module";
       provide: APP_GUARD,
       useClass: RolesGuard,
     },
+    {
+      provide: "NATS",
+      useFactory: () => NATS.connect({url: Config.get("NATS_URL"), json: true}),
+    },
   ],
   controllers: [AppController],
+  exports: ["NATS"],
 })
 export class AppModule {}
