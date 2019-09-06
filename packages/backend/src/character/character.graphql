@@ -35,6 +35,19 @@ input CharacterInput {
   registrationProfession: Profession
 }
 
+input FullCharacterInput {
+  name: String
+  quenta: Upload
+  roles: [CharacterRole!]
+  profession: Profession
+  registrationProfession: Profession
+  professionLevel: Int
+  balance: Int
+  state: CharacterState
+  pollution: Int
+  deathTime: Date
+}
+
 type Character {
   id: Int!
   name: String!
@@ -61,4 +74,5 @@ type Mutation {
   """avatar - base64-encoded image (200x200, png)"""
   uploadAvatar(id: Int!, avatar: String!): Date!
   suicide: Date
+  updateCharacter(id: Int!, data: FullCharacterInput!): Boolean
 }

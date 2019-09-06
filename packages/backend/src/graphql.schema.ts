@@ -73,6 +73,19 @@ export class EditUserInput {
     city?: string;
 }
 
+export class FullCharacterInput {
+    name?: string;
+    quenta?: Upload;
+    roles?: CharacterRole[];
+    profession?: Profession;
+    registrationProfession?: Profession;
+    professionLevel?: number;
+    balance?: number;
+    state?: CharacterState;
+    pollution?: number;
+    deathTime?: Date;
+}
+
 export class LoginInput {
     email: string;
     password: string;
@@ -141,6 +154,8 @@ export abstract class IMutation {
     abstract uploadAvatar(id: number, avatar: string): Date | Promise<Date>;
 
     abstract suicide(): Date | Promise<Date>;
+
+    abstract updateCharacter(id: number, data: FullCharacterInput): boolean | Promise<boolean>;
 
     abstract createNews(data: NewsInput): News | Promise<News>;
 

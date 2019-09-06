@@ -3,11 +3,12 @@ import { Logger } from "@nestjs/common";
 import { CharacterService } from "./character.service";
 import { CreateCharacter } from "shared/node";
 import { GetUser } from "user/get-user.decorator";
-import { User, UserRole as Role, Character, CharacterState } from "matrix-database";
+import { User, UserRole as Role, Character, CharacterState, CharacterRole, Roles as RolesClass } from "matrix-database";
 import { FileService } from "file/file.service";
 import * as imageSizeSync from "image-size";
 import { CustomError } from "CustomError";
 import { Roles } from "auth/roles.decorator";
+import { FullCharacterInput } from "graphql.schema";
 
 @Resolver("Character")
 @Roles(Role.LoggedIn)
@@ -77,5 +78,18 @@ export class CharacterResolvers {
     const deathTime = new Date();
     await this.character.update(user.mainCharacter.id, {state: CharacterState.Death, deathTime});
     return deathTime;
+  }
+
+  @Mutation()
+  @Roles(Role.Admin)
+  async updateCharacter(
+    @Args("id") id: number,
+    @Args("data") data: FullCharacterInput,
+  ): Promise<boolean> {
+    await this.character.update(id, "roles" in data ? {
+      ...data,
+      roles: new RolesClass<typeof CharacterRole>(data.roles, CharacterRole),
+    } : {...data} as unknown as Partial<Character>);
+    return true;
   }
 }

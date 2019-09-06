@@ -1,13 +1,14 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, Transaction, EntityManager, TransactionManager } from "typeorm";
-import { Character } from "matrix-database";
+import { Character, CharacterState } from "matrix-database";
 import { FileUpload } from "graphql-upload";
 import { FileService } from "file/file.service";
 
 @Injectable()
 export class CharacterService {
   private readonly log = new Logger(CharacterService.name);
+  private readonly severeWoundDeathTime = 30 * 60 * 1000;
   constructor(
     @InjectRepository(Character)
     private readonly repo: Repository<Character>,
@@ -40,6 +41,27 @@ export class CharacterService {
     const quenta = await (data.quenta as unknown as FileUpload);
     if (quenta) data = {...data, quenta: quenta.filename};
     else delete data.quenta;
+
+    if (data.state) {
+      switch (data.state) {
+        case CharacterState.Normal:
+          if (!data.pollution) data.pollution = 0;
+          if (!data.pollutionStartTime) data.pollutionStartTime = null;
+          if (!data.deathTime) data.deathTime = null;
+          break;
+        case CharacterState.Pollution:
+          if (!data.pollution) data.pollution = 0;
+          if (!data.pollutionStartTime) data.pollutionStartTime = new Date();
+          break;
+        case CharacterState.SevereWound:
+          if (!data.deathTime) data.deathTime = new Date(Date.now() + this.severeWoundDeathTime);
+          break;
+        case CharacterState.Death:
+          if (!data.deathTime) data.deathTime = new Date();
+          break;
+      }
+    }
+
     await repo.update(id, data);
 
     if (quenta && quenta.filename) {
