@@ -5,11 +5,12 @@ import { AuthService } from "auth/auth.service";
 import { CreateUser, CreateCharacter, EditUser, ChangePassword } from "shared/node";
 import { Response } from "express";
 import { GetUser } from "./get-user.decorator";
-import { User, UserRole as Role, Character } from "matrix-database";
+import { User, UserRole as Role, Character, CharacterState } from "matrix-database";
 import { LoginResult, UserRole as GqlRole } from "graphql.schema";
 import { CustomError } from "CustomError";
 import { Roles } from "auth/roles.decorator";
 import { CharacterService } from "character/character.service";
+import { States } from "auth/states.decorator";
 
 @Resolver("User")
 export class UserResolvers {
@@ -27,7 +28,9 @@ export class UserResolvers {
 
   @ResolveProperty()
   async characters(@Parent() user: User, @GetUser() me: User) {
-    if (user.id !== me.id && !me.roles.has(Role.Admin)) throw new CustomError("Доступ запрещён");
+    if ((user.id !== me.id || ![CharacterState.Normal, CharacterState.Pollution].includes(me.mainCharacter.state)) && !me.roles.has(Role.Admin)) {
+      throw new CustomError("Доступ запрещён");
+    }
     return await this.character.findByOwner(user.id);
   }
 

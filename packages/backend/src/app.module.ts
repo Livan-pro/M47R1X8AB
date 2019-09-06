@@ -13,7 +13,7 @@ import { DateScalar } from "./date.scalar";
 import { AppResolvers } from "./app.resolvers";
 import { NewsModule } from "./news/news.module";
 import { APP_GUARD } from "@nestjs/core";
-import { RolesGuard } from "auth/roles.guard";
+import { MyGuard } from "auth/my.guard";
 import { BalanceModule } from "balance/balance.module";
 import { AttachmentModule } from "attachment/attachment.module";
 
@@ -50,7 +50,7 @@ import { AttachmentModule } from "attachment/attachment.module";
     AppResolvers,
     {
       provide: APP_GUARD,
-      useClass: RolesGuard,
+      useClass: MyGuard,
     },
     {
       provide: "NATS",
