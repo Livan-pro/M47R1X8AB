@@ -44,8 +44,8 @@ export class User {
   @Column({length: 1000, nullable: true})
   medicalInfo: string;
 
-  @Column({type: "int", default: 0, transformer: new RolesTransformer<UserRole>(UserRole)})
-  roles: Roles<UserRole>;
+  @Column({type: "int", default: 0, transformer: new RolesTransformer<typeof UserRole>(UserRole)})
+  roles: Roles<typeof UserRole>;
 
   @Column({length: 32, nullable: true})
   city: string;
