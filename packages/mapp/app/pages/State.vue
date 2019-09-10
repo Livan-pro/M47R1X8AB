@@ -29,7 +29,7 @@ import { logout } from "@/vue-apollo";
 import { month } from "@/utils";
 
 const states = Object.freeze({
-  [CharacterState.Normal]: "Нормальное состояние",
+  [CharacterState.Normal]: "Норма",
   [CharacterState.Pollution]: "Загрязнение",
   [CharacterState.SevereWound]: "Тяжёлое ранение",
   [CharacterState.Death]: "Смерть",
