@@ -64,6 +64,21 @@ type Character {
   deathTime: Date
 }
 
+type CharacterUpdate {
+  id: Int
+  name: String
+  quenta: String
+  roles: [CharacterRole!]
+  profession: Profession
+  registrationProfession: Profession
+  professionLevel: Int
+  avatarUploadedAt: Date
+  balance: Int
+  state: CharacterState
+  pollution: Int
+  deathTime: Date
+}
+
 type Query {
   characters: [Character!]!
   character(id: Int!): Character
@@ -75,4 +90,8 @@ type Mutation {
   uploadAvatar(id: Int!, avatar: String!): Date!
   suicide: Date
   updateCharacter(id: Int!, data: FullCharacterInput!): Boolean
+}
+
+type Subscription {
+  mainCharacter: CharacterUpdate
 }

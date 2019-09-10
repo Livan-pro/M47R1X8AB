@@ -16,12 +16,19 @@ import { APP_GUARD } from "@nestjs/core";
 import { MyGuard } from "auth/my.guard";
 import { BalanceModule } from "balance/balance.module";
 import { AttachmentModule } from "attachment/attachment.module";
+import { ConnectionContext } from "subscriptions-transport-ws";
+import * as WebSocket from "ws";
+import { parse as parseCookie } from "cookie";
 
 @Global()
 @Module({
   imports: [
     GraphQLModule.forRoot({
-      context: ({ req, res }: {req: Request, res: Response}) => ({ req, res }),
+      context: (data: {req: Request, res: Response} | {connection: {context: {req: Request}}}) => {
+        if ("connection" in data) return {req: data.connection.context.req};
+        else return {req: data.req, res: data.res};
+      },
+      // context: ({ req, res }: {req: Request, res: Response}) => ({ req, res }),
       tracing: Config.getBoolean("GRAPHQL_TRACING", false),
       typePaths: ["./**/*.graphql"],
       uploads: {
@@ -35,7 +42,17 @@ import { AttachmentModule } from "attachment/attachment.module";
       resolverValidationOptions: {
         requireResolversForResolveType: false,
       },*/
-      // installSubscriptionHandlers: true,
+      installSubscriptionHandlers: true,
+      subscriptions: {
+        onConnect: (connectionParams: {token?: string}, websocket: WebSocket, context: ConnectionContext) => {
+          if (!context.request.hasOwnProperty("cookies") && typeof context.request.headers.cookie === "string") {
+            Object.assign(context.request, {cookies: parseCookie(context.request.headers.cookie)});
+          }
+          Object.assign(context.request, {connectionParams});
+          console.log("onConnect", connectionParams);
+          return {req: context.request};
+        },
+      },
     }),
     TypeOrmModule.forRoot(),
     AttachmentModule,

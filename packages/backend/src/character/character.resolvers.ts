@@ -1,5 +1,5 @@
-import { Resolver, Mutation, Args, Query, Parent, ResolveProperty } from "@nestjs/graphql";
-import { Logger } from "@nestjs/common";
+import { Resolver, Mutation, Args, Query, Parent, ResolveProperty, Subscription } from "@nestjs/graphql";
+import { Logger, Inject } from "@nestjs/common";
 import { CharacterService } from "./character.service";
 import { CreateCharacter } from "shared/node";
 import { GetUser } from "user/get-user.decorator";
@@ -10,6 +10,8 @@ import { CustomError } from "CustomError";
 import { Roles } from "auth/roles.decorator";
 import { FullCharacterInput } from "graphql.schema";
 import { States } from "auth/states.decorator";
+import { NatsAsyncIterator } from "utils/nats.iterator";
+import { Client } from "nats";
 
 @Resolver("Character")
 @Roles(Role.LoggedIn)
@@ -18,6 +20,8 @@ export class CharacterResolvers {
   constructor(
     private readonly character: CharacterService,
     private readonly file: FileService,
+    @Inject("NATS")
+    private readonly nats: Client,
   ) {}
 
   @ResolveProperty()
@@ -95,5 +99,21 @@ export class CharacterResolvers {
       roles: new RolesClass<typeof CharacterRole>(data.roles, CharacterRole),
     } : {...data} as unknown as Partial<Character>);
     return true;
+  }
+
+  @Subscription("mainCharacter", {
+    filter: (payload: {mainCharacter: Partial<Character>}, _, ctx: {req: {user: User}}) => {
+      return payload.mainCharacter.id === ctx.req.user.mainCharacterId;
+    },
+    resolve: data => {
+      console.log(data);
+      const {id, ...filtered} = data.mainCharacter;
+      console.log(filtered);
+      return filtered;
+    },
+  })
+  sMainCharacter(@GetUser() user: User) {
+    this.log.log(`subscribe ${user.id} ${user.mainCharacterId}`);
+    return new NatsAsyncIterator(this.nats, "*.character.update", "mainCharacter");
   }
 }

@@ -57,7 +57,7 @@ export class UserResolvers {
     @Args("password") password: string,
     @Args("rememberMe") rememberMe: boolean,
     @Args("admin") admin: boolean,
-    @Context("res") res: Response,
+    @Context("res") res: Response | undefined,
   ): Promise<LoginResult> {
     let user: User;
     try {
@@ -68,7 +68,7 @@ export class UserResolvers {
     if (admin && !user.roles.has(Role.Admin)) throw new CustomError("Неверный логин или пароль");
     if (!await this.auth.verifyPassword(password, user.password)) throw new CustomError("Неверный логин или пароль");
     const token = await this.auth.createToken(email, rememberMe);
-    res.cookie("token", token.token, { expires: token.expires, httpOnly: true });
+    if (res && res.cookie) res.cookie("token", token.token, { expires: token.expires, httpOnly: true });
     return {
       email: user.email,
       token: token.token,

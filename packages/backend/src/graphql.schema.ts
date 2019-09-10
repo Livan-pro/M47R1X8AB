@@ -141,6 +141,21 @@ export class Character {
     deathTime?: Date;
 }
 
+export class CharacterUpdate {
+    id?: number;
+    name?: string;
+    quenta?: string;
+    roles?: CharacterRole[];
+    profession?: Profession;
+    registrationProfession?: Profession;
+    professionLevel?: number;
+    avatarUploadedAt?: Date;
+    balance?: number;
+    state?: CharacterState;
+    pollution?: number;
+    deathTime?: Date;
+}
+
 export class LoginResult {
     email: string;
     token: string;
@@ -200,6 +215,10 @@ export abstract class IQuery {
     abstract me(): User | Promise<User>;
 
     abstract users(): User[] | Promise<User[]>;
+}
+
+export abstract class ISubscription {
+    abstract mainCharacter(): CharacterUpdate | Promise<CharacterUpdate>;
 }
 
 export class User {
