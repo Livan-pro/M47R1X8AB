@@ -31,6 +31,7 @@
     "ts-node": "^8.3.0"
   },
   "dependencies": {
+    "bshared": "^1.0.0",
     "dotenv": "^8.1.0",
     "mysql": "^2.17.1",
     "nats": "^1.3.0",

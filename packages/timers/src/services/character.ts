@@ -4,13 +4,12 @@ import { Logger } from "pino";
 import { Connection, Repository, Transaction, TransactionRepository, In } from "typeorm";
 import { Character, CharacterState } from "matrix-database";
 import { Client } from "nats";
+import { CharacterUtils } from "bshared";
 
 @Service()
 export class CharacterService implements IService {
   private readonly log: Logger;
   private readonly repo: Repository<Character>;
-  private readonly severeWoundDeathTime = 30 * 60 * 1000;
-  private readonly pollutionTickTime = 60 * 1000;
   private readonly timers: Map<number, NodeJS.Timeout> = new Map();
   constructor(
     @Inject("LOGGER") logger: Logger,
@@ -41,7 +40,7 @@ export class CharacterService implements IService {
       case CharacterState.Pollution:
         if (this.timers.has(char.id)) clearTimeout(this.timers.get(char.id));
         if (!char.pollutionStartTime) return false;
-        time = this.pollutionTickTime - ((Date.now() - char.pollutionStartTime.getTime()) % this.pollutionTickTime);
+        time = CharacterUtils.pollutionTickTime - ((Date.now() - char.pollutionStartTime.getTime()) % CharacterUtils.pollutionTickTime);
         this.timers.set(id, setTimeout(() => this.tick(id), time));
         break;
       case CharacterState.SevereWound:
@@ -67,12 +66,12 @@ export class CharacterService implements IService {
     let pollution: number;
     switch(char.state) {
       case CharacterState.Pollution:
-        pollution = this.getPollutionByTime(char.pollutionStartTime);
+        pollution = CharacterUtils.getPollutionByTime(char.pollutionStartTime);
         if (pollution === char.pollution) break;
         update.pollution = pollution;
         if (char.pollution >= 100) {
           update.state = CharacterState.SevereWound;
-          update.deathTime = new Date(Date.now() + this.severeWoundDeathTime);
+          update.deathTime = new Date(Date.now() + CharacterUtils.severeWoundDeathTime);
         }
         break;
       case CharacterState.SevereWound:
@@ -86,10 +85,6 @@ export class CharacterService implements IService {
       this.nats.publish("timers.character.update", {...update, id});
     }
     this.setupTimer(char);
-  }
-
-  private getPollutionByTime(startTime: Date, current: Date = new Date()) {
-    return Math.floor((current.getTime() - startTime.getTime()) / this.pollutionTickTime);
   }
 
   private onCharacterUpdate(char: Partial<Character>) {
