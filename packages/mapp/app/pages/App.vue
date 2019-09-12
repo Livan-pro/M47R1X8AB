@@ -1,7 +1,9 @@
 <template>
   <Page>
     <ActionBar title="Матрица 2219" android:flat="true" />
+    <ActivityIndicator v-if="loading" busy="true" />
     <TabView
+      v-else
       :key="tabsId"
       class="nav"
       androidTabsPosition="bottom"
@@ -12,7 +14,7 @@
     >
       <TabViewItem v-for="tab in tabs" :key="tab.id" :class="tab.class" :title="tab.title">
         <Frame :id="tab.id" :key="tab.id">
-          <component :is="tab.component" :ref="tab.ref" />
+          <component :is="tab.component" :ref="tab.ref" v-bind="tab.props" />
         </Frame>
       </TabViewItem>
     </TabView>
@@ -33,10 +35,13 @@ import me from "@/gql/MainCharacterWithSubscription";
 import { MainCharacter_me as Me } from "@/gql/__generated__/MainCharacter";
 import { CharacterState } from "@/gql/__generated__/globalTypes";
 
-const tabCreator = (tabs: { title: string; component: string; id: string; class: string; ref: string }[]) => {
+const tabCreator = (
+  tabs: { title: string; component: string; id: string; class: string; ref: string; props: Record<string, string | number | object> }[],
+) => {
   let id = 0;
-  return (condition: boolean, tab: { title: string; component: string }) => {
-    if (condition) tabs.push({ ...tab, id: "f" + id, class: "fas", ref: tab.component.charAt(0).toLowerCase() + tab.component.slice(1) });
+  return (condition: boolean, tab: { title: string; component: string; props?: Record<string, string | number | object> }) => {
+    if (condition)
+      tabs.push({ ...tab, id: "f" + id, class: "fas", ref: tab.component.charAt(0).toLowerCase() + tab.component.slice(1), props: tab.props || {} });
     ++id;
   };
 };
@@ -89,13 +94,21 @@ export default class App extends Vue {
     tab(criticalState, { title: "\uf491", component: "State" });
     tab(!criticalState, { title: "\uf1ea", component: "News" });
     tab(!criticalState, { title: "\uf0c0", component: "Characters" });
-    tab(this.state !== CharacterState.Death, { title: "\uf029", component: "Scan" });
+    tab(this.state !== CharacterState.Death, {
+      title: "\uf029",
+      component: "Scan",
+      props: this.state === CharacterState.SevereWound ? { whitelist: ["mp"] } : {},
+    });
     tab(!criticalState, { title: "\uf0c9", component: "Menu" });
     return tabs;
   }
 
   get tabsId() {
     return this.tabs.reduce((id, tab) => id + tab.id, "tabs_");
+  }
+
+  get loading() {
+    return this.me.mainCharacter.id === -1;
   }
 }
 </script>

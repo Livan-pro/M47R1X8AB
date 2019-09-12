@@ -1,6 +1,7 @@
 export * from "./entities/attachment";
 export * from "./entities/balance-transfer";
 export * from "./entities/character";
+export * from "./entities/medpack";
 export * from "./entities/news";
 export * from "./entities/user";
 export * from "./utils/attachment-type.enum";

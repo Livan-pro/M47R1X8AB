@@ -1,7 +1,6 @@
 import { ApolloClient } from "apollo-client";
 import { WebSocketLink } from "apollo-link-ws";
 import { InMemoryCache } from "apollo-cache-inmemory";
-import { setContext } from "apollo-link-context";
 import { onError } from "apollo-link-error";
 import VueApollo from "vue-apollo";
 import * as appSettings from "tns-core-modules/application-settings";
@@ -48,16 +47,8 @@ export function logout(): void {
   }
 }
 
-const authLink = setContext((_, { headers }): unknown => {
-  return {
-    headers: {
-      ...headers,
-      authorization: token ? `Bearer ${token}` : "",
-    },
-  };
-});
-
-const logoutLink = onError(({ graphQLErrors }): void => {
+const logoutLink = onError(({ graphQLErrors, networkError }): void => {
+  console.error("apollo error", networkError, graphQLErrors);
   if (
     graphQLErrors &&
     graphQLErrors.length >= 1 &&
@@ -72,7 +63,7 @@ const cache = new InMemoryCache();
 
 // Create the apollo client
 export const apolloClient = new ApolloClient({
-  link: logoutLink.concat(authLink.concat(link)),
+  link: logoutLink.concat(link),
   cache,
   defaultOptions: {
     watchQuery: {

@@ -109,6 +109,7 @@ export class CharacterResolvers {
     },
     resolve: data => {
       const {id, ...filtered} = data.mainCharacter;
+      if (filtered.deathTime) filtered.deathTime = new Date(filtered.deathTime);
       return filtered;
     },
   })
