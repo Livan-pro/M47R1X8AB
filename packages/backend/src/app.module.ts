@@ -22,6 +22,7 @@ import { parse as parseCookie } from "cookie";
 import { CacheModule } from "cache/cache.module";
 import { FileModule } from "file/file.module";
 import { MedpackModule } from "medpack/medpack.module";
+import { MedicineModule } from "medicine/medicine.module";
 
 @Global()
 @Module({
@@ -63,6 +64,7 @@ import { MedpackModule } from "medpack/medpack.module";
     CacheModule,
     CharacterModule,
     FileModule,
+    MedicineModule,
     MedpackModule,
     NewsModule,
     UserModule,
