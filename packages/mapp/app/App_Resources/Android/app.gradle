@@ -4,6 +4,7 @@ android {
   defaultConfig {  
     generatedDensities = []
     applicationId = "pro.livan.matrix8ab"
+    ndk.abiFilters 'armeabi-v7a','arm64-v8a','x86','x86_64'
   }
   aaptOptions {  
     additionalParameters "--no-version-vectors"  
