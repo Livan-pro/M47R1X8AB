@@ -1,19 +1,5 @@
-import gql from "graphql-tag";
+import MainCharacter from "./MainCharacterWithSubscription";
 
 export default {
-  query: gql`
-    query MainCharacter {
-      me {
-        mainCharacter {
-          id
-          name
-          avatarUploadedAt
-          balance
-          profession
-          professionLevel
-          state
-        }
-      }
-    }
-  `,
+  query: MainCharacter.query,
 };

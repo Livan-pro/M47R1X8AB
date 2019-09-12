@@ -5,13 +5,13 @@
 import { Profession, CharacterState } from "./globalTypes";
 
 // ====================================================
-// GraphQL query operation: MainCharacter
+// GraphQL subscription operation: MainCharacterSubscription
 // ====================================================
 
-export interface MainCharacter_me_mainCharacter {
-  __typename: "Character";
-  id: number;
-  name: string;
+export interface MainCharacterSubscription_mainCharacter {
+  __typename: "CharacterUpdate";
+  id: number | null;
+  name: string | null;
   avatarUploadedAt: any | null;
   balance: number | null;
   profession: Profession | null;
@@ -21,11 +21,6 @@ export interface MainCharacter_me_mainCharacter {
   deathTime: any | null;
 }
 
-export interface MainCharacter_me {
-  __typename: "User";
-  mainCharacter: MainCharacter_me_mainCharacter | null;
-}
-
-export interface MainCharacter {
-  me: MainCharacter_me | null;
+export interface MainCharacterSubscription {
+  mainCharacter: MainCharacterSubscription_mainCharacter | null;
 }

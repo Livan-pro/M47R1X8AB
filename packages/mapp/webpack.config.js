@@ -238,9 +238,16 @@ module.exports = env => {
             compiler: NsVueTemplateCompiler,
           },
         },
+        // fixes https://github.com/graphql/graphql-js/issues/1272
+        {
+          test: /\.mjs$/,
+          include: /node_modules/,
+          type: "javascript/auto",
+        },
       ],
     },
     plugins: [
+      new webpack.NormalModuleReplacementPlugin(/^ws$/, "nativescript-websockets"),
       // ... Vue Loader plugin omitted
       // make sure to include the plugin!
       new VueLoaderPlugin(),
