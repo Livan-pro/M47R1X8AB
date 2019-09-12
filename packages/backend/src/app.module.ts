@@ -20,6 +20,8 @@ import { ConnectionContext } from "subscriptions-transport-ws";
 import * as WebSocket from "ws";
 import { parse as parseCookie } from "cookie";
 import { CacheModule } from "cache/cache.module";
+import { FileModule } from "file/file.module";
+import { MedpackModule } from "medpack/medpack.module";
 
 @Global()
 @Module({
@@ -60,6 +62,8 @@ import { CacheModule } from "cache/cache.module";
     BalanceModule,
     CacheModule,
     CharacterModule,
+    FileModule,
+    MedpackModule,
     NewsModule,
     UserModule,
   ],
