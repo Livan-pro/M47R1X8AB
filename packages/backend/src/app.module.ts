@@ -19,6 +19,7 @@ import { AttachmentModule } from "attachment/attachment.module";
 import { ConnectionContext } from "subscriptions-transport-ws";
 import * as WebSocket from "ws";
 import { parse as parseCookie } from "cookie";
+import { CacheModule } from "cache/cache.module";
 
 @Global()
 @Module({
@@ -57,6 +58,7 @@ import { parse as parseCookie } from "cookie";
     AttachmentModule,
     AuthModule,
     BalanceModule,
+    CacheModule,
     CharacterModule,
     NewsModule,
     UserModule,

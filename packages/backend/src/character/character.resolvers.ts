@@ -12,6 +12,7 @@ import { FullCharacterInput } from "graphql.schema";
 import { States } from "auth/states.decorator";
 import { NatsAsyncIterator } from "utils/nats.iterator";
 import { Client } from "nats";
+import { UserCacheService } from "cache/user-cache.service";
 
 @Resolver("Character")
 @Roles(Role.LoggedIn)
@@ -20,6 +21,7 @@ export class CharacterResolvers {
   constructor(
     private readonly character: CharacterService,
     private readonly file: FileService,
+    private readonly uCache: UserCacheService,
     @Inject("NATS")
     private readonly nats: Client,
   ) {}
@@ -102,8 +104,8 @@ export class CharacterResolvers {
   }
 
   @Subscription("mainCharacter", {
-    filter: (payload: {mainCharacter: Partial<Character>}, _, ctx: {req: {user: User}}) => {
-      return payload.mainCharacter.id === ctx.req.user.mainCharacterId;
+    filter(this: CharacterResolvers, payload: {mainCharacter: Partial<Character>}, _, ctx: {req: {user: User}}) {
+      return payload.mainCharacter.id === this.uCache.getMainCharacterId(ctx.req.user.id);
     },
     resolve: data => {
       const {id, ...filtered} = data.mainCharacter;
