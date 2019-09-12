@@ -40,19 +40,15 @@ export default {
       { subscriptionData }: { subscriptionData: { data: { mainCharacter: Partial<MainCharacter> } } },
     ): MainCharacter => {
       const obj = {};
-      console.log("updateQuery1", subscriptionData.data.mainCharacter);
       for (const key in subscriptionData.data.mainCharacter) {
         if (subscriptionData.data.mainCharacter[key] !== null) obj[key] = subscriptionData.data.mainCharacter[key];
       }
-      console.log("updateQuery", obj);
-      console.log("prev", { ...prev });
       const data = {
         me: {
           __typename: "User",
           mainCharacter: { ...prev.me.mainCharacter, ...obj },
         },
       };
-      console.log("updated", data);
       return data as MainCharacter;
     },
   },
