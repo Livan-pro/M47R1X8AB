@@ -4,6 +4,7 @@
       <ActivityIndicator v-if="loading" busy="true" />
       <ConfirmQRMoneyTransfer v-else-if="type === 'mt'" :id="id" :amount="amount" />
       <ConfirmMedpack v-else-if="type === 'mp'" :code="code" />
+      <ConfirmMedicine v-else-if="type === 'me'" :code="code" />
       <Label v-else :text="'Результат: ' + result" />
     </GridLayout>
   </Page>
@@ -16,12 +17,13 @@ import { BarcodeScanner } from "nativescript-barcodescanner";
 
 import ConfirmQRMoneyTransfer from "@/components/ConfirmQRMoneyTransfer.vue";
 import ConfirmMedpack from "@/components/ConfirmMedpack.vue";
+import ConfirmMedicine from "@/components/ConfirmMedicine.vue";
 import CharacterPage from "./Character.vue";
 
 const barcodescanner = new BarcodeScanner();
 
 @Component({
-  components: { ConfirmQRMoneyTransfer, ConfirmMedpack },
+  components: { ConfirmQRMoneyTransfer, ConfirmMedpack, ConfirmMedicine },
 })
 export default class Scan extends Vue {
   @Prop({ type: Array, default: null }) whitelist!: string[];
@@ -99,6 +101,7 @@ export default class Scan extends Vue {
     mt: this.parseMT,
     c: this.parseC,
     mp: this.parseMP,
+    me: this.parseME,
   };
 
   parseMT(data) {
@@ -121,6 +124,14 @@ export default class Scan extends Vue {
     if (data[1].length !== 16) return false;
     this.code = data[1];
     this.type = "mp";
+    return true;
+  }
+
+  parseME(data) {
+    if (data.length !== 2) return false;
+    if (data[1].length !== 16) return false;
+    this.code = data[1];
+    this.type = "me";
     return true;
   }
 }
