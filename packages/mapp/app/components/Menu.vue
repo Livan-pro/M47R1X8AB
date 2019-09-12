@@ -1,5 +1,5 @@
 <template>
-  <ListView for="item in items" @itemTap="onItemTap">
+  <ListView for="item in items" :height="75 * items.length" @itemTap="onItemTap">
     <v-template>
       <Label class="p-y-20 text-center item-title" :class="{ 'item-disabled': item.disabled }" :text="item.title" />
     </v-template>

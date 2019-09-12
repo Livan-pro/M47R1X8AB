@@ -38,8 +38,8 @@ export class Character {
   @Column({nullable: true})
   avatarUploadedAt: Date;
 
-  @Column({type: "int", default: 0, transformer: new RolesTransformer<CharacterRole>(CharacterRole)})
-  roles: Roles<CharacterRole>;
+  @Column({type: "int", default: 0, transformer: new RolesTransformer<typeof CharacterRole>(CharacterRole)})
+  roles: Roles<typeof CharacterRole>;
 
   @Column("enum", {enum: Profession})
   registrationProfession: Profession;

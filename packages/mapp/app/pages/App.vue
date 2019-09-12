@@ -29,7 +29,7 @@ import Characters from "./Characters.vue";
 import Scan from "./Scan.vue";
 import Menu from "./Menu.vue";
 
-import me from "@/gql/MainCharacter";
+import me from "@/gql/MainCharacterWithSubscription";
 import { MainCharacter_me as Me } from "@/gql/__generated__/MainCharacter";
 import { CharacterState } from "@/gql/__generated__/globalTypes";
 
@@ -59,6 +59,8 @@ export default class App extends Vue {
       profession: null,
       professionLevel: null,
       state: CharacterState.Normal,
+      pollution: 0,
+      deathTime: "",
     },
   };
 

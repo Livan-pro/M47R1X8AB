@@ -17,6 +17,8 @@ export interface MainCharacter_me_mainCharacter {
   profession: Profession | null;
   professionLevel: number | null;
   state: CharacterState | null;
+  pollution: number | null;
+  deathTime: any | null;
 }
 
 export interface MainCharacter_me {

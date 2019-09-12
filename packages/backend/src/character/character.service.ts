@@ -1,9 +1,11 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger, Inject } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, Transaction, EntityManager, TransactionManager } from "typeorm";
-import { Character } from "matrix-database";
+import { Character, CharacterState } from "matrix-database";
 import { FileUpload } from "graphql-upload";
 import { FileService } from "file/file.service";
+import { Client } from "nats";
+import { CharacterUtils } from "bshared";
 
 @Injectable()
 export class CharacterService {
@@ -12,6 +14,7 @@ export class CharacterService {
     @InjectRepository(Character)
     private readonly repo: Repository<Character>,
     private readonly file: FileService,
+    @Inject("NATS") private readonly nats: Client,
   ) {}
 
   async getByIdAndOwner(id: number, userId: number): Promise<Character> {
@@ -40,7 +43,33 @@ export class CharacterService {
     const quenta = await (data.quenta as unknown as FileUpload);
     if (quenta) data = {...data, quenta: quenta.filename};
     else delete data.quenta;
+
+    if (data.state) {
+      switch (data.state) {
+        case CharacterState.Normal:
+          if (!data.pollution) data.pollution = 0;
+          if (!data.pollutionStartTime) data.pollutionStartTime = null;
+          if (!data.deathTime) data.deathTime = null;
+          break;
+        case CharacterState.Pollution:
+          if (!data.pollution && data.pollutionStartTime) data.pollution = CharacterUtils.getPollutionByTime(data.pollutionStartTime); // TODO
+          else if (data.pollution && !data.pollutionStartTime) data.pollutionStartTime = CharacterUtils.getTimeByPollution(data.pollution); // TODO
+          else {
+            if (!data.pollution) data.pollution = 0;
+            if (!data.pollutionStartTime) data.pollutionStartTime = new Date();
+          }
+          break;
+        case CharacterState.SevereWound:
+          if (!data.deathTime) data.deathTime = new Date(Date.now() + CharacterUtils.severeWoundDeathTime);
+          break;
+        case CharacterState.Death:
+          if (!data.deathTime) data.deathTime = new Date();
+          break;
+      }
+    }
+
     await repo.update(id, data);
+    this.nats.publish("backend.character.update", {...data, id});
 
     if (quenta && quenta.filename) {
       this.log.log("Uploading file...");

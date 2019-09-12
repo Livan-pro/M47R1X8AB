@@ -2,9 +2,10 @@ import { Resolver, Mutation, Args, Query } from "@nestjs/graphql";
 import { Logger } from "@nestjs/common";
 import { BalanceService } from "./balance.service";
 import { GetUser } from "user/get-user.decorator";
-import { User, UserRole as Role, BalanceTransfer } from "matrix-database";
+import { User, UserRole as Role, BalanceTransfer, CharacterState } from "matrix-database";
 import { CustomError } from "CustomError";
 import { Roles } from "auth/roles.decorator";
+import { States } from "auth/states.decorator";
 
 @Resolver()
 @Roles(Role.LoggedIn)
@@ -15,6 +16,7 @@ export class BalanceResolvers {
   ) {}
 
   @Mutation()
+  @States(CharacterState.Normal, CharacterState.Pollution)
   async moneyTransfer(
     @Args("id") id: number,
     @Args("amount") amount: number,

@@ -2,9 +2,10 @@ import { Resolver, Query, Mutation, Args } from "@nestjs/graphql";
 import { Logger } from "@nestjs/common";
 import { NewsService } from "./news.service";
 import { News, NewsInput } from "graphql.schema";
-import { UserRole as Role, User } from "matrix-database";
+import { UserRole as Role, User, CharacterState } from "matrix-database";
 import { Roles } from "auth/roles.decorator";
 import { GetUser } from "user/get-user.decorator";
+import { States } from "auth/states.decorator";
 
 @Resolver()
 @Roles(Role.LoggedIn)
@@ -15,6 +16,7 @@ export class NewsResolvers {
   ) {}
 
   @Query("news")
+  @States(CharacterState.Normal, CharacterState.Pollution)
   async getNews(): Promise<News[]> {
     return await this.news.getAll();
   }

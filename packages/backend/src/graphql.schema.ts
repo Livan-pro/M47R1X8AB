@@ -73,6 +73,19 @@ export class EditUserInput {
     city?: string;
 }
 
+export class FullCharacterInput {
+    name?: string;
+    quenta?: Upload;
+    roles?: CharacterRole[];
+    profession?: Profession;
+    registrationProfession?: Profession;
+    professionLevel?: number;
+    balance?: number;
+    state?: CharacterState;
+    pollution?: number;
+    deathTime?: Date;
+}
+
 export class LoginInput {
     email: string;
     password: string;
@@ -128,6 +141,21 @@ export class Character {
     deathTime?: Date;
 }
 
+export class CharacterUpdate {
+    id?: number;
+    name?: string;
+    quenta?: string;
+    roles?: CharacterRole[];
+    profession?: Profession;
+    registrationProfession?: Profession;
+    professionLevel?: number;
+    avatarUploadedAt?: Date;
+    balance?: number;
+    state?: CharacterState;
+    pollution?: number;
+    deathTime?: Date;
+}
+
 export class LoginResult {
     email: string;
     token: string;
@@ -141,6 +169,8 @@ export abstract class IMutation {
     abstract uploadAvatar(id: number, avatar: string): Date | Promise<Date>;
 
     abstract suicide(): Date | Promise<Date>;
+
+    abstract updateCharacter(id: number, data: FullCharacterInput): boolean | Promise<boolean>;
 
     abstract createNews(data: NewsInput): News | Promise<News>;
 
@@ -185,6 +215,10 @@ export abstract class IQuery {
     abstract me(): User | Promise<User>;
 
     abstract users(): User[] | Promise<User[]>;
+}
+
+export abstract class ISubscription {
+    abstract mainCharacter(): CharacterUpdate | Promise<CharacterUpdate>;
 }
 
 export class User {

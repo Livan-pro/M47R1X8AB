@@ -1,13 +1,18 @@
-import { Resolver, Mutation, Args, Query, Parent, ResolveProperty } from "@nestjs/graphql";
-import { Logger } from "@nestjs/common";
+import { Resolver, Mutation, Args, Query, Parent, ResolveProperty, Subscription } from "@nestjs/graphql";
+import { Logger, Inject } from "@nestjs/common";
 import { CharacterService } from "./character.service";
 import { CreateCharacter } from "shared/node";
 import { GetUser } from "user/get-user.decorator";
-import { User, UserRole as Role, Character, CharacterState } from "matrix-database";
+import { User, UserRole as Role, Character, CharacterState, CharacterRole, Roles as RolesClass } from "matrix-database";
 import { FileService } from "file/file.service";
 import * as imageSizeSync from "image-size";
 import { CustomError } from "CustomError";
 import { Roles } from "auth/roles.decorator";
+import { FullCharacterInput } from "graphql.schema";
+import { States } from "auth/states.decorator";
+import { NatsAsyncIterator } from "utils/nats.iterator";
+import { Client } from "nats";
+import { UserCacheService } from "cache/user-cache.service";
 
 @Resolver("Character")
 @Roles(Role.LoggedIn)
@@ -16,6 +21,9 @@ export class CharacterResolvers {
   constructor(
     private readonly character: CharacterService,
     private readonly file: FileService,
+    private readonly uCache: UserCacheService,
+    @Inject("NATS")
+    private readonly nats: Client,
   ) {}
 
   @ResolveProperty()
@@ -24,6 +32,7 @@ export class CharacterResolvers {
   }
 
   @Query()
+  @States(CharacterState.Normal, CharacterState.Pollution)
   async characters(@GetUser() user: User): Promise<Character[]> {
     const fields: Array<keyof Character> = ["id", "name", "avatarUploadedAt", "profession"];
     if (user.roles.has(Role.Admin)) fields.push("quenta", "roles");
@@ -31,6 +40,7 @@ export class CharacterResolvers {
   }
 
   @Query("character")
+  @States(CharacterState.Normal, CharacterState.Pollution)
   async getCharacter(@GetUser() user: User, @Args("id") id: number): Promise<Character | undefined> {
     const fields: Array<keyof Character> = ["id", "name", "avatarUploadedAt", "profession"];
     if (user.roles.has(Role.Admin)) fields.push("quenta", "roles");
@@ -49,6 +59,7 @@ export class CharacterResolvers {
   }
 
   @Mutation()
+  @States(CharacterState.Normal, CharacterState.Pollution)
   async uploadAvatar(
     @Args("id") id: number,
     @Args("avatar") avatar: string,
@@ -77,5 +88,32 @@ export class CharacterResolvers {
     const deathTime = new Date();
     await this.character.update(user.mainCharacter.id, {state: CharacterState.Death, deathTime});
     return deathTime;
+  }
+
+  @Mutation()
+  @Roles(Role.Admin)
+  async updateCharacter(
+    @Args("id") id: number,
+    @Args("data") data: FullCharacterInput,
+  ): Promise<boolean> {
+    await this.character.update(id, "roles" in data ? {
+      ...data,
+      roles: new RolesClass<typeof CharacterRole>(data.roles, CharacterRole),
+    } : {...data} as unknown as Partial<Character>);
+    return true;
+  }
+
+  @Subscription("mainCharacter", {
+    filter(this: CharacterResolvers, payload: {mainCharacter: Partial<Character>}, _, ctx: {req: {user: User}}) {
+      return payload.mainCharacter.id === this.uCache.getMainCharacterId(ctx.req.user.id);
+    },
+    resolve: data => {
+      const {id, ...filtered} = data.mainCharacter;
+      return filtered;
+    },
+  })
+  sMainCharacter(@GetUser() user: User) {
+    this.log.log(`subscribe ${user.id} ${user.mainCharacterId}`);
+    return new NatsAsyncIterator(this.nats, "*.character.update", "mainCharacter");
   }
 }
