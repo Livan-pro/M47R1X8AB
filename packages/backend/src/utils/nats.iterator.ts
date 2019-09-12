@@ -42,7 +42,6 @@ export class NatsAsyncIterator<T>  implements AsyncIterator<T> {
 
   private onMessage(data: T) {
     this.queue.push(data);
-    console.log("onMessage", data);
     if (this.deferred) this.deferred.resolve();
   }
 }

@@ -106,9 +106,7 @@ export class CharacterResolvers {
       return payload.mainCharacter.id === ctx.req.user.mainCharacterId;
     },
     resolve: data => {
-      console.log(data);
       const {id, ...filtered} = data.mainCharacter;
-      console.log(filtered);
       return filtered;
     },
   })

@@ -49,7 +49,6 @@ import { parse as parseCookie } from "cookie";
             Object.assign(context.request, {cookies: parseCookie(context.request.headers.cookie)});
           }
           Object.assign(context.request, {connectionParams});
-          console.log("onConnect", connectionParams);
           return {req: context.request};
         },
       },
