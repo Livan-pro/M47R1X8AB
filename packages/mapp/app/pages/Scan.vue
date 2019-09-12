@@ -3,6 +3,7 @@
     <GridLayout class="p-x-20 p-y-10" rows="*" columns="*">
       <ActivityIndicator v-if="loading" busy="true" />
       <ConfirmQRMoneyTransfer v-else-if="type === 'mt'" :id="id" :amount="amount" />
+      <ConfirmMedpack v-else-if="type === 'mp'" :code="code" />
       <Label v-else :text="'Результат: ' + result" />
     </GridLayout>
   </Page>
@@ -14,12 +15,13 @@ import Vue from "nativescript-vue";
 import { BarcodeScanner } from "nativescript-barcodescanner";
 
 import ConfirmQRMoneyTransfer from "@/components/ConfirmQRMoneyTransfer.vue";
+import ConfirmMedpack from "@/components/ConfirmMedpack.vue";
 import CharacterPage from "./Character.vue";
 
 const barcodescanner = new BarcodeScanner();
 
 @Component({
-  components: { ConfirmQRMoneyTransfer },
+  components: { ConfirmQRMoneyTransfer, ConfirmMedpack },
 })
 export default class Scan extends Vue {
   @Prop({ type: Array, default: null }) whitelist!: string[];
@@ -28,6 +30,7 @@ export default class Scan extends Vue {
   type = "unknown";
   id = -1;
   amount = -1;
+  code = "";
 
   async scan(): Promise<boolean> {
     this.loading = true;
@@ -40,7 +43,7 @@ export default class Scan extends Vue {
         openSettingsIfPermissionWasPreviouslyDenied: true, // On iOS you can send the user to the settings app if access was previously denied
       });
       this.result = result.text;
-      this.recognize(this.result);
+      process.nextTick(() => this.recognize(this.result));
       this.loading = false;
       return true;
     } catch (err) {
@@ -69,10 +72,10 @@ export default class Scan extends Vue {
         });
         return;
       }
-      if (this.whitelist && !this.whitelist[data[0]]) {
+      if (this.whitelist && !this.whitelist.includes(data[0])) {
         await alert({
           title: "Ошибка",
-          message: "Вы не моежете считать этот QR-код сейчас",
+          message: "Вы не можете считать этот QR-код сейчас",
           okButtonText: "ОК",
         });
         return;
@@ -95,6 +98,7 @@ export default class Scan extends Vue {
   parsers = {
     mt: this.parseMT,
     c: this.parseC,
+    mp: this.parseMP,
   };
 
   parseMT(data) {
@@ -109,6 +113,14 @@ export default class Scan extends Vue {
     if (data.length !== 2) return false;
     const id = parseInt(data[1]);
     this.$navigateTo(CharacterPage, { frame: this.$root.currentFrame, props: { id } });
+    return true;
+  }
+
+  parseMP(data) {
+    if (data.length !== 2) return false;
+    if (data[1].length !== 16) return false;
+    this.code = data[1];
+    this.type = "mp";
     return true;
   }
 }
