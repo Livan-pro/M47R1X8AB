@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Character, Medicine } from "matrix-database";
-import { MedicineService } from "./Medicine.service";
-import { MedicineResolvers } from "./Medicine.resolvers";
+import { MedicineService } from "./medicine.service";
+import { MedicineResolvers } from "./medicine.resolvers";
 
 @Module({
   imports: [
