@@ -1,6 +1,7 @@
 export * from "./entities/attachment";
 export * from "./entities/balance-transfer";
 export * from "./entities/character";
+export * from "./entities/implant-prolongation";
 export * from "./entities/implant";
 export * from "./entities/medicine";
 export * from "./entities/medpack";
