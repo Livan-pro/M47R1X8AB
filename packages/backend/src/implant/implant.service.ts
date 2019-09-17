@@ -50,9 +50,12 @@ export class ImplantService {
       lock: {mode: "pessimistic_write"},
     });
 
+    const iRepo = manager.getRepository(Implant);
+
     const data = {implantsRejectTime: new Date(
       (char.implantsRejectTime < new Date() ? Date.now() : char.implantsRejectTime.getTime()) + implantProlongation.time,
     )};
+    await iRepo.update({characterId}, {working: true});
     await cRepo.update(characterId, data);
     await repo.update(implantProlongation.id, {usedById: characterId, usedAt: new Date()});
     this.nats.publish("backend.character.update", {...data, id: characterId});
