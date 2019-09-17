@@ -41,10 +41,10 @@ export class Character {
   @Column({type: "int", default: 0, transformer: new RolesTransformer<typeof CharacterRole>(CharacterRole)})
   roles: Roles<typeof CharacterRole>;
 
-  @Column("enum", {enum: Profession})
+  @Column("enum", {enum: Profession, default: Profession.None})
   registrationProfession: Profession;
 
-  @Column("enum", {enum: Profession})
+  @Column("enum", {enum: Profession, default: Profession.None})
   profession: Profession;
 
   @Column("int", {default: 0})
@@ -53,7 +53,7 @@ export class Character {
   @Column({type: "int", default: 0})
   balance: number;
 
-  @Column("enum", {enum: CharacterState})
+  @Column("enum", {enum: CharacterState, default: CharacterState.Normal})
   state: CharacterState;
 
   @Column({nullable: true})
