@@ -9,6 +9,7 @@ import { UserCacheService } from "cache/user-cache.service";
 import { NatsAsyncIterator } from "utils/nats.iterator";
 import { Client } from "nats";
 import { FullImplantInput } from "graphql.schema";
+import { CustomError } from "CustomError";
 
 @Resolver()
 @Roles(Role.LoggedIn)
@@ -25,6 +26,21 @@ export class ImplantResolvers {
   @Query()
   async implants(@GetUser() user: User) {
     return this.implant.getByCharacterId(user.mainCharacterId);
+  }
+
+  @Mutation()
+  async prolongImplants(
+    @Args("code") code: string,
+    @GetUser() user: User,
+  ): Promise<void> {
+    if (code.length !== 16) throw new CustomError("Неверный код продления имплантов!");
+    let buf: Buffer;
+    try {
+      buf = Buffer.from(code, "hex");
+    } catch (e) {
+      throw new CustomError("Неверный код продления имплантов!");
+    }
+    await this.implant.useProlongation(buf, user.mainCharacterId);
   }
 
   @Mutation()

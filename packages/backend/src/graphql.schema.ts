@@ -209,6 +209,8 @@ export abstract class IMutation {
 
     abstract updateImplant(id: number, data: FullImplantInput): boolean | Promise<boolean>;
 
+    abstract prolongImplants(code: string): boolean | Promise<boolean>;
+
     abstract useMedicine(code: string): boolean | Promise<boolean>;
 
     abstract useMedpack(code: string): boolean | Promise<boolean>;
