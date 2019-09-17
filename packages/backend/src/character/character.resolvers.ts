@@ -35,16 +35,25 @@ export class CharacterResolvers {
   @States(CharacterState.Normal, CharacterState.Pollution)
   async characters(@GetUser() user: User): Promise<Character[]> {
     const fields: Array<keyof Character> = ["id", "name", "avatarUploadedAt", "profession"];
-    if (user.roles.has(Role.Admin)) fields.push("quenta", "roles");
-    return await this.character.getAll(fields);
+    const relations = [];
+    if (user.roles.has(Role.Admin)) {
+      fields.push("quenta", "roles");
+      relations.push("location");
+    }
+    return await this.character.getAll(fields, relations);
   }
 
   @Query("character")
   @States(CharacterState.Normal, CharacterState.Pollution)
   async getCharacter(@GetUser() user: User, @Args("id") id: number): Promise<Character | undefined> {
-    const fields: Array<keyof Character> = ["id", "name", "avatarUploadedAt", "profession"];
+    const fields: Array<keyof Character> = ["id", "userId", "name", "avatarUploadedAt", "profession", "professionLevel", "location"];
     if (user.roles.has(Role.Admin)) fields.push("quenta", "roles");
-    return await this.character.findById(id);
+    const char = await this.character.findById(id, fields, ["location"]);
+    if (char.userId !== user.id && !user.roles.has(Role.Admin)) {
+      char.location = null;
+      char.professionLevel = null;
+    }
+    return char;
   }
 
   @Mutation()

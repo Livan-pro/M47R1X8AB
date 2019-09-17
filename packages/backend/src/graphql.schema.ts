@@ -91,6 +91,7 @@ export class FullCharacterInput {
     pollution?: number;
     deathTime?: Date;
     implantsRejectTime?: Date;
+    locationId?: number;
 }
 
 export class FullImplantInput {
@@ -155,6 +156,7 @@ export class Character {
     pollution?: number;
     deathTime?: Date;
     implantsRejectTime?: Date;
+    location?: Location;
 }
 
 export class CharacterUpdate {
@@ -171,6 +173,7 @@ export class CharacterUpdate {
     pollution?: number;
     deathTime?: Date;
     implantsRejectTime?: Date;
+    location?: Location;
 }
 
 export class Implant {
@@ -187,6 +190,10 @@ export class ImplantUpdate {
     type?: ImplantType;
     working?: boolean;
     quality?: boolean;
+}
+
+export class Location {
+    name?: string;
 }
 
 export class LoginResult {

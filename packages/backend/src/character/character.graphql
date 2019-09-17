@@ -47,6 +47,11 @@ input FullCharacterInput {
   pollution: Int
   deathTime: Date
   implantsRejectTime: Date
+  locationId: Int
+}
+
+type Location {
+  name: String
 }
 
 type Character {
@@ -64,6 +69,7 @@ type Character {
   pollution: Int
   deathTime: Date
   implantsRejectTime: Date
+  location: Location
 }
 
 type CharacterUpdate {
@@ -80,6 +86,7 @@ type CharacterUpdate {
   pollution: Int
   deathTime: Date
   implantsRejectTime: Date
+  location: Location
 }
 
 type Query {

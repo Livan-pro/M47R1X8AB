@@ -30,11 +30,15 @@ export class UserService {
     return await this.repo.find({relations: ["mainCharacter"]});
   }
 
-  async getByEmailWithCharacter(email: string): Promise<User> {
+  async getByEmailWithRelations(email: string, relations: string[]): Promise<User> {
     const user = await this.repo.findOneOrFail({email}, {
-      relations: ["mainCharacter"],
+      relations,
     });
     return user;
+  }
+
+  async getByEmailWithCharacter(email: string): Promise<User> {
+    return this.getByEmailWithRelations(email, ["mainCharacter"]);
   }
 
   @Transaction()

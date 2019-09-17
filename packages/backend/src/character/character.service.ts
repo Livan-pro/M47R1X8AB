@@ -21,12 +21,12 @@ export class CharacterService {
     return await this.repo.findOneOrFail({id, userId});
   }
 
-  async getAll(fields: Array<keyof Character>): Promise<Character[]> {
-    return await this.repo.find({select: fields});
+  async getAll(fields: Array<keyof Character>, relations: string[] = []): Promise<Character[]> {
+    return await this.repo.find({select: fields, relations});
   }
 
-  async findById(id: number, fields?: Array<keyof Character>): Promise<Character | undefined> {
-    return await this.repo.findOne(id, {select: fields});
+  async findById(id: number, fields?: Array<keyof Character>, relations: string[] = []): Promise<Character | undefined> {
+    return await this.repo.findOne(id, {select: fields, relations});
   }
 
   async findByOwner(userId: number): Promise<Character[]> {
