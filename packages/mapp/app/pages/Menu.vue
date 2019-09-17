@@ -16,6 +16,7 @@ import { logout } from "@/vue-apollo";
 import CharacterItem from "@/components/CharacterItem.vue";
 import Menu from "@/components/Menu.vue";
 import MoneyPage from "./Money.vue";
+import ImplantsPage from "./Implants.vue";
 
 import me from "@/gql/MainCharacter";
 import { MainCharacter_me as MainCharacter } from "@/gql/__generated__/MainCharacter";
@@ -53,6 +54,7 @@ export default class MenuPage extends Vue {
       { title: "Инвентарь" },
       { title: "Свойства" },
       { title: "Состояние", open: StatePage },
+      { title: "Импланты", open: ImplantsPage },
       { title: "Мой QR-код", modal: QRCode, props: { text: `cbrpnk://c/${this.character.id}` } },
       { title: "Сменить персонажа", open: ChangeCharacterPage },
       { title: "Выход", action: logout },

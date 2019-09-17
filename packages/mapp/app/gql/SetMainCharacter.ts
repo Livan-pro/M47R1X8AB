@@ -15,6 +15,9 @@ export default {
         profession
         professionLevel
         state
+        pollution
+        deathTime
+        implantsRejectTime
       }
     }
   `,
