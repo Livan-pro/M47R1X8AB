@@ -1,12 +1,14 @@
 import { Container, Service, Inject } from "typedi";
-import { CharacterService } from "./services/character";
+import { CharacterStateService } from "./services/character-state";
 import { IService } from "./service.interface";
 import { Logger } from "pino";
+import { CharacterImplantsService } from "./services/character-implants";
 
 @Service()
 export class AppService {
   private readonly serviceTypes = [
-    CharacterService,
+    CharacterStateService,
+    CharacterImplantsService
   ];
 
   private services: IService[];
@@ -15,7 +17,7 @@ export class AppService {
   constructor(
     @Inject("LOGGER") logger: Logger,
   ) {
-    this.services = this.serviceTypes.map(type => Container.get(type));
+    this.services = this.serviceTypes.map(type => Container.get<IService>(type));
     this.log = logger.child({scope: AppService.name});
   }
 

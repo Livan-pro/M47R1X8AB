@@ -1,5 +1,5 @@
 import { Service, Inject } from "typedi";
-import { IService } from "service.interface";
+import { IService } from "../service.interface";
 import { Logger } from "pino";
 import { Connection, Repository, Transaction, TransactionRepository, In } from "typeorm";
 import { Character, CharacterState } from "matrix-database";
@@ -7,7 +7,7 @@ import { Client } from "nats";
 import { CharacterUtils } from "bshared";
 
 @Service()
-export class CharacterService implements IService {
+export class CharacterStateService implements IService {
   private readonly log: Logger;
   private readonly repo: Repository<Character>;
   private readonly timers: Map<number, NodeJS.Timeout> = new Map();
@@ -16,7 +16,7 @@ export class CharacterService implements IService {
     @Inject("CONNECTION") connection: Connection,
     @Inject("NATS") private readonly nats: Client,
   ) {
-    this.log = logger.child({scope: CharacterService.name});
+    this.log = logger.child({scope: CharacterStateService.name});
     this.repo = connection.getRepository<Character>(Character);
   }
 
