@@ -113,4 +113,9 @@ export default class App extends Vue {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+TabView {
+  font-size: 20;
+  tab-text-font-size: 20;
+}
+</style>
