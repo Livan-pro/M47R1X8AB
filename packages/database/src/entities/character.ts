@@ -64,4 +64,7 @@ export class Character {
 
   @Column({nullable: true})
   pollutionStartTime: Date;
+
+  @Column({nullable: true})
+  implantsRejectTime: Date;
 }
