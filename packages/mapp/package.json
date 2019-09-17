@@ -1,6 +1,6 @@
 {
   "name": "matrix-mobile-app",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Matrix's native mobile application",
   "author": "Livan <livanerror@gmail.com>",
   "private": true,
@@ -14,7 +14,7 @@
       "version": "6.0.1"
     },
     "tns-android": {
-      "version": "6.0.0"
+      "version": "6.0.2"
     }
   },
   "dependencies": {
@@ -61,7 +61,7 @@
     "eslint-plugin-vue": "^5.2.3",
     "graphql-tag": "^2.10.1",
     "lazy": "1.0.11",
-    "nativescript-dev-webpack": "1.0.1",
+    "nativescript-dev-webpack": "^1.1.1",
     "nativescript-vue-template-compiler": "^2.4.0",
     "node-sass": "^4.9.2",
     "prettier": "^1.18.2",
