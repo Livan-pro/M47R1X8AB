@@ -65,7 +65,8 @@ export default class App extends Vue {
       professionLevel: null,
       state: CharacterState.Normal,
       pollution: 0,
-      deathTime: "",
+      deathTime: null,
+      implantsRejectTime: null,
     },
   };
 

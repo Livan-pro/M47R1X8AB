@@ -44,7 +44,8 @@ export default class MenuPage extends Vue {
       professionLevel: null,
       state: CharacterState.Normal,
       pollution: 0,
-      deathTime: "",
+      deathTime: null,
+      implantsRejectTime: null,
     },
   };
   get items() {
