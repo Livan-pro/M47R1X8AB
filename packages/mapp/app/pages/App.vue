@@ -104,7 +104,7 @@ export default class App extends Vue {
   }
 
   get tabsId() {
-    return this.tabs.reduce((id, tab) => id + tab.id, "tabs_");
+    return `${this.tabs.reduce((id, tab) => id + tab.id, "tabs_")}+${this.me.mainCharacter.id}`;
   }
 
   get loading() {

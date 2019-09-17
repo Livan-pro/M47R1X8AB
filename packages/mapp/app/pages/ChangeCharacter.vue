@@ -37,7 +37,6 @@ export default class ChangeCharacterPage extends Vue {
 
   selectCharacter(id: number) {
     this.$apollo.mutate({ ...SetMainCharacter, variables: { id } });
-    this.$navigateTo(MenuPage, { frame: this.$root.currentFrame });
   }
 }
 </script>
