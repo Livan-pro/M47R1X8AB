@@ -19,6 +19,12 @@ export enum CharacterState {
   SevereWound = "SevereWound",
 }
 
+export enum ImplantType {
+  Brain = "Brain",
+  Internal = "Internal",
+  Limb = "Limb",
+}
+
 export enum Profession {
   Biotechnician = "Biotechnician",
   Chemist = "Chemist",

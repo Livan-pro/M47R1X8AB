@@ -19,6 +19,7 @@ export interface MainCharacterSubscription_mainCharacter {
   state: CharacterState | null;
   pollution: number | null;
   deathTime: any | null;
+  implantsRejectTime: any | null;
 }
 
 export interface MainCharacterSubscription {

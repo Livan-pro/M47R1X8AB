@@ -1,0 +1,43 @@
+enum ImplantType {
+  Limb,
+  Brain,
+  Internal,
+}
+
+type Implant {
+  id: Int!
+  name: String!
+  type: ImplantType!
+  working: Boolean!
+  quality: Boolean!
+}
+
+type ImplantUpdate {
+  _id: Int!
+  name: String
+  type: ImplantType
+  working: Boolean
+  quality: Boolean
+}
+
+input FullImplantInput {
+  characterId: Int
+  name: String
+  type: ImplantType
+  working: Boolean
+  quality: Boolean
+}
+
+type Query {
+  implants: [Implant!]!
+}
+
+type Mutation {
+  createImplant(data: FullImplantInput!): Int!
+  updateImplant(id: Int!, data: FullImplantInput!): Boolean
+  prolongImplants(code: String!): Boolean
+}
+
+type Subscription {
+  implants: ImplantUpdate!
+}

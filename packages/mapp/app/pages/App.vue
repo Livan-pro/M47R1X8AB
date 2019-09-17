@@ -65,7 +65,8 @@ export default class App extends Vue {
       professionLevel: null,
       state: CharacterState.Normal,
       pollution: 0,
-      deathTime: "",
+      deathTime: null,
+      implantsRejectTime: null,
     },
   };
 
@@ -104,7 +105,7 @@ export default class App extends Vue {
   }
 
   get tabsId() {
-    return this.tabs.reduce((id, tab) => id + tab.id, "tabs_");
+    return `${this.tabs.reduce((id, tab) => id + tab.id, "tabs_")}+${this.me.mainCharacter.id}`;
   }
 
   get loading() {
@@ -113,4 +114,9 @@ export default class App extends Vue {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+TabView {
+  font-size: 20;
+  tab-text-font-size: 20;
+}
+</style>

@@ -28,6 +28,12 @@ export enum CharacterState {
     Death = "Death"
 }
 
+export enum ImplantType {
+    Limb = "Limb",
+    Brain = "Brain",
+    Internal = "Internal"
+}
+
 export enum Profession {
     None = "None",
     Netrunner = "Netrunner",
@@ -84,6 +90,15 @@ export class FullCharacterInput {
     state?: CharacterState;
     pollution?: number;
     deathTime?: Date;
+    implantsRejectTime?: Date;
+}
+
+export class FullImplantInput {
+    characterId?: number;
+    name?: string;
+    type?: ImplantType;
+    working?: boolean;
+    quality?: boolean;
 }
 
 export class LoginInput {
@@ -139,6 +154,7 @@ export class Character {
     state?: CharacterState;
     pollution?: number;
     deathTime?: Date;
+    implantsRejectTime?: Date;
 }
 
 export class CharacterUpdate {
@@ -154,6 +170,23 @@ export class CharacterUpdate {
     state?: CharacterState;
     pollution?: number;
     deathTime?: Date;
+    implantsRejectTime?: Date;
+}
+
+export class Implant {
+    id: number;
+    name: string;
+    type: ImplantType;
+    working: boolean;
+    quality: boolean;
+}
+
+export class ImplantUpdate {
+    _id: number;
+    name?: string;
+    type?: ImplantType;
+    working?: boolean;
+    quality?: boolean;
 }
 
 export class LoginResult {
@@ -171,6 +204,12 @@ export abstract class IMutation {
     abstract suicide(): Date | Promise<Date>;
 
     abstract updateCharacter(id: number, data: FullCharacterInput): boolean | Promise<boolean>;
+
+    abstract createImplant(data: FullImplantInput): number | Promise<number>;
+
+    abstract updateImplant(id: number, data: FullImplantInput): boolean | Promise<boolean>;
+
+    abstract prolongImplants(code: string): boolean | Promise<boolean>;
 
     abstract useMedicine(code: string): boolean | Promise<boolean>;
 
@@ -214,6 +253,8 @@ export abstract class IQuery {
 
     abstract character(id: number): Character | Promise<Character>;
 
+    abstract implants(): Implant[] | Promise<Implant[]>;
+
     abstract news(): News[] | Promise<News[]>;
 
     abstract me(): User | Promise<User>;
@@ -223,6 +264,8 @@ export abstract class IQuery {
 
 export abstract class ISubscription {
     abstract mainCharacter(): CharacterUpdate | Promise<CharacterUpdate>;
+
+    abstract implants(): ImplantUpdate | Promise<ImplantUpdate>;
 }
 
 export class User {

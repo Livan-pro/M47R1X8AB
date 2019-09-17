@@ -1,13 +1,14 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { User } from "matrix-database";
+import { User, Implant } from "matrix-database";
 import { UserCacheService } from "./user-cache.service";
+import { ImplantCacheService } from "./implant-cache.service";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Implant]),
   ],
-  providers: [UserCacheService],
-  exports: [UserCacheService],
+  providers: [UserCacheService, ImplantCacheService],
+  exports: [UserCacheService, ImplantCacheService],
 })
 export class CacheModule {}

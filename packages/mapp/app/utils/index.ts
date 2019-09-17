@@ -1,4 +1,5 @@
 import { News_news_attachment as Attachment } from "../gql/__generated__/News";
+import { ImplantType } from "@/gql/__generated__/globalTypes";
 
 export const dataUrl = ENV_DATA_URL || "https://cyberpunk2219.tech/data";
 
@@ -24,3 +25,13 @@ export const getProfessionText = (profession: string, professionLevel?: number):
   professions[profession] ? professions[profession] + (professionLevel ? ` (${professionLevel})` : "") : "";
 
 export const month = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
+
+export const implantTypes: {
+  [key: string]: string;
+} = {
+  Limb: "Конечности",
+  Brain: "Мозговой",
+  Internal: "Внутренний",
+};
+
+export const getImplantTypeText = (type: ImplantType): string => implantTypes[type] || "";

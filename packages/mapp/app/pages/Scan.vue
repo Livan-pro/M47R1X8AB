@@ -5,6 +5,7 @@
       <ConfirmQRMoneyTransfer v-else-if="type === 'mt'" :id="id" :amount="amount" />
       <ConfirmMedpack v-else-if="type === 'mp'" :code="code" />
       <ConfirmMedicine v-else-if="type === 'me'" :code="code" />
+      <ConfirmImplantProlong v-else-if="type === 'ip'" :code="code" />
       <Label v-else :text="'Результат: ' + result" />
     </GridLayout>
   </Page>
@@ -18,12 +19,13 @@ import { BarcodeScanner } from "nativescript-barcodescanner";
 import ConfirmQRMoneyTransfer from "@/components/ConfirmQRMoneyTransfer.vue";
 import ConfirmMedpack from "@/components/ConfirmMedpack.vue";
 import ConfirmMedicine from "@/components/ConfirmMedicine.vue";
+import ConfirmImplantProlong from "@/components/ConfirmImplantProlong.vue";
 import CharacterPage from "./Character.vue";
 
 const barcodescanner = new BarcodeScanner();
 
 @Component({
-  components: { ConfirmQRMoneyTransfer, ConfirmMedpack, ConfirmMedicine },
+  components: { ConfirmQRMoneyTransfer, ConfirmMedpack, ConfirmMedicine, ConfirmImplantProlong },
 })
 export default class Scan extends Vue {
   @Prop({ type: Array, default: null }) whitelist!: string[];
@@ -98,13 +100,14 @@ export default class Scan extends Vue {
   }
 
   parsers = {
-    mt: this.parseMT,
-    c: this.parseC,
-    mp: this.parseMP,
-    me: this.parseME,
+    mt: this.parseMoneyTransfer,
+    c: this.parseCharacter,
+    ip: this.parseImplantsProlong,
+    mp: this.parseMedPack,
+    me: this.parseMedicine,
   };
 
-  parseMT(data) {
+  parseMoneyTransfer(data) {
     if (data.length !== 3) return false;
     this.id = parseInt(data[1]);
     this.amount = parseInt(data[2]);
@@ -112,14 +115,14 @@ export default class Scan extends Vue {
     return true;
   }
 
-  parseC(data) {
+  parseCharacter(data) {
     if (data.length !== 2) return false;
     const id = parseInt(data[1]);
     this.$navigateTo(CharacterPage, { frame: this.$root.currentFrame, props: { id } });
     return true;
   }
 
-  parseMP(data) {
+  parseMedPack(data) {
     if (data.length !== 2) return false;
     if (data[1].length !== 16) return false;
     this.code = data[1];
@@ -127,11 +130,19 @@ export default class Scan extends Vue {
     return true;
   }
 
-  parseME(data) {
+  parseMedicine(data) {
     if (data.length !== 2) return false;
     if (data[1].length !== 16) return false;
     this.code = data[1];
     this.type = "me";
+    return true;
+  }
+
+  parseImplantsProlong(data) {
+    if (data.length !== 2) return false;
+    if (data[1].length !== 16) return false;
+    this.code = data[1];
+    this.type = "ip";
     return true;
   }
 }

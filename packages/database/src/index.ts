@@ -1,6 +1,8 @@
 export * from "./entities/attachment";
 export * from "./entities/balance-transfer";
 export * from "./entities/character";
+export * from "./entities/implant-prolongation";
+export * from "./entities/implant";
 export * from "./entities/medicine";
 export * from "./entities/medpack";
 export * from "./entities/news";
@@ -8,6 +10,7 @@ export * from "./entities/user";
 export * from "./utils/attachment-type.enum";
 export * from "./utils/character-role.enum";
 export * from "./utils/character-state.enum";
+export * from "./utils/implant-type.enum";
 export * from "./utils/profession.enum";
 export * from "./utils/role-transformer";
 export * from "./utils/roles";

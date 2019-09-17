@@ -15,6 +15,7 @@ export default {
           state
           pollution
           deathTime
+          implantsRejectTime
         }
       }
     }
@@ -32,6 +33,7 @@ export default {
           state
           pollution
           deathTime
+          implantsRejectTime
         }
       }
     `,

@@ -17,6 +17,9 @@ export interface SetMainCharacter_setMainCharacter {
   profession: Profession | null;
   professionLevel: number | null;
   state: CharacterState | null;
+  pollution: number | null;
+  deathTime: any | null;
+  implantsRejectTime: any | null;
 }
 
 export interface SetMainCharacter {
