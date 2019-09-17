@@ -110,6 +110,8 @@ export class CharacterResolvers {
     resolve: data => {
       const {id, ...filtered} = data.mainCharacter;
       if (filtered.deathTime) filtered.deathTime = new Date(filtered.deathTime);
+      if (filtered.pollutionStartTime) filtered.pollutionStartTime = new Date(filtered.pollutionStartTime);
+      if (filtered.implantsRejectTime) filtered.implantsRejectTime = new Date(filtered.implantsRejectTime);
       return filtered;
     },
   })
