@@ -5,6 +5,7 @@ import { Roles } from "../utils/roles";
 import { RolesTransformer } from "../utils/role-transformer";
 import { Profession } from "../utils/profession.enum";
 import { CharacterState } from "../utils/character-state.enum";
+import { Location } from "./location";
 
 @Entity("characters")
 export class Character {
@@ -67,4 +68,11 @@ export class Character {
 
   @Column({nullable: true})
   implantsRejectTime: Date;
+
+  @ManyToOne(type => Location)
+  @JoinColumn({name: "locationId"})
+  location: Location;
+
+  @Column({nullable: true})
+  locationId: number;
 }
