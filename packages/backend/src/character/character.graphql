@@ -46,6 +46,7 @@ input FullCharacterInput {
   state: CharacterState
   pollution: Int
   deathTime: Date
+  implantsRejectTime: Date
 }
 
 type Character {
@@ -62,6 +63,7 @@ type Character {
   state: CharacterState
   pollution: Int
   deathTime: Date
+  implantsRejectTime: Date
 }
 
 type CharacterUpdate {
@@ -77,6 +79,7 @@ type CharacterUpdate {
   state: CharacterState
   pollution: Int
   deathTime: Date
+  implantsRejectTime: Date
 }
 
 type Query {

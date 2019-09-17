@@ -23,6 +23,7 @@ import { CacheModule } from "cache/cache.module";
 import { FileModule } from "file/file.module";
 import { MedpackModule } from "medpack/medpack.module";
 import { MedicineModule } from "medicine/medicine.module";
+import { ImplantModule } from "implant/implant.module";
 
 @Global()
 @Module({
@@ -64,6 +65,7 @@ import { MedicineModule } from "medicine/medicine.module";
     CacheModule,
     CharacterModule,
     FileModule,
+    ImplantModule,
     MedicineModule,
     MedpackModule,
     NewsModule,
