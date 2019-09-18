@@ -44,6 +44,7 @@ export default class MoneyTransferAmountModal extends Vue {
     avatarUploadedAt: null,
     profession: null,
     professionLevel: null,
+    location: null,
   };
   loading = false;
 
