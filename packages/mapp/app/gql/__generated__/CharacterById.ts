@@ -8,6 +8,11 @@ import { Profession } from "./globalTypes";
 // GraphQL query operation: CharacterById
 // ====================================================
 
+export interface CharacterById_character_location {
+  __typename: "Location";
+  name: string | null;
+}
+
 export interface CharacterById_character {
   __typename: "Character";
   id: number;
@@ -16,6 +21,7 @@ export interface CharacterById_character {
   avatarUploadedAt: any | null;
   profession: Profession | null;
   professionLevel: number | null;
+  location: CharacterById_character_location | null;
 }
 
 export interface CharacterById {

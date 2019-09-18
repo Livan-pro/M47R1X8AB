@@ -5,6 +5,7 @@
         <CharacterAvatar :id="id" :avatarUploadedAt="character.avatarUploadedAt" :size="200" @tap="onTap" />
         <Label :text="character.name" class="h1 text-center" :class="{ own: character.own }" />
         <Label :text="profession" class="h2 text-center" />
+        <Label v-if="location" :text="location" class="h2 text-center" />
       </StackLayout>
     </ScrollView>
   </Page>
@@ -43,6 +44,7 @@ export default class CharacterPage extends Vue {
     avatarUploadedAt: null,
     profession: null,
     professionLevel: null,
+    location: null,
   };
 
   onTap() {
@@ -52,6 +54,10 @@ export default class CharacterPage extends Vue {
 
   get profession() {
     return getProfessionText(this.character.profession, this.character.professionLevel);
+  }
+
+  get location() {
+    return this.character.location && this.character.location.name && `Прописка: ${this.character.location.name}`;
   }
 }
 </script>

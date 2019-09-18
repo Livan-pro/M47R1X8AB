@@ -16,6 +16,9 @@ export default {
           pollution
           deathTime
           implantsRejectTime
+          location {
+            name
+          }
         }
       }
     }
@@ -34,6 +37,9 @@ export default {
           pollution
           deathTime
           implantsRejectTime
+          location {
+            name
+          }
         }
       }
     `,

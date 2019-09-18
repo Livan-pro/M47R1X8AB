@@ -67,6 +67,7 @@ export default class App extends Vue {
       pollution: 0,
       deathTime: null,
       implantsRejectTime: null,
+      location: null,
     },
   };
 
