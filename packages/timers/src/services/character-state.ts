@@ -25,7 +25,8 @@ export class CharacterStateService implements IService {
     for (const char of characters) {
       await this.tick(char.id);
     }
-    this.nats.subscribe("backend.character.update", (data: Character) => this.onCharacterUpdate(data));
+    this.nats.subscribe("backend.character.update", (data: Partial<Character>) => this.onCharacterUpdate(data));
+    this.nats.subscribe("timers1.character.update", (data: Partial<Character>) => this.onCharacterUpdate(data));
   }
 
   private setupTimer(char: Partial<Character>): boolean {

@@ -8,6 +8,11 @@ import { Profession, CharacterState } from "./globalTypes";
 // GraphQL query operation: MainCharacter
 // ====================================================
 
+export interface MainCharacter_me_mainCharacter_location {
+  __typename: "Location";
+  name: string | null;
+}
+
 export interface MainCharacter_me_mainCharacter {
   __typename: "Character";
   id: number;
@@ -20,6 +25,7 @@ export interface MainCharacter_me_mainCharacter {
   pollution: number | null;
   deathTime: any | null;
   implantsRejectTime: any | null;
+  location: MainCharacter_me_mainCharacter_location | null;
 }
 
 export interface MainCharacter_me {

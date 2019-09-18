@@ -3,12 +3,14 @@ import { CharacterStateService } from "./services/character-state";
 import { IService } from "./service.interface";
 import { Logger } from "pino";
 import { CharacterImplantsService } from "./services/character-implants";
+import { HomelessPollutionService } from "./services/homeless-pollution";
 
 @Service()
 export class AppService {
   private readonly serviceTypes = [
     CharacterStateService,
-    CharacterImplantsService
+    CharacterImplantsService,
+    HomelessPollutionService,
   ];
 
   private services: IService[];

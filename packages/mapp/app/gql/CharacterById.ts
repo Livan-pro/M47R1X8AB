@@ -10,6 +10,9 @@ export default {
         avatarUploadedAt
         profession
         professionLevel
+        location {
+          name
+        }
       }
     }
   `,

@@ -3,6 +3,7 @@ export * from "./entities/balance-transfer";
 export * from "./entities/character";
 export * from "./entities/implant-prolongation";
 export * from "./entities/implant";
+export * from "./entities/location";
 export * from "./entities/medicine";
 export * from "./entities/medpack";
 export * from "./entities/news";
