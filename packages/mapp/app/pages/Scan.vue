@@ -6,6 +6,7 @@
       <ConfirmMedpack v-else-if="type === 'mp'" :code="code" />
       <ConfirmMedicine v-else-if="type === 'me'" :code="code" />
       <ConfirmImplantProlong v-else-if="type === 'ip'" :code="code" />
+      <ConfirmItemGift v-else-if="type === 'ig'" :code="code" />
       <Label v-else :text="'Результат: ' + result" />
     </GridLayout>
   </Page>
@@ -20,12 +21,13 @@ import ConfirmQRMoneyTransfer from "@/components/ConfirmQRMoneyTransfer.vue";
 import ConfirmMedpack from "@/components/ConfirmMedpack.vue";
 import ConfirmMedicine from "@/components/ConfirmMedicine.vue";
 import ConfirmImplantProlong from "@/components/ConfirmImplantProlong.vue";
+import ConfirmItemGift from "@/components/ConfirmItemGift.vue";
 import CharacterPage from "./Character.vue";
 
 const barcodescanner = new BarcodeScanner();
 
 @Component({
-  components: { ConfirmQRMoneyTransfer, ConfirmMedpack, ConfirmMedicine, ConfirmImplantProlong },
+  components: { ConfirmQRMoneyTransfer, ConfirmMedpack, ConfirmMedicine, ConfirmImplantProlong, ConfirmItemGift },
 })
 export default class Scan extends Vue {
   @Prop({ type: Array, default: null }) whitelist!: string[];
@@ -102,6 +104,7 @@ export default class Scan extends Vue {
   parsers = {
     mt: this.parseMoneyTransfer,
     c: this.parseCharacter,
+    ig: this.parseItemGift,
     ip: this.parseImplantsProlong,
     mp: this.parseMedPack,
     me: this.parseMedicine,
@@ -143,6 +146,14 @@ export default class Scan extends Vue {
     if (data[1].length !== 16) return false;
     this.code = data[1];
     this.type = "ip";
+    return true;
+  }
+
+  parseItemGift(data) {
+    if (data.length !== 2) return false;
+    if (data[1].length !== 16) return false;
+    this.code = data[1];
+    this.type = "ig";
     return true;
   }
 }

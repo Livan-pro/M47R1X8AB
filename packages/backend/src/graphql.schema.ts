@@ -225,6 +225,8 @@ export abstract class IMutation {
 
     abstract transferItem(to: number, itemId: number, amount: number): boolean | Promise<boolean>;
 
+    abstract useItemGift(code: string): InventoryItem | Promise<InventoryItem>;
+
     abstract useMedicine(code: string): boolean | Promise<boolean>;
 
     abstract useMedpack(code: string): boolean | Promise<boolean>;

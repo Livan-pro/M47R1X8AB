@@ -9,4 +9,5 @@ type Query {
 
 type Mutation {
   transferItem(to: Int!, itemId: Int!, amount: Int!): Boolean
+  useItemGift(code: String!): InventoryItem
 }
