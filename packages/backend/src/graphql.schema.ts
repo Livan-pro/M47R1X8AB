@@ -192,6 +192,11 @@ export class ImplantUpdate {
     quality?: boolean;
 }
 
+export class InventoryItem {
+    itemId: number;
+    amount: number;
+}
+
 export class Location {
     name?: string;
 }
@@ -217,6 +222,8 @@ export abstract class IMutation {
     abstract updateImplant(id: number, data: FullImplantInput): boolean | Promise<boolean>;
 
     abstract prolongImplants(code: string): boolean | Promise<boolean>;
+
+    abstract transferItem(to: number, itemId: number, amount: number): boolean | Promise<boolean>;
 
     abstract useMedicine(code: string): boolean | Promise<boolean>;
 
@@ -261,6 +268,8 @@ export abstract class IQuery {
     abstract character(id: number): Character | Promise<Character>;
 
     abstract implants(): Implant[] | Promise<Implant[]>;
+
+    abstract inventory(): InventoryItem[] | Promise<InventoryItem[]>;
 
     abstract news(): News[] | Promise<News[]>;
 

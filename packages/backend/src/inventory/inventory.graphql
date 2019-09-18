@@ -1,0 +1,12 @@
+type InventoryItem {
+  itemId: Int!
+  amount: Int!
+}
+
+type Query {
+  inventory: [InventoryItem!]!
+}
+
+type Mutation {
+  transferItem(to: Int!, itemId: Int!, amount: Int!): Boolean
+}

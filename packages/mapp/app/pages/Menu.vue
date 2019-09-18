@@ -17,6 +17,7 @@ import CharacterItem from "@/components/CharacterItem.vue";
 import Menu from "@/components/Menu.vue";
 import MoneyPage from "./Money.vue";
 import ImplantsPage from "./Implants.vue";
+import InventoryPage from "./Inventory.vue";
 
 import me from "@/gql/MainCharacter";
 import { MainCharacter_me as MainCharacter } from "@/gql/__generated__/MainCharacter";
@@ -53,7 +54,7 @@ export default class MenuPage extends Vue {
     return [
       { title: `Баланс: ${this.balance}`, open: MoneyPage },
       { title: "Сообщения" },
-      { title: "Инвентарь" },
+      { title: "Инвентарь", open: InventoryPage },
       { title: "Свойства" },
       { title: "Состояние", open: StatePage },
       { title: "Импланты", open: ImplantsPage },

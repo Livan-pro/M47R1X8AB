@@ -2,10 +2,10 @@
   <Page actionBarHidden="true">
     <ScrollView>
       <StackLayout class="p-x-20 p-y-10">
-        <Label text="Перевод денег" dock="left" class="h2" />
+        <Label text="Передача предмета" dock="left" class="h2" />
         <CharacterItem :data="character" @tap.prevent="" />
-        <TextField v-model="amount" hint="Сумма" keyboardType="number" returnKeyType="done" @returnPress="doTransfer" />
-        <Button text="Перевести" @tap="doTransfer" />
+        <TextField v-model="amount" hint="Количество" keyboardType="number" returnKeyType="done" @returnPress="doTransfer" />
+        <Button text="Передать" @tap="doTransfer" />
       </StackLayout>
     </ScrollView>
   </Page>
@@ -17,8 +17,9 @@ import Vue from "nativescript-vue";
 import CharacterItem from "@/components/CharacterItem.vue";
 
 import CharacterById from "@/gql/CharacterById";
-import MoneyTransfer, { createUpdate } from "@/gql/MoneyTransfer";
+import ItemTransfer, { createUpdate } from "@/gql/ItemTransfer";
 import { CharacterById_character as Character } from "@/gql/__generated__/CharacterById";
+import { items } from "@/utils/items";
 
 @Component({
   components: { CharacterItem },
@@ -27,14 +28,15 @@ import { CharacterById_character as Character } from "@/gql/__generated__/Charac
       ...CharacterById,
       variables() {
         return {
-          id: (this as MoneyTransferAmountModal).id,
+          id: (this as ItemTransferAmountModal).characterId,
         };
       },
     },
   },
 })
-export default class MoneyTransferAmountModal extends Vue {
-  @Prop({ type: Number, default: -1 }) id!: number;
+export default class ItemTransferAmountModal extends Vue {
+  @Prop({ type: Number, default: -1 }) characterId!: number;
+  @Prop({ type: Number, default: -1 }) itemId!: number;
   amount = "";
   character: Character = {
     __typename: "Character",
@@ -53,16 +55,17 @@ export default class MoneyTransferAmountModal extends Vue {
     const amount = parseInt(this.amount, 10);
     try {
       await this.$apollo.mutate({
-        ...MoneyTransfer,
+        ...ItemTransfer,
         variables: {
-          id: this.id,
+          characterId: this.characterId,
+          itemId: this.itemId,
           amount,
         },
-        update: createUpdate(amount),
+        update: createUpdate(this.itemId, amount),
       });
       await alert({
         title: "Успех",
-        message: `Вы перевели ${amount} кредитов пользователю ${(this.character as Character).name}`,
+        message: `Вы передали ${amount} предметов типа ${this.item.name} пользователю ${this.character.name}`,
         okButtonText: "ОК",
       });
     } catch (error) {
@@ -77,6 +80,10 @@ export default class MoneyTransferAmountModal extends Vue {
     }
     this.loading = false;
     this.$modal.close();
+  }
+
+  get item() {
+    return items[this.itemId] || { name: "Неизвестный предмет" };
   }
 }
 </script>
