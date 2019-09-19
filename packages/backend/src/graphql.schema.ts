@@ -258,6 +258,8 @@ export abstract class IMutation {
     abstract setUserRole(id: number, role: UserRole, value?: boolean): boolean | Promise<boolean>;
 
     abstract setMainCharacter(characterId: number): Character | Promise<Character>;
+
+    abstract updateUser(id: number, data?: EditUserInput): User | Promise<User>;
 }
 
 export class News {
