@@ -36,6 +36,15 @@ export interface AttachmentInput {
   type: AttachmentType;
 }
 
+export interface EditUserInput {
+  firstName?: string | null;
+  lastName?: string | null;
+  phone?: string | null;
+  vkId?: string | null;
+  medicalInfo?: string | null;
+  city?: string | null;
+}
+
 export interface NewsInput {
   title?: string | null;
   text?: string | null;

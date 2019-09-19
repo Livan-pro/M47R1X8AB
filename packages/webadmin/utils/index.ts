@@ -10,3 +10,6 @@ const getDataUrl = (): string => {
 export const dataUrl = getDataUrl();
 
 export const getAttachmentUrl = (attachment: Attachment): string => `${dataUrl}/attachments/${attachment.id}/${attachment.name}`;
+
+export const maxChars = (amount: number): ((input: string) => boolean | string) => (input): boolean | string =>
+  input.length <= amount || "Слишком длинное значение";

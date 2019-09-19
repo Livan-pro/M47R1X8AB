@@ -6,8 +6,13 @@
       <v-text-field v-model="search" append-icon="mdi-search" label="Поиск" single-line hide-details></v-text-field>
     </v-card-title>
     <v-data-table :headers="headers" :items="items" :search="search" sort-by="id" class="elevation-1" multi-sort>
-      <template v-slot:item.vkId="{ value }">
-        <a :href="'https://vk.com/' + value">{{ value }}</a>
+      <template v-for="edit in editable" v-slot:[`item.${edit.key}`]="{ item }">
+        <v-edit-dialog :key="edit.key" :return-value.sync="item[edit.key]" @save="update(item.id, { [edit.key]: item[edit.key] })">
+          {{ item[edit.key] }}
+          <template v-slot:input>
+            <v-text-field v-model="item[edit.key]" :rules="edit.rules" :label="edit.name" single-line counter></v-text-field>
+          </template>
+        </v-edit-dialog>
       </template>
       <template v-slot:item.mainCharacter.name="{ item: { mainCharacter: value } }">
         <v-layout align-center>
@@ -21,6 +26,9 @@
       <template v-slot:item.actions="{ item }">
         <make-admin-button v-if="isSuperAdmin" :id="item.id" :value="item.roles.includes('Admin')" />
         <upload-quenta-button :id="item.mainCharacter.id" />
+        <v-btn x-small text fab color="primary" :href="`https://vk.com/${item.vkId}`">
+          VK
+        </v-btn>
       </template>
     </v-data-table>
   </v-card>
@@ -36,9 +44,10 @@ import CharacterAvatar from "~/components/CharacterAvatar.vue";
 import IconBtn from "~/components/IconBtn.vue";
 import UploadQuentaButton from "~/components/UploadQuentaButton.vue";
 import MakeAdminButton from "~/components/MakeAdminButton.vue";
-import { UserRole as Role } from "../gql/__generated__/globalTypes";
-import { dataUrl } from "@/utils";
+import { UserRole as Role, EditUserInput } from "~/gql/__generated__/globalTypes";
+import { dataUrl, maxChars } from "@/utils";
 import { professionToText } from "shared/browser";
+import { createMutation } from "~/gql/UpdateUser";
 
 @Component({
   components: { CharacterAvatar, IconBtn, UploadQuentaButton, MakeAdminButton },
@@ -99,6 +108,26 @@ export default class UsersPage extends Vue {
 
   formatDate(value: number) {
     return new Date(value).toLocaleString();
+  }
+
+  max255chars(str: string) {
+    return str.length <= 255 || "Слишком длинная строка!";
+  }
+
+  get editable() {
+    return [
+      { key: "firstName", rules: [maxChars(255)], name: "Имя" },
+      { key: "lastName", rules: [maxChars(255)], name: "Фамилия" },
+      { key: "phone", rules: [maxChars(20)], name: "Телефон" },
+      { key: "vkId", rules: [maxChars(32)], name: "VK ID" },
+      { key: "medicalInfo", rules: [maxChars(1000)], name: "Мед. информация" },
+      { key: "city", rules: [maxChars(32)], name: "Город" },
+    ];
+  }
+
+  async update(id: number, data: EditUserInput) {
+    console.log("update", id, data);
+    await this.$apollo.mutate(createMutation(id, data));
   }
 }
 </script>
