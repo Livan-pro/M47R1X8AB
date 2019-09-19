@@ -29,6 +29,25 @@ export class MedicineResolvers {
     if (user.mainCharacter.state !== CharacterState.Pollution) {
       throw new CustomError("Вам не требуется лекарство!");
     }
-    await this.medicine.use(buf, user.mainCharacterId);
+    await this.medicine.useMedicine(buf, user.mainCharacterId);
+  }
+
+  @Mutation()
+  async useMedpack(
+    @Args("code") code: string,
+    @GetUser() user: User,
+  ): Promise<void> {
+    if (code.length !== 16) throw new CustomError("Неверный код медпака!");
+    let buf: Buffer;
+    try {
+      buf = Buffer.from(code, "hex");
+    } catch (e) {
+      throw new CustomError("Неверный код медпака!");
+    }
+    if (user.mainCharacter.state !== CharacterState.Pollution && user.mainCharacter.state !== CharacterState.SevereWound) {
+      throw new CustomError("Вам не требуется медпак!");
+    }
+    await this.medicine.useMedpack(buf, user.mainCharacterId);
+  }
   }
 }
