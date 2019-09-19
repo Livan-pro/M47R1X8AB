@@ -157,6 +157,7 @@ export class Character {
     deathTime?: Date;
     implantsRejectTime?: Date;
     location?: Location;
+    properties: Property[];
 }
 
 export class CharacterUpdate {
@@ -174,6 +175,7 @@ export class CharacterUpdate {
     deathTime?: Date;
     implantsRejectTime?: Date;
     location?: Location;
+    properties?: Property[];
 }
 
 export class Implant {
@@ -262,6 +264,11 @@ export class News {
     text: string;
     datetime: Date;
     attachment?: Attachment;
+}
+
+export class Property {
+    name: string;
+    value: string;
 }
 
 export abstract class IQuery {

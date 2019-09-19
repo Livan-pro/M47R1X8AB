@@ -51,7 +51,7 @@ export class CharacterResolvers {
     if (user.roles.has(Role.Admin) || user.mainCharacter.roles.has(CharacterRole.Medic) || id === user.mainCharacterId) {
       fields.push("implantsRejectTime");
     }
-    const char = await this.character.findById(id, fields, ["location"]);
+    const char = await this.character.findById(id, fields, ["location", "properties"]);
     if (!char) return null;
     if (char.userId !== user.id && !user.roles.has(Role.Admin)) {
       char.location = null;
