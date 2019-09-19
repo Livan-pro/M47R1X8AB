@@ -24,8 +24,16 @@ export class ImplantResolvers {
   ) {}
 
   @Query()
-  async implants(@GetUser() user: User) {
-    return this.implant.getByCharacterId(user.mainCharacterId);
+  async implants(
+    @Args("id") id: number,
+    @GetUser() user: User,
+  ) {
+    if (id) {
+      if (!user.roles.has(Role.Admin) && !user.mainCharacter.roles.has(CharacterRole.Medic)) {
+        throw new CustomError("У вас нет доступа к имплантам этого персонажа!");
+      }
+      return this.implant.getByCharacterId(id);
+    } else return this.implant.getByCharacterId(user.mainCharacterId);
   }
 
   @Mutation()

@@ -29,7 +29,7 @@ input FullImplantInput {
 }
 
 type Query {
-  implants: [Implant!]!
+  implants(id: Int): [Implant!]!
 }
 
 type Mutation {
