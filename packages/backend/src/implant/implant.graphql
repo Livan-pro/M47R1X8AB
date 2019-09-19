@@ -29,13 +29,14 @@ input FullImplantInput {
 }
 
 type Query {
-  implants: [Implant!]!
+  implants(id: Int): [Implant!]!
 }
 
 type Mutation {
   createImplant(data: FullImplantInput!): Int!
   updateImplant(id: Int!, data: FullImplantInput!): Boolean
   prolongImplants(code: String!): Boolean
+  fixImplants(characterId: Int!): Boolean
 }
 
 type Subscription {

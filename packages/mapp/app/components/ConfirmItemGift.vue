@@ -1,6 +1,6 @@
 <template>
   <StackLayout class="p-b-10">
-    <CharacterItem :data="me.mainCharacter" @tap.prevent="" />
+    <CharacterItem :data="me.mainCharacter" />
     <Label text="Вы действительно хотите получить предмет?" textWrap="true" dock="left" class="h2" />
     <Button text="Получить" @tap="doUse" />
   </StackLayout>

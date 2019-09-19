@@ -223,6 +223,8 @@ export abstract class IMutation {
 
     abstract prolongImplants(code: string): boolean | Promise<boolean>;
 
+    abstract fixImplants(characterId: number): boolean | Promise<boolean>;
+
     abstract transferItem(to: number, itemId: number, amount: number): boolean | Promise<boolean>;
 
     abstract useItemGift(code: string): InventoryItem | Promise<InventoryItem>;
@@ -230,6 +232,8 @@ export abstract class IMutation {
     abstract useMedicine(code: string): boolean | Promise<boolean>;
 
     abstract useMedpack(code: string): boolean | Promise<boolean>;
+
+    abstract heal(characterId: number): boolean | Promise<boolean>;
 
     abstract createNews(data: NewsInput): News | Promise<News>;
 
@@ -269,7 +273,7 @@ export abstract class IQuery {
 
     abstract character(id: number): Character | Promise<Character>;
 
-    abstract implants(): Implant[] | Promise<Implant[]>;
+    abstract implants(id?: number): Implant[] | Promise<Implant[]>;
 
     abstract inventory(): InventoryItem[] | Promise<InventoryItem[]>;
 

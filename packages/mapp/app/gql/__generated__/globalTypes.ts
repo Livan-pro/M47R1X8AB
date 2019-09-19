@@ -12,6 +12,16 @@ export enum AttachmentType {
   Video = "Video",
 }
 
+export enum CharacterRole {
+  Android = "Android",
+  Medic = "Medic",
+  NPC = "NPC",
+  Netrunner = "Netrunner",
+  None = "None",
+  Replicant = "Replicant",
+  Technician = "Technician",
+}
+
 export enum CharacterState {
   Death = "Death",
   Normal = "Normal",
@@ -37,6 +47,19 @@ export enum Profession {
   Netrunner = "Netrunner",
   None = "None",
   Stalker = "Stalker",
+}
+
+export enum UserRole {
+  Admin = "Admin",
+  SuperAdmin = "SuperAdmin",
+}
+
+export interface FullImplantInput {
+  characterId?: number | null;
+  name?: string | null;
+  type?: ImplantType | null;
+  working?: boolean | null;
+  quality?: boolean | null;
 }
 
 //==============================================================

@@ -2,8 +2,8 @@ import gql from "graphql-tag";
 
 export default {
   query: gql`
-    query Implants {
-      implants {
+    query Implants($id: Int) {
+      implants(id: $id) {
         id
         name
         type

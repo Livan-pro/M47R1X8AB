@@ -1,6 +1,6 @@
 <template>
   <StackLayout class="p-b-10">
-    <CharacterItem :data="me.mainCharacter" @tap.prevent="" />
+    <CharacterItem :data="me.mainCharacter" />
     <Label text="Вы действительно хотите продлить срок действия имплантов?" textWrap="true" dock="left" class="h2" />
     <Button text="Продлить" @tap="doUse" />
   </StackLayout>

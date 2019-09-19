@@ -3,7 +3,7 @@
     <ScrollView>
       <StackLayout class="p-x-20 p-y-10">
         <Label text="Передача предмета" dock="left" class="h2" />
-        <CharacterItem :data="character" @tap.prevent="" />
+        <CharacterItem :data="character" />
         <TextField v-model="amount" hint="Количество" keyboardType="number" returnKeyType="done" @returnPress="doTransfer" />
         <Button text="Передать" @tap="doTransfer" />
       </StackLayout>
@@ -47,6 +47,7 @@ export default class ItemTransferAmountModal extends Vue {
     profession: null,
     professionLevel: null,
     location: null,
+    implantsRejectTime: null,
   };
   loading = false;
 

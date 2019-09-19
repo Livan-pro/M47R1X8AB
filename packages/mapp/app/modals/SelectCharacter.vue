@@ -5,7 +5,7 @@
         <Label text="Выберите персонажа" class="h2 text-center" />
         <template v-for="(item, i) in characters">
           <StackLayout :key="'hr-' + i" class="hr-light m-b-10" />
-          <CharacterItem :key="i" :data="item" @tap.prevent="onTap" />
+          <CharacterItem :key="i" :data="item" @tap="onTap" />
         </template>
         <StackLayout class="hr-light" />
       </StackLayout>

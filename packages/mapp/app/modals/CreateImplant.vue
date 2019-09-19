@@ -2,10 +2,10 @@
   <Page actionBarHidden="true">
     <ScrollView>
       <StackLayout class="p-x-20 p-y-10">
-        <Label text="Перевод денег" dock="left" class="h2" />
-        <CharacterItem :data="character" />
-        <TextField v-model="amount" hint="Сумма" keyboardType="number" returnKeyType="done" @returnPress="doTransfer" />
-        <Button text="Перевести" @tap="doTransfer" />
+        <Label text="Создание импланта" dock="left" class="h2" />
+        <TextField v-model="name" hint="Название" returnKeyType="done" />
+        <ListPicker v-model="typeIndex" :items="types" />
+        <Button text="Создать" @tap="doCreate" />
       </StackLayout>
     </ScrollView>
   </Page>
@@ -17,8 +17,9 @@ import Vue from "nativescript-vue";
 import CharacterItem from "@/components/CharacterItem.vue";
 
 import CharacterById from "@/gql/CharacterById";
-import MoneyTransfer, { createUpdate } from "@/gql/MoneyTransfer";
+import CreateImplant from "@/gql/CreateImplant";
 import { CharacterById_character as Character } from "@/gql/__generated__/CharacterById";
+import { implantTypes } from "@/utils";
 
 @Component({
   components: { CharacterItem },
@@ -27,15 +28,14 @@ import { CharacterById_character as Character } from "@/gql/__generated__/Charac
       ...CharacterById,
       variables() {
         return {
-          id: (this as MoneyTransferAmountModal).id,
+          id: (this as CreateImplantModal).id,
         };
       },
     },
   },
 })
-export default class MoneyTransferAmountModal extends Vue {
+export default class CreateImplantModal extends Vue {
   @Prop({ type: Number, default: -1 }) id!: number;
-  amount = "";
   character: Character = {
     __typename: "Character",
     id: -1,
@@ -48,22 +48,33 @@ export default class MoneyTransferAmountModal extends Vue {
     implantsRejectTime: null,
   };
   loading = false;
+  name = "";
+  typeIndex = 0;
 
-  async doTransfer() {
+  async doCreate() {
+    if (this.name.length < 1) {
+      await alert({
+        title: "Ошибка",
+        message: "Вы должны ввести название импланта!",
+        okButtonText: "ОК",
+      });
+      return;
+    }
     this.loading = true;
-    const amount = parseInt(this.amount, 10);
     try {
       await this.$apollo.mutate({
-        ...MoneyTransfer,
+        ...CreateImplant,
         variables: {
-          id: this.id,
-          amount,
+          data: {
+            characterId: this.id,
+            name: this.name,
+            type: this.type,
+          },
         },
-        update: createUpdate(amount),
       });
       await alert({
         title: "Успех",
-        message: `Вы перевели ${amount} кредитов пользователю ${(this.character as Character).name}`,
+        message: `Вы создали имплант для персонажа ${(this.character as Character).name}`,
         okButtonText: "ОК",
       });
     } catch (error) {
@@ -78,6 +89,14 @@ export default class MoneyTransferAmountModal extends Vue {
     }
     this.loading = false;
     this.$modal.close();
+  }
+
+  get types() {
+    return Object.values(implantTypes);
+  }
+
+  get type() {
+    return Object.keys(implantTypes)[this.typeIndex];
   }
 }
 </script>

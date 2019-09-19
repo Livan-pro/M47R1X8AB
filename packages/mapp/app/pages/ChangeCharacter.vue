@@ -5,7 +5,7 @@
         <Label text="Ваши персонажи" class="h1 text-center" />
         <template v-for="(item, i) in me.characters">
           <StackLayout :key="'hr-' + i" class="hr-light m-b-10" />
-          <CharacterItem :key="i" :data="item" @tap.prevent="selectCharacter(item.id)" />
+          <CharacterItem :key="i" :data="item" @tap="selectCharacter" />
         </template>
         <StackLayout class="hr-light" />
       </StackLayout>
@@ -21,7 +21,6 @@ import CharacterItem from "@/components/CharacterItem.vue";
 import me from "@/gql/MyCharacters";
 import { MyCharacters_me as Me } from "@/gql/__generated__/MyCharacters";
 import SetMainCharacter from "@/gql/SetMainCharacter";
-import MenuPage from "@/pages/Menu.vue";
 
 @Component({
   components: { CharacterItem },
