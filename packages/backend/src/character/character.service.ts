@@ -38,7 +38,7 @@ export class CharacterService {
     id: number,
     data: Partial<Character>,
     @TransactionManager() manager?: EntityManager,
-  ): Promise<void> {
+  ): Promise<Partial<Character>> {
     const repo = manager.getRepository(Character);
     const quenta = await (data.quenta as unknown as FileUpload);
     if (quenta) data = {...data, quenta: quenta.filename};
@@ -76,5 +76,6 @@ export class CharacterService {
       await this.file.upload(quenta, ["quenta", id.toString(), quenta.filename]);
       this.log.log("Done!");
     }
+    return {...data, id};
   }
 }

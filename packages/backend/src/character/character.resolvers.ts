@@ -110,12 +110,11 @@ export class CharacterResolvers {
   async updateCharacter(
     @Args("id") id: number,
     @Args("data") data: FullCharacterInput,
-  ): Promise<boolean> {
-    await this.character.update(id, "roles" in data ? {
+  ): Promise<Partial<Character>> {
+    return await this.character.update(id, "roles" in data ? {
       ...data,
       roles: new RolesClass<typeof CharacterRole>(data.roles, CharacterRole),
     } : {...data} as unknown as Partial<Character>);
-    return true;
   }
 
   @Mutation()

@@ -217,7 +217,7 @@ export abstract class IMutation {
 
     abstract suicide(): Date | Promise<Date>;
 
-    abstract updateCharacter(id: number, data: FullCharacterInput): boolean | Promise<boolean>;
+    abstract updateCharacter(id: number, data: FullCharacterInput): Character | Promise<Character>;
 
     abstract editProperty(characterId: number, name: string, value: string): boolean | Promise<boolean>;
 

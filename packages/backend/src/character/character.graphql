@@ -106,7 +106,7 @@ type Mutation {
   """avatar - base64-encoded image (200x200, png)"""
   uploadAvatar(id: Int!, avatar: String!): Date!
   suicide: Date
-  updateCharacter(id: Int!, data: FullCharacterInput!): Boolean
+  updateCharacter(id: Int!, data: FullCharacterInput!): Character
   editProperty(characterId: Int!, name: String!, value: String!): Boolean
 }
 
