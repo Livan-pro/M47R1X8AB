@@ -2,10 +2,10 @@
   <Page actionBarHidden="true">
     <ScrollView>
       <StackLayout class="p-x-20 p-y-10">
-        <Label text="Передача предмета" dock="left" class="h2" />
-        <CharacterItem :data="character" />
-        <TextField v-model="amount" hint="Количество" keyboardType="number" returnKeyType="done" @returnPress="doTransfer" />
-        <Button text="Передать" @tap="doTransfer" />
+        <Label text="Создание импланта" dock="left" class="h2" />
+        <TextField v-model="name" hint="Название" returnKeyType="next" />
+        <ListPicker v-model="typeIndex" :items="types" />
+        <Button text="Создать" @tap="doCreate" />
       </StackLayout>
     </ScrollView>
   </Page>
@@ -17,9 +17,9 @@ import Vue from "nativescript-vue";
 import CharacterItem from "@/components/CharacterItem.vue";
 
 import CharacterById from "@/gql/CharacterById";
-import ItemTransfer, { createUpdate } from "@/gql/ItemTransfer";
+import CreateImplant from "@/gql/CreateImplant";
 import { CharacterById_character as Character } from "@/gql/__generated__/CharacterById";
-import { items } from "@/utils/items";
+import { implantTypes } from "@/utils";
 
 @Component({
   components: { CharacterItem },
@@ -28,16 +28,14 @@ import { items } from "@/utils/items";
       ...CharacterById,
       variables() {
         return {
-          id: (this as ItemTransferAmountModal).characterId,
+          id: (this as CreateImplantModal).id,
         };
       },
     },
   },
 })
-export default class ItemTransferAmountModal extends Vue {
-  @Prop({ type: Number, default: -1 }) characterId!: number;
-  @Prop({ type: Number, default: -1 }) itemId!: number;
-  amount = "";
+export default class CreateImplantModal extends Vue {
+  @Prop({ type: Number, default: -1 }) id!: number;
   character: Character = {
     __typename: "Character",
     id: -1,
@@ -49,23 +47,33 @@ export default class ItemTransferAmountModal extends Vue {
     location: null,
   };
   loading = false;
+  name = "";
+  typeIndex = 0;
 
-  async doTransfer() {
+  async doCreate() {
+    if (this.name.length < 1) {
+      await alert({
+        title: "Ошибка",
+        message: "Вы должны ввести название импланта!",
+        okButtonText: "ОК",
+      });
+      return;
+    }
     this.loading = true;
-    const amount = parseInt(this.amount, 10);
     try {
       await this.$apollo.mutate({
-        ...ItemTransfer,
+        ...CreateImplant,
         variables: {
-          characterId: this.characterId,
-          itemId: this.itemId,
-          amount,
+          data: {
+            characterId: this.id,
+            name: this.name,
+            type: this.type,
+          },
         },
-        update: createUpdate(this.itemId, amount),
       });
       await alert({
         title: "Успех",
-        message: `Вы передали ${amount} предметов типа ${this.item.name} пользователю ${this.character.name}`,
+        message: `Вы создали имплант для персонажа ${(this.character as Character).name}`,
         okButtonText: "ОК",
       });
     } catch (error) {
@@ -82,8 +90,12 @@ export default class ItemTransferAmountModal extends Vue {
     this.$modal.close();
   }
 
-  get item() {
-    return items[this.itemId] || { name: "Неизвестный предмет" };
+  get types() {
+    return Object.values(implantTypes);
+  }
+
+  get type() {
+    return Object.keys(implantTypes)[this.typeIndex];
   }
 }
 </script>

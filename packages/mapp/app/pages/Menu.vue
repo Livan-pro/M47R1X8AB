@@ -1,7 +1,7 @@
 <template>
   <Page actionBarHidden="true">
     <StackLayout class="p-x-20 p-y-10">
-      <CharacterItem :data="character" :avatarSize="50" :hideBalance="true" />
+      <CharacterItem :data="character" :avatarSize="50" :hideBalance="true" @tap="onTap" />
       <StackLayout class="hr-light m-y-10" />
       <Menu :items="items" />
     </StackLayout>
@@ -18,6 +18,7 @@ import Menu from "@/components/Menu.vue";
 import MoneyPage from "./Money.vue";
 import ImplantsPage from "./Implants.vue";
 import InventoryPage from "./Inventory.vue";
+import CharacterPage from "./Character.vue";
 
 import me from "@/gql/MainCharacter";
 import { MainCharacter_me as MainCharacter } from "@/gql/__generated__/MainCharacter";
@@ -50,6 +51,11 @@ export default class MenuPage extends Vue {
       location: null,
     },
   };
+
+  onTap(id: number) {
+    this.$navigateTo(CharacterPage, { frame: this.$root.currentFrame, props: { id } });
+  }
+
   get items() {
     return [
       { title: `Баланс: ${this.balance}`, open: MoneyPage },

@@ -1,7 +1,7 @@
 <template>
   <StackLayout class="p-b-10">
     <Label text="Вы действительно хотите перевести деньги?" textWrap="true" dock="left" class="h2" />
-    <CharacterItem :data="character" @tap.prevent="" />
+    <CharacterItem :data="character" />
     <Label :text="`Сумма: ${amount}`" textWrap="true" dock="left" class="h2" />
     <Button text="Перевести" @tap="doTransfer" />
   </StackLayout>

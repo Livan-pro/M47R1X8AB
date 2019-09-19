@@ -3,7 +3,7 @@
     <ScrollView>
       <StackLayout class="p-x-20 p-y-10">
         <Label text="Перевод денег" dock="left" class="h2" />
-        <CharacterItem :data="character" @tap.prevent="" />
+        <CharacterItem :data="character" />
         <TextField v-model="amount" hint="Сумма" keyboardType="number" returnKeyType="done" @returnPress="doTransfer" />
         <Button text="Перевести" @tap="doTransfer" />
       </StackLayout>

@@ -6,6 +6,7 @@
         <Label :text="character.name" class="h1 text-center" :class="{ own: character.own }" />
         <Label :text="profession" class="h2 text-center" />
         <Label v-if="location" :text="location" class="h2 text-center" />
+        <Button v-if="isMedic" text="Экран медика" @tap="openMedic" />
       </StackLayout>
     </ScrollView>
   </Page>
@@ -16,10 +17,15 @@ import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
 import CharacterAvatar from "@/components/CharacterAvatar.vue";
 import UploadAvatar from "@/pages/UploadAvatar.vue";
+import MedicPage from "@/pages/Medic.vue";
 
 import CharacterById from "@/gql/CharacterById";
 import { CharacterById_character as Character } from "@/gql/__generated__/CharacterById";
+import me from "@/gql/MyRoles";
+import { MyRoles_me as MyRoles } from "@/gql/__generated__/MyRoles";
+
 import { getProfessionText } from "../utils";
+import { UserRole, CharacterRole } from "@/gql/__generated__/globalTypes";
 
 @Component({
   components: { CharacterAvatar },
@@ -32,6 +38,7 @@ import { getProfessionText } from "../utils";
         };
       },
     },
+    me,
   },
 })
 export default class CharacterPage extends Vue {
@@ -46,10 +53,27 @@ export default class CharacterPage extends Vue {
     professionLevel: null,
     location: null,
   };
+  me: MyRoles = {
+    __typename: "User",
+    mainCharacter: {
+      __typename: "Character",
+      id: -1,
+      roles: [],
+    },
+    roles: [],
+  };
 
   onTap() {
     if (!(this.character as Character).own) return;
     this.$navigateTo(UploadAvatar, { frame: this.$root.currentFrame, props: { id: this.id } });
+  }
+
+  openMedic() {
+    this.$navigateTo(MedicPage, { frame: this.$root.currentFrame, props: { id: this.id } });
+  }
+
+  get isMedic() {
+    return this.me.roles.includes(UserRole.Admin) || this.me.mainCharacter.roles.includes(CharacterRole.Medic);
   }
 
   get profession() {

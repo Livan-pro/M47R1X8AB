@@ -12,7 +12,6 @@
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
-import Character from "@/pages/Character.vue";
 import CharacterAvatar from "@/components/CharacterAvatar.vue";
 import { getProfessionText } from "@/utils";
 
@@ -34,13 +33,7 @@ export default class CharacterItem extends Vue {
   @Prop({ type: Boolean, default: false }) hideProfession!: boolean;
 
   onTap() {
-    let navigate = true;
-    this.$emit("tap", {
-      id: this.data.id,
-      preventDefault: () => (navigate = false),
-    });
-    if (!navigate) return;
-    this.$navigateTo(Character, { frame: this.$root.currentFrame, props: { id: this.data.id } });
+    this.$emit("tap", this.data.id);
   }
 
   getProfessionText() {

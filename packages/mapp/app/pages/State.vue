@@ -1,7 +1,7 @@
 <template>
   <Page actionBarHidden="true">
     <StackLayout class="p-x-20 p-y-10">
-      <CharacterItem :data="character" :avatarSize="50" :hideBalance="true" />
+      <CharacterItem :data="character" :avatarSize="50" :hideBalance="true" @tap="onTap" />
       <StackLayout class="hr-light m-y-10" />
       <Label :text="stateText" :class="color" class="h1 text-center m-y-10" />
       <Label v-if="isDeathTimeVisible" :text="deathTimeText" class="h2 text-center" />
@@ -27,6 +27,7 @@ import { CharacterState, Profession } from "@/gql/__generated__/globalTypes";
 import suicide, { createUpdate } from "@/gql/Suicide";
 import { logout } from "@/vue-apollo";
 import { month } from "@/utils";
+import CharacterPage from "./Character.vue";
 
 const states = Object.freeze({
   [CharacterState.Normal]: "Норма",
@@ -90,6 +91,10 @@ export default class StatePage extends Vue {
 
   async suicide() {
     await this.$apollo.mutate({ ...suicide, update: createUpdate(this.character.id) });
+  }
+
+  onTap(id: number) {
+    this.$navigateTo(CharacterPage, { frame: this.$root.currentFrame, props: { id } });
   }
 
   get items() {
