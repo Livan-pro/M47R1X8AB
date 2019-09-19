@@ -44,10 +44,12 @@ export class ImplantResolvers {
   }
 
   @Mutation()
-  @Roles(Role.Admin)
+  @Roles([Role.Admin], [CharacterRole.Medic])
   async createImplant(
     @Args("data") data: FullImplantInput,
+    @GetUser() user: User,
   ): Promise<number> {
+    if (data.characterId === user.mainCharacterId && !user.roles.has(Role.Admin)) throw new CustomError("Вы не можете добавить имплант себе!");
     const implant = await this.implant.create(data);
     return implant.id;
   }
