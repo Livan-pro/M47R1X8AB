@@ -52,17 +52,9 @@ export class CharacterImplantsService implements IService {
       lock: {mode: "pessimistic_read"},
     });
     if (char.implantsRejectTime <= new Date()) {
-      const iRepo = manager.getRepository(Implant);
-      const ids = (await iRepo.find({
-        where: {characterId, working: true},
-        select: ["id", "working"],
-        lock: {mode: "pessimistic_write"},
-      })).map(i => i.id);
-      await iRepo.update({id: In(ids)}, {working: false});
       const update = {implantsRejectTime: null};
       await cRepo.update(characterId, update);
       this.nats.publish("timers.character.update", {...update, id: characterId});
-      for (const id of ids) this.nats.publish("timers.implant.update", {id, working: false});
     }
     this.setupTimer(char);
   }
