@@ -21,4 +21,11 @@ export class PropertyService {
       .values({characterId, name, value});
     await this.repo.query(query.getQuery() + " ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)", [characterId, name, value]);
   }
+
+  async delete(
+    characterId: number,
+    name: string,
+  ): Promise<void> {
+    await this.repo.delete({characterId, name});
+  }
 }

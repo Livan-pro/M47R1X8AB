@@ -126,7 +126,8 @@ export class CharacterResolvers {
     @Args("value") value: string,
     @GetUser() user: User,
   ): Promise<boolean> {
-    await this.property.createOrUpdate(characterId, name, value);
+    if (value && value.length) await this.property.createOrUpdate(characterId, name, value);
+    else await this.property.delete(characterId, name);
     return true;
   }
 
