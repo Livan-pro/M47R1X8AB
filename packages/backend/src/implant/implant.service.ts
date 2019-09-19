@@ -51,11 +51,29 @@ export class ImplantService {
       lock: {mode: "pessimistic_write"},
     });
 
-    const data = {implantsRejectTime: new Date(
-      (char.implantsRejectTime < new Date() ? Date.now() : char.implantsRejectTime.getTime()) + implantProlongation.time,
-    )};
+    const data = {implantsRejectTime: CharacterUtils.getNewRejectTime(char.implantsRejectTime, implantProlongation.time)};
     await cRepo.update(characterId, data);
     await repo.update(implantProlongation.id, {usedById: characterId, usedAt: new Date()});
     this.nats.publish("backend.character.update", {...data, id: characterId});
+  }
+
+  @Transaction()
+  async fix(
+    byCharacterId: number,
+    forCharacterId: number,
+    @TransactionManager() manager?: EntityManager,
+  ) {
+    const iRepo = manager.getRepository(Implant);
+
+    const cRepo = manager.getRepository(Character);
+    const char = await cRepo.findOneOrFail({id: forCharacterId}, {
+      select: ["implantsRejectTime"],
+      lock: {mode: "pessimistic_write"},
+    });
+
+    const data = {implantsRejectTime: CharacterUtils.getNewRejectTime(char.implantsRejectTime, CharacterUtils.getMedicRejectTime())};
+    await cRepo.update(forCharacterId, data);
+    await iRepo.update({characterId: forCharacterId, working: false}, {working: true});
+    this.nats.publish("backend.character.update", {...data, id: forCharacterId});
   }
 }

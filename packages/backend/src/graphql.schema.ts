@@ -223,6 +223,8 @@ export abstract class IMutation {
 
     abstract prolongImplants(code: string): boolean | Promise<boolean>;
 
+    abstract fixImplants(characterId: number): boolean | Promise<boolean>;
+
     abstract transferItem(to: number, itemId: number, amount: number): boolean | Promise<boolean>;
 
     abstract useItemGift(code: string): InventoryItem | Promise<InventoryItem>;

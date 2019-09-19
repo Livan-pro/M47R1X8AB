@@ -5,6 +5,7 @@ export abstract class CharacterUtils {
   public static readonly severeWoundDeathTime = Config.getInt("SEVERE_WOUND_DEATH_TIME");
   public static readonly homelessTickTime = Config.getInt("HOMELESS_TICK_TIME");
   public static readonly homelessPollutionChance = Config.getFloat("HOMELESS_POLLUTION_CHANCE");
+  public static readonly medicRejectTime = Config.getInt("MEDIC_REJECT_TIME");
 
   public static getPollutionByTime(startTime: Date, current: Date = new Date()): number {
     return Math.floor((current.getTime() - startTime.getTime()) / this.pollutionTickTime);
@@ -16,5 +17,13 @@ export abstract class CharacterUtils {
 
   public static getHomelessPollutionStarted() {
     return Math.random() < this.homelessPollutionChance;
+  }
+
+  public static getNewRejectTime(rejectTime: Date, addTime: number): Date {
+    return new Date((rejectTime < new Date() ? Date.now() : rejectTime.getTime()) + addTime);
+  }
+
+  public static getMedicRejectTime() {
+    return this.medicRejectTime;
   }
 }
