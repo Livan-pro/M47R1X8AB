@@ -55,6 +55,7 @@ export class CharacterResolvers {
     }
     const char = await this.character.findById(id, fields, ["location", "properties"]);
     if (!char) return null;
+    if (!user.roles.has(Role.Admin)) char.userId = null;
     if (char.userId !== user.id && !user.roles.has(Role.Admin)) {
       char.location = null;
       char.professionLevel = null;

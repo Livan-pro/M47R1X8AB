@@ -143,6 +143,7 @@ export class BalanceTransfer {
 
 export class Character {
     id: number;
+    userId?: number;
     name: string;
     quenta?: string;
     roles?: CharacterRole[];
