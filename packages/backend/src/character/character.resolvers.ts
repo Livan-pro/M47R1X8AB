@@ -34,7 +34,7 @@ export class CharacterResolvers {
   @Query()
   @States(CharacterState.Normal, CharacterState.Pollution)
   async characters(@GetUser() user: User): Promise<Character[]> {
-    const fields: Array<keyof Character> = ["id", "name", "avatarUploadedAt", "profession"];
+    const fields: Array<keyof Character> = ["id", "userId", "name", "avatarUploadedAt", "profession"];
     const relations = [];
     if (user.roles.has(Role.Admin)) {
       fields.push("quenta", "roles");
