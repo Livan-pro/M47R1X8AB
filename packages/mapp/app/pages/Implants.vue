@@ -3,10 +3,8 @@
     <ScrollView>
       <StackLayout class="p-x-20 p-y-10">
         <Label text="Импланты" class="h1 text-center" />
-        <template v-if="isTimerVisible">
-          <StackLayout class="hr-light" />
-          <Label :text="`Отторжение через: ${timerText}`" class="h2 text-center" />
-        </template>
+        <StackLayout class="hr-light" />
+        <Label :text="stateText" class="h2 text-center" :class="{ rejected }" />
         <template v-for="(item, i) in implants">
           <StackLayout :key="'hr-' + i" class="hr-light m-b-10" />
           <ImplantItem :key="i" :data="item" />
@@ -57,7 +55,7 @@ export default class ImplantsPage extends Vue {
   }
 
   updateTime() {
-    if (!this.isTimerVisible) return;
+    if (this.rejected) return;
 
     const ms = this.implantsRejectTime - Date.now();
     let s = Math.floor(ms / 1000);
@@ -68,14 +66,22 @@ export default class ImplantsPage extends Vue {
     this.timerText = (h > 0 ? `${h.toString().padStart(2, "0")}:` : "") + `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
   }
 
-  get isTimerVisible() {
-    return !!this.implantsRejectTime;
+  get rejected() {
+    return !this.implantsRejectTime;
   }
 
   get implantsRejectTime() {
     return this.me.mainCharacter.implantsRejectTime;
   }
+
+  get stateText() {
+    return this.rejected ? "Импланты отторглись" : `Отторжение через: ${this.timerText}`;
+  }
 }
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.rejected {
+  color: $red;
+}
+</style>

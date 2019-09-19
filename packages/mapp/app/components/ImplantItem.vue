@@ -30,7 +30,7 @@ export default class ImplantItem extends Vue {
   }
 
   get workingText() {
-    return this.data.working ? "Работает" : "Не работает";
+    return this.data.working ? "Работает" : "Сломан";
   }
 
   get qualityText() {
