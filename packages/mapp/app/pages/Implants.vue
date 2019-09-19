@@ -2,6 +2,8 @@
   <Page actionBarHidden="true">
     <ScrollView>
       <StackLayout class="p-x-20 p-y-10">
+        <CharacterItem :data="character" :avatarSize="50" :hideBalance="true" />
+        <StackLayout class="hr-light m-y-10" />
         <Label text="Импланты" class="h1 text-center" />
         <StackLayout class="hr-light" />
         <Label :text="stateText" class="h2 text-center" :class="{ rejected }" />
@@ -16,30 +18,50 @@
 </template>
 
 <script lang="ts">
-import { Component } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
+import CharacterItem from "@/components/CharacterItem.vue";
 import ImplantItem from "@/components/ImplantItem.vue";
 
 import implants from "@/gql/Implants";
-import me from "@/gql/ImplantsRejectTime";
+import character from "@/gql/CharacterById";
 import { Implants_implants as Implant } from "@/gql/__generated__/Implants";
-import { ImplantsRejectTime_me as Me } from "@/gql/__generated__/ImplantsRejectTime";
+import { CharacterById_character as Character } from "@/gql/__generated__/CharacterById";
 
 @Component({
-  components: { ImplantItem },
+  components: { CharacterItem, ImplantItem },
   apollo: {
-    implants,
-    me,
+    implants: {
+      ...implants,
+      variables() {
+        return {
+          id: (this as ImplantsPage).id,
+        };
+      },
+    },
+    character: {
+      ...character,
+      variables() {
+        return {
+          id: (this as ImplantsPage).id,
+        };
+      },
+    },
   },
 })
 export default class ImplantsPage extends Vue {
+  @Prop({ type: Number, default: -1 }) id!: number;
   implants: Implant[] = [];
-  me: Me = {
-    __typename: "User",
-    mainCharacter: {
-      __typename: "Character",
-      implantsRejectTime: null,
-    },
+  character: Character = {
+    __typename: "Character",
+    id: -1,
+    name: "неизвестно",
+    own: false,
+    avatarUploadedAt: null,
+    profession: null,
+    professionLevel: null,
+    location: null,
+    implantsRejectTime: null,
   };
 
   timerText = "00:00";
@@ -71,7 +93,7 @@ export default class ImplantsPage extends Vue {
   }
 
   get implantsRejectTime() {
-    return this.me.mainCharacter.implantsRejectTime;
+    return this.character.implantsRejectTime;
   }
 
   get stateText() {

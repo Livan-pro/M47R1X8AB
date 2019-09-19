@@ -22,6 +22,7 @@ export interface CharacterById_character {
   profession: Profession | null;
   professionLevel: number | null;
   location: CharacterById_character_location | null;
+  implantsRejectTime: any | null;
 }
 
 export interface CharacterById {

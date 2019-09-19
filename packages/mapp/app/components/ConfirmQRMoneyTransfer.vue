@@ -41,6 +41,7 @@ export default class ConfirmQRMoneyTransfer extends Vue {
     profession: null,
     professionLevel: null,
     location: null,
+    implantsRejectTime: null,
   };
 
   loading = false;

@@ -13,6 +13,7 @@ export default {
         location {
           name
         }
+        implantsRejectTime
       }
     }
   `,

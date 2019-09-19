@@ -3,7 +3,7 @@
     <ScrollView>
       <StackLayout class="p-x-20 p-y-10">
         <Label text="Создание импланта" dock="left" class="h2" />
-        <TextField v-model="name" hint="Название" returnKeyType="next" />
+        <TextField v-model="name" hint="Название" returnKeyType="done" />
         <ListPicker v-model="typeIndex" :items="types" />
         <Button text="Создать" @tap="doCreate" />
       </StackLayout>
@@ -45,6 +45,7 @@ export default class CreateImplantModal extends Vue {
     profession: null,
     professionLevel: null,
     location: null,
+    implantsRejectTime: null,
   };
   loading = false;
   name = "";

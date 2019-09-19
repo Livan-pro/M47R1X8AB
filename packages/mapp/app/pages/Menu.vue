@@ -63,7 +63,7 @@ export default class MenuPage extends Vue {
       { title: "Инвентарь", open: InventoryPage },
       { title: "Свойства" },
       { title: "Состояние", open: StatePage },
-      { title: "Импланты", open: ImplantsPage },
+      { title: "Импланты", open: ImplantsPage, props: { id: this.character.id } },
       { title: "Мой QR-код", modal: QRCode, props: { text: `cbrpnk://c/${this.character.id}` } },
       { title: "Сменить персонажа", open: ChangeCharacterPage },
       { title: "Выход", action: logout },

@@ -52,6 +52,7 @@ export default class CharacterPage extends Vue {
     profession: null,
     professionLevel: null,
     location: null,
+    implantsRejectTime: null,
   };
   me: MyRoles = {
     __typename: "User",

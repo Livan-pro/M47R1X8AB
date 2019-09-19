@@ -12,6 +12,7 @@
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
 
+import ImplantsPage from "@/pages/Implants.vue";
 import CharacterItem from "@/components/CharacterItem.vue";
 import Menu from "@/components/Menu.vue";
 import CreateImplant from "@/modals/CreateImplant.vue";
@@ -46,10 +47,12 @@ export default class MedicPage extends Vue {
     profession: null,
     professionLevel: null,
     location: null,
+    implantsRejectTime: null,
   };
 
   get items() {
     return [
+      { title: "Список имплантов", open: ImplantsPage, props: { id: this.id } },
       { title: "Вылечить", action: () => this.heal() },
       { title: "Починить импланты", action: () => this.fixImplants() },
       { title: "Создание импланта", modal: CreateImplant, props: { id: this.id } },
