@@ -157,6 +157,7 @@ export class Character {
     deathTime?: Date;
     implantsRejectTime?: Date;
     location?: Location;
+    properties: Property[];
 }
 
 export class CharacterUpdate {
@@ -174,6 +175,7 @@ export class CharacterUpdate {
     deathTime?: Date;
     implantsRejectTime?: Date;
     location?: Location;
+    properties?: Property[];
 }
 
 export class Implant {
@@ -216,6 +218,8 @@ export abstract class IMutation {
     abstract suicide(): Date | Promise<Date>;
 
     abstract updateCharacter(id: number, data: FullCharacterInput): boolean | Promise<boolean>;
+
+    abstract editProperty(characterId: number, name: string, value: string): boolean | Promise<boolean>;
 
     abstract createImplant(data: FullImplantInput): number | Promise<number>;
 
@@ -262,6 +266,11 @@ export class News {
     text: string;
     datetime: Date;
     attachment?: Attachment;
+}
+
+export class Property {
+    name: string;
+    value: string;
 }
 
 export abstract class IQuery {

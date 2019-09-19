@@ -46,6 +46,7 @@ export default class MoneyTransferAmountModal extends Vue {
     professionLevel: null,
     location: null,
     implantsRejectTime: null,
+    properties: [],
   };
   loading = false;
 

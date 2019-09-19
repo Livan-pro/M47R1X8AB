@@ -54,6 +54,11 @@ type Location {
   name: String
 }
 
+type Property {
+  name: String!
+  value: String!
+}
+
 type Character {
   id: Int!
   name: String!
@@ -70,6 +75,7 @@ type Character {
   deathTime: Date
   implantsRejectTime: Date
   location: Location
+  properties: [Property!]!
 }
 
 type CharacterUpdate {
@@ -87,6 +93,7 @@ type CharacterUpdate {
   deathTime: Date
   implantsRejectTime: Date
   location: Location
+  properties: [Property!]
 }
 
 type Query {
@@ -100,6 +107,7 @@ type Mutation {
   uploadAvatar(id: Int!, avatar: String!): Date!
   suicide: Date
   updateCharacter(id: Int!, data: FullCharacterInput!): Boolean
+  editProperty(characterId: Int!, name: String!, value: String!): Boolean
 }
 
 type Subscription {

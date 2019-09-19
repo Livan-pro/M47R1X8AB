@@ -48,6 +48,7 @@ export default class MedicPage extends Vue {
     professionLevel: null,
     location: null,
     implantsRejectTime: null,
+    properties: [],
   };
 
   get items() {

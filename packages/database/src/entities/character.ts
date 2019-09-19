@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne } from "typeorm";
+import { Column, Entity, JoinColumn, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany } from "typeorm";
 import { User } from "./user";
 import { CharacterRole } from "../utils/character-role.enum";
 import { Roles } from "../utils/roles";
@@ -6,6 +6,7 @@ import { RolesTransformer } from "../utils/role-transformer";
 import { Profession } from "../utils/profession.enum";
 import { CharacterState } from "../utils/character-state.enum";
 import { Location } from "./location";
+import { Property } from "./property";
 
 @Entity("characters")
 export class Character {
@@ -75,4 +76,7 @@ export class Character {
 
   @Column({nullable: true})
   locationId: number;
+
+  @OneToMany(type => Property, (property: Property) => property.character)
+  properties: Character[];
 }

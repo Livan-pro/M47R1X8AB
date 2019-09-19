@@ -1,8 +1,14 @@
 import { Injectable, CanActivate, ExecutionContext } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { User, UserRole, CharacterState, CharacterRole } from "matrix-database";
+import { User, UserRole, CharacterState, CharacterRole, Profession } from "matrix-database";
 import { GqlAuthGuard } from "./gql-auth.guard";
 import { RolesDecoratorData } from "./roles.decorator";
+
+interface ISeparatedRoles {
+  user: UserRole[];
+  character: CharacterRole[];
+  professions: Profession[];
+}
 
 @Injectable()
 export class MyGuard extends GqlAuthGuard implements CanActivate {
@@ -13,7 +19,7 @@ export class MyGuard extends GqlAuthGuard implements CanActivate {
   /* Logic:
     1. if roles & states not defined => return true
     2. if JWT is missing or invalid => return false
-    3. if roles defined => check user & character roles
+    3. if roles defined => check user & character roles & character profession
     4. if states defined => check character state
     5. if all ok => return true
   */
@@ -33,6 +39,9 @@ export class MyGuard extends GqlAuthGuard implements CanActivate {
           ) || (
             rolesAnd.character.length &&
             (!user.mainCharacter || !user.mainCharacter.roles || !user.mainCharacter.roles.has(rolesAnd.character))
+          ) || (
+            rolesAnd.professions.length &&
+            (!user.mainCharacter || !user.mainCharacter.profession || !rolesAnd.professions.includes(user.mainCharacter.profession))
           )) continue;
           continue or;
         }
@@ -52,11 +61,11 @@ export class MyGuard extends GqlAuthGuard implements CanActivate {
     return value;
   }
 
-  getRolesDecoratorArray(context: ExecutionContext): Array<Array<{ user: UserRole[], character: CharacterRole[]}>> | false {
+  getRolesDecoratorArray(context: ExecutionContext): ISeparatedRoles[][] | false {
     const classValue = this.reflector.get<RolesDecoratorData>("roles", context.getClass());
     const handlerValue = this.reflector.get<RolesDecoratorData>("roles", context.getHandler());
     if (!classValue && !handlerValue) return false;
-    const value: Array<Array<{ user: UserRole[], character: CharacterRole[]}>> = [];
+    const value: ISeparatedRoles[][] = [];
     for (const val of [classValue, handlerValue]) {
       if (!Array.isArray(val)) continue;
       if (val.length < 1) continue;
@@ -66,11 +75,12 @@ export class MyGuard extends GqlAuthGuard implements CanActivate {
     return value;
   }
 
-  separateRoles(input: Array<UserRole | CharacterRole>): { user: UserRole[], character: CharacterRole[]} {
+  separateRoles(input: Array<UserRole | CharacterRole>): ISeparatedRoles {
     return input.reduce((acc, r) => {
       if (UserRole[r]) acc.user.push(r);
       else if (CharacterRole[r]) acc.character.push(r);
+      else if (Profession[r]) acc.professions.push(r);
       return acc;
-    }, {user: [], character: []});
+    }, {user: [], character: [], professions: []});
   }
 }

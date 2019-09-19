@@ -14,6 +14,10 @@ export default {
           name
         }
         implantsRejectTime
+        properties {
+          name
+          value
+        }
       }
     }
   `,

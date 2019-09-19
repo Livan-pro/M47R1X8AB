@@ -3,7 +3,7 @@ import { Logger, Inject } from "@nestjs/common";
 import { CharacterService } from "./character.service";
 import { CreateCharacter } from "shared/node";
 import { GetUser } from "user/get-user.decorator";
-import { User, UserRole as Role, Character, CharacterState, CharacterRole, Roles as RolesClass } from "matrix-database";
+import { User, UserRole as Role, Character, CharacterState, CharacterRole, Roles as RolesClass, Profession, Property } from "matrix-database";
 import { FileService } from "file/file.service";
 import * as imageSizeSync from "image-size";
 import { CustomError } from "CustomError";
@@ -13,6 +13,7 @@ import { States } from "auth/states.decorator";
 import { NatsAsyncIterator } from "utils/nats.iterator";
 import { Client } from "nats";
 import { UserCacheService } from "cache/user-cache.service";
+import { PropertyService } from "./property.service";
 
 @Resolver("Character")
 @Roles(Role.LoggedIn)
@@ -22,6 +23,7 @@ export class CharacterResolvers {
     private readonly character: CharacterService,
     private readonly file: FileService,
     private readonly uCache: UserCacheService,
+    private readonly property: PropertyService,
     @Inject("NATS")
     private readonly nats: Client,
   ) {}
@@ -34,7 +36,7 @@ export class CharacterResolvers {
   @Query()
   @States(CharacterState.Normal, CharacterState.Pollution)
   async characters(@GetUser() user: User): Promise<Character[]> {
-    const fields: Array<keyof Character> = ["id", "name", "avatarUploadedAt", "profession"];
+    const fields: Array<keyof Character> = ["id", "userId", "name", "avatarUploadedAt", "profession"];
     const relations = [];
     if (user.roles.has(Role.Admin)) {
       fields.push("quenta", "roles");
@@ -51,7 +53,7 @@ export class CharacterResolvers {
     if (user.roles.has(Role.Admin) || user.mainCharacter.roles.has(CharacterRole.Medic) || id === user.mainCharacterId) {
       fields.push("implantsRejectTime");
     }
-    const char = await this.character.findById(id, fields, ["location"]);
+    const char = await this.character.findById(id, fields, ["location", "properties"]);
     if (!char) return null;
     if (char.userId !== user.id && !user.roles.has(Role.Admin)) {
       char.location = null;
@@ -113,6 +115,19 @@ export class CharacterResolvers {
       ...data,
       roles: new RolesClass<typeof CharacterRole>(data.roles, CharacterRole),
     } : {...data} as unknown as Partial<Character>);
+    return true;
+  }
+
+  @Mutation()
+  @Roles([Role.Admin], [Profession.Marshal])
+  async editProperty(
+    @Args("characterId") characterId: number,
+    @Args("name") name: string,
+    @Args("value") value: string,
+    @GetUser() user: User,
+  ): Promise<boolean> {
+    if (value && value.length) await this.property.createOrUpdate(characterId, name, value);
+    else await this.property.delete(characterId, name);
     return true;
   }
 

@@ -1,5 +1,5 @@
 import { SetMetadata } from "@nestjs/common";
-import { UserRole, CharacterRole } from "matrix-database";
+import { UserRole, CharacterRole, Profession } from "matrix-database";
 
 /*
 If roles is Array<UserRole | CharacterRole>:
@@ -14,7 +14,7 @@ method-level @Roles([UserRole.Admin, CharacterRole.Medic], [UserRole.SuperAdmin]
 User should be logged in and ( (should have Admin role and main character should have Medic role) or (user should have SuperAdmin role) )
 */
 
-export type RolesDecoratorData = Array<Array<UserRole | CharacterRole>> | Array<UserRole | CharacterRole>;
+export type RolesDecoratorData = Array<Array<UserRole | CharacterRole | Profession>> | Array<UserRole | CharacterRole | Profession>;
 
 // tslint:disable-next-line: variable-name
 export const Roles = (...roles: RolesDecoratorData) => SetMetadata("roles", roles);

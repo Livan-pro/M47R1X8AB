@@ -9,6 +9,7 @@ export * from "./entities/location";
 export * from "./entities/medicine";
 export * from "./entities/medpack";
 export * from "./entities/news";
+export * from "./entities/property";
 export * from "./entities/user";
 export * from "./utils/attachment-type.enum";
 export * from "./utils/character-role.enum";

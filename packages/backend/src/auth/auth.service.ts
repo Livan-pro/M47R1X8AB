@@ -23,7 +23,7 @@ export class AuthService {
 
   async validateUser(payload: IJwtPayload): Promise<User> {
     try {
-      const user = await this.user.getByEmailWithRelations(payload.email, ["mainCharacter", "mainCharacter.location"]);
+      const user = await this.user.getByEmailWithRelations(payload.email, ["mainCharacter", "mainCharacter.location", "mainCharacter.properties"]);
       if (user.passwordChangedAt && (user.passwordChangedAt.getTime() / 1000 > payload.iat)) return null;
       return user;
     } catch (err) {

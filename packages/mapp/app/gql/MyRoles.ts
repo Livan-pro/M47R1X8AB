@@ -8,6 +8,7 @@ export default {
         mainCharacter {
           id
           roles
+          profession
         }
       }
     }
