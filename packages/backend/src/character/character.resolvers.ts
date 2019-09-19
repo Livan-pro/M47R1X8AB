@@ -49,6 +49,7 @@ export class CharacterResolvers {
     const fields: Array<keyof Character> = ["id", "userId", "name", "avatarUploadedAt", "profession", "professionLevel", "location"];
     if (user.roles.has(Role.Admin)) fields.push("quenta", "roles");
     const char = await this.character.findById(id, fields, ["location"]);
+    if (!char) return null;
     if (char.userId !== user.id && !user.roles.has(Role.Admin)) {
       char.location = null;
       char.professionLevel = null;
