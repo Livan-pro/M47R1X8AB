@@ -48,6 +48,7 @@ export default class ItemTransferAmountModal extends Vue {
     professionLevel: null,
     location: null,
     implantsRejectTime: null,
+    properties: [],
   };
   loading = false;
 

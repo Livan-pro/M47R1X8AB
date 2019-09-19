@@ -13,6 +13,12 @@ export interface CharacterById_character_location {
   name: string | null;
 }
 
+export interface CharacterById_character_properties {
+  __typename: "Property";
+  name: string;
+  value: string;
+}
+
 export interface CharacterById_character {
   __typename: "Character";
   id: number;
@@ -23,6 +29,7 @@ export interface CharacterById_character {
   professionLevel: number | null;
   location: CharacterById_character_location | null;
   implantsRejectTime: any | null;
+  properties: CharacterById_character_properties[];
 }
 
 export interface CharacterById {

@@ -20,3 +20,7 @@ export interface Implants_implants {
 export interface Implants {
   implants: Implants_implants[];
 }
+
+export interface ImplantsVariables {
+  id?: number | null;
+}

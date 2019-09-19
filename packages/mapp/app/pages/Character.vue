@@ -7,6 +7,16 @@
         <Label :text="profession" class="h2 text-center" />
         <Label v-if="location" :text="location" class="h2 text-center" />
         <Button v-if="isMedic" text="Экран медика" @tap="openMedic" />
+        <template v-if="properties.length">
+          <StackLayout class="hr-light m-y-10" />
+          <Label text="Свойства" class="h2 text-center" />
+          <StackLayout class="hr-light m-t-10" />
+          <ListView for="prop in properties" :height="75 * properties.length">
+            <v-template>
+              <Label class="p-y-20 text-center" :text="`${prop.name}: ${prop.value}`" textWrap="true" />
+            </v-template>
+          </ListView>
+        </template>
       </StackLayout>
     </ScrollView>
   </Page>
@@ -53,6 +63,7 @@ export default class CharacterPage extends Vue {
     professionLevel: null,
     location: null,
     implantsRejectTime: null,
+    properties: [],
   };
   me: MyRoles = {
     __typename: "User",
@@ -83,6 +94,10 @@ export default class CharacterPage extends Vue {
 
   get location() {
     return this.character.location && this.character.location.name && `Прописка: ${this.character.location.name}`;
+  }
+
+  get properties() {
+    return this.character.properties;
   }
 }
 </script>

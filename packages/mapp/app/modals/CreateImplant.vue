@@ -46,6 +46,7 @@ export default class CreateImplantModal extends Vue {
     professionLevel: null,
     location: null,
     implantsRejectTime: null,
+    properties: [],
   };
   loading = false;
   name = "";

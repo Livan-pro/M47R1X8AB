@@ -62,6 +62,7 @@ export default class ImplantsPage extends Vue {
     professionLevel: null,
     location: null,
     implantsRejectTime: null,
+    properties: [],
   };
 
   timerText = "00:00";
