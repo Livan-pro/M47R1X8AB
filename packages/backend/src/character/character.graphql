@@ -107,6 +107,7 @@ type Mutation {
   uploadAvatar(id: Int!, avatar: String!): Date!
   suicide: Date
   updateCharacter(id: Int!, data: FullCharacterInput!): Boolean
+  editProperty(characterId: Int!, name: String!, value: String!): Boolean
 }
 
 type Subscription {

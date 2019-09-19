@@ -219,6 +219,8 @@ export abstract class IMutation {
 
     abstract updateCharacter(id: number, data: FullCharacterInput): boolean | Promise<boolean>;
 
+    abstract editProperty(characterId: number, name: string, value: string): boolean | Promise<boolean>;
+
     abstract createImplant(data: FullImplantInput): number | Promise<number>;
 
     abstract updateImplant(id: number, data: FullImplantInput): boolean | Promise<boolean>;
