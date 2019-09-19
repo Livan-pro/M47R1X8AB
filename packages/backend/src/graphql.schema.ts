@@ -233,6 +233,8 @@ export abstract class IMutation {
 
     abstract useMedpack(code: string): boolean | Promise<boolean>;
 
+    abstract heal(characterId: number): boolean | Promise<boolean>;
+
     abstract createNews(data: NewsInput): News | Promise<News>;
 
     abstract updateNews(id: number, data: NewsInput): News | Promise<News>;

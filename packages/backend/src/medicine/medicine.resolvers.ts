@@ -2,7 +2,7 @@ import { Resolver, Mutation, Args } from "@nestjs/graphql";
 import { Logger } from "@nestjs/common";
 import { MedicineService } from "./medicine.service";
 import { GetUser } from "user/get-user.decorator";
-import { User, UserRole as Role, CharacterState } from "matrix-database";
+import { User, UserRole as Role, CharacterState, CharacterRole } from "matrix-database";
 import { Roles } from "auth/roles.decorator";
 import { CustomError } from "CustomError";
 
@@ -49,5 +49,14 @@ export class MedicineResolvers {
     }
     await this.medicine.useMedpack(buf, user.mainCharacterId);
   }
+
+  @Mutation()
+  @Roles([CharacterRole.Medic], [Role.Admin])
+  async heal(
+    @Args("characterId") characterId: number,
+    @GetUser() user: User,
+  ): Promise<void> {
+    if (characterId === user.mainCharacterId) throw new CustomError("Вы не можете лечить себя!");
+    await this.medicine.heal(characterId);
   }
 }

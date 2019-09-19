@@ -73,4 +73,24 @@ export class MedicineService {
     await repo.update(medpack.id, {usedById: characterId, usedAt: new Date()});
     this.nats.publish("backend.character.update", {...data, id: characterId});
   }
+
+  @Transaction()
+  async heal(
+    characterId: number,
+    @TransactionManager() manager?: EntityManager,
+  ): Promise<void> {
+    const repo = manager.getRepository(Character);
+    const char = await repo.findOneOrFail({id: characterId}, {
+      select: ["state", "pollution", "pollutionStartTime", "deathTime"],
+      lock: {mode: "pessimistic_write"},
+    });
+
+    if (char.state !== CharacterState.Pollution && char.state !== CharacterState.SevereWound) {
+      throw new CustomError("Этому персонажу не требуется лечение!");
+    }
+
+    const data = {state: CharacterState.Normal, pollution: 0, pollutionStartTime: null, deathTime: null};
+    await repo.update(characterId, data);
+    this.nats.publish("backend.character.update", {...data, id: characterId});
+  }
 }
