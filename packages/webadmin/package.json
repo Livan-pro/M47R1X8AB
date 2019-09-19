@@ -18,7 +18,9 @@
     "graphql-tag": "^2.10.1",
     "nuxt": "^2.0.0",
     "nuxt-property-decorator": "^2.3.0",
-    "shared": "^1.1.0"
+    "shared": "^1.1.0",
+    "vue-meta": "^2.2.2",
+    "vuetify": "^2.0.18"
   },
   "devDependencies": {
     "@nuxt/typescript": "^2.8.1",
