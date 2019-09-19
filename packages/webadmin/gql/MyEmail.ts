@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 
-export default {
+const obj = ({
   query: gql`
     query MyEmail {
       me {
@@ -11,4 +11,6 @@ export default {
   error: (): void => {},
   errorPolicy: "ignore",
   fetchPolicy: "cache-and-network",
-};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+} as unknown) as { query: any };
+export default obj;
