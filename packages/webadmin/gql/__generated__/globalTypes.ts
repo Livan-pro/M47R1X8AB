@@ -12,6 +12,23 @@ export enum AttachmentType {
   Video = "Video",
 }
 
+export enum CharacterRole {
+  Android = "Android",
+  Medic = "Medic",
+  NPC = "NPC",
+  Netrunner = "Netrunner",
+  None = "None",
+  Replicant = "Replicant",
+  Technician = "Technician",
+}
+
+export enum CharacterState {
+  Death = "Death",
+  Normal = "Normal",
+  Pollution = "Pollution",
+  SevereWound = "SevereWound",
+}
+
 export enum Profession {
   Biotechnician = "Biotechnician",
   Chemist = "Chemist",
@@ -43,6 +60,21 @@ export interface EditUserInput {
   vkId?: string | null;
   medicalInfo?: string | null;
   city?: string | null;
+}
+
+export interface FullCharacterInput {
+  name?: string | null;
+  quenta?: any | null;
+  roles?: CharacterRole[] | null;
+  profession?: Profession | null;
+  registrationProfession?: Profession | null;
+  professionLevel?: number | null;
+  balance?: number | null;
+  state?: CharacterState | null;
+  pollution?: number | null;
+  deathTime?: any | null;
+  implantsRejectTime?: any | null;
+  locationId?: number | null;
 }
 
 export interface NewsInput {
