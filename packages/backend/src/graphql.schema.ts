@@ -212,6 +212,8 @@ export class LoginResult {
 export abstract class IMutation {
     abstract moneyTransfer(id: number, amount: number): boolean | Promise<boolean>;
 
+    abstract addBalance(id: number, amount: number): Character | Promise<Character>;
+
     abstract editCharacter(id: number, character: CharacterInput): boolean | Promise<boolean>;
 
     abstract uploadAvatar(id: number, avatar: string): Date | Promise<Date>;

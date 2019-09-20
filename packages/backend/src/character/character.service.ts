@@ -17,6 +17,10 @@ export class CharacterService {
     @Inject("NATS") private readonly nats: Client,
   ) {}
 
+  async getById(id: number, fields?: Array<keyof Character>, relations: string[] = []): Promise<Character> {
+    return await this.repo.findOneOrFail(id, {select: fields, relations});
+  }
+
   async getByIdAndOwner(id: number, userId: number): Promise<Character> {
     return await this.repo.findOneOrFail({id, userId});
   }
