@@ -1,5 +1,5 @@
 import { Resolver, Mutation, Args, Query, Parent, ResolveProperty, Subscription } from "@nestjs/graphql";
-import { Logger, Inject } from "@nestjs/common";
+import { Logger, Inject, ForbiddenException } from "@nestjs/common";
 import { CharacterService } from "./character.service";
 import { CreateCharacter } from "shared/node";
 import { GetUser } from "user/get-user.decorator";
@@ -34,15 +34,28 @@ export class CharacterResolvers {
   }
 
   @Query()
-  @States(CharacterState.Normal, CharacterState.Pollution)
   async characters(@GetUser() user: User): Promise<Character[]> {
-    const fields: Array<keyof Character> = ["id", "userId", "name", "avatarUploadedAt", "profession"];
-    const relations = [];
-    if (user.roles.has(Role.Admin)) {
-      fields.push("quenta", "roles");
-      relations.push("location");
+    if (!user.roles.has(Role.Admin) && user.mainCharacter.state !== CharacterState.Normal && user.mainCharacter.state !== CharacterState.Pollution) {
+      throw new ForbiddenException();
     }
-    return await this.character.getAll(fields, relations);
+    const fields: Array<keyof Character> = ["id", "userId", "name", "avatarUploadedAt", "profession", "professionLevel"];
+    const relations = ["location"];
+    if (user.roles.has(Role.Admin)) {
+      fields.push("quenta", "roles", "registrationProfession", "balance", "state", "pollution", "deathTime", "implantsRejectTime");
+    }
+    const chars = await this.character.getAll(fields, relations);
+    if (!user.roles.has(Role.Admin)) {
+      chars.map(c => {
+        if (c.userId !== user.id) {
+          c.location = null;
+          c.professionLevel = null;
+        }
+        c.userId = null;
+        return c;
+      });
+    }
+
+    return chars;
   }
 
   @Query("character")
