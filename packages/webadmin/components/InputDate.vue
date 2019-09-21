@@ -1,7 +1,7 @@
 <template>
   <v-menu v-model="menu" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y full-width min-width="290px">
     <template v-slot:activator="{ on }">
-      <v-text-field :value="valueFormatted" @input="update" :label="label" prepend-icon="event" readonly v-on="!readonly && on" />
+      <v-text-field :value="valueFormatted" @input="update" :label="label" prepend-icon="mdi-calendar" readonly v-on="!readonly && on" />
     </template>
     <v-date-picker
       :value="valueISO"
