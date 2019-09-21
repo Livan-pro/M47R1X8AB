@@ -1,7 +1,7 @@
 <template>
   <Page backgroundSpanUnderStatusBar="true">
     <ActionBar title="Вход в Матрицу" android:flat="true" />
-    <StackLayout class="p-x-20" verticalAlignment="center">
+    <StackLayout class="p-x-20" verticalAlignment="center" marginBottom="214">
       <Label :text="url" />
       <ActivityIndicator :busy="loading" />
       <TextField v-model="form.email" hint="Email" returnKeyType="next" />
