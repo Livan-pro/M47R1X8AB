@@ -26,6 +26,7 @@ import ChangeCharacterPage from "./ChangeCharacter.vue";
 import QRCode from "@/components/QRCode.vue";
 import StatePage from "./State.vue";
 import { CharacterState } from "@/gql/__generated__/globalTypes";
+import MessagesPage from "./Messages.vue";
 
 @Component({
   components: { CharacterItem, Menu },
@@ -59,7 +60,7 @@ export default class MenuPage extends Vue {
   get items() {
     return [
       { title: `Баланс: ${this.balance}`, open: MoneyPage },
-      { title: "Сообщения" },
+      { title: "Сообщения", open: MessagesPage },
       { title: "Инвентарь", open: InventoryPage },
       { title: "Свойства" },
       { title: "Состояние", open: StatePage },
