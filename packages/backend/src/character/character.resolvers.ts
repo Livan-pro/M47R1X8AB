@@ -9,7 +9,6 @@ import * as imageSizeSync from "image-size";
 import { CustomError } from "CustomError";
 import { Roles } from "auth/roles.decorator";
 import { FullCharacterInput } from "graphql.schema";
-import { States } from "auth/states.decorator";
 import { NatsAsyncIterator } from "utils/nats.iterator";
 import { Client } from "nats";
 import { UserCacheService } from "cache/user-cache.service";
@@ -59,7 +58,7 @@ export class CharacterResolvers {
   }
 
   @Query("character")
-  @States(CharacterState.Normal, CharacterState.Pollution)
+  @Roles([Role.Admin], [CharacterState.Normal, CharacterState.Pollution])
   async getCharacter(@GetUser() user: User, @Args("id") id: number): Promise<Character | undefined> {
     const fields: Array<keyof Character> = ["id", "userId", "name", "avatarUploadedAt", "profession", "professionLevel", "location"];
     if (user.roles.has(Role.Admin)) fields.push("quenta", "roles");
@@ -88,7 +87,7 @@ export class CharacterResolvers {
   }
 
   @Mutation()
-  @States(CharacterState.Normal, CharacterState.Pollution)
+  @Roles(CharacterState.Normal, CharacterState.Pollution)
   async uploadAvatar(
     @Args("id") id: number,
     @Args("avatar") avatar: string,

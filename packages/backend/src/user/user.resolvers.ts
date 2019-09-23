@@ -10,7 +10,6 @@ import { LoginResult, UserRole as GqlRole, EditUserInput } from "graphql.schema"
 import { CustomError } from "CustomError";
 import { Roles } from "auth/roles.decorator";
 import { CharacterService } from "character/character.service";
-import { States } from "auth/states.decorator";
 
 @Resolver("User")
 export class UserResolvers {

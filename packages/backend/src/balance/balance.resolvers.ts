@@ -5,7 +5,6 @@ import { GetUser } from "user/get-user.decorator";
 import { User, UserRole as Role, BalanceTransfer, CharacterState, Character } from "matrix-database";
 import { CustomError } from "CustomError";
 import { Roles } from "auth/roles.decorator";
-import { States } from "auth/states.decorator";
 import { CharacterService } from "character/character.service";
 
 @Resolver()
@@ -18,7 +17,7 @@ export class BalanceResolvers {
   ) {}
 
   @Mutation()
-  @States(CharacterState.Normal, CharacterState.Pollution)
+  @Roles(CharacterState.Normal, CharacterState.Pollution)
   async moneyTransfer(
     @Args("id") id: number,
     @Args("amount") amount: number,
