@@ -24,6 +24,7 @@ import { FileModule } from "file/file.module";
 import { MedicineModule } from "medicine/medicine.module";
 import { ImplantModule } from "implant/implant.module";
 import { InventoryModule } from "inventory/inventory.module";
+import { LocationModule } from "location/location.module";
 
 @Global()
 @Module({
@@ -67,6 +68,7 @@ import { InventoryModule } from "inventory/inventory.module";
     FileModule,
     ImplantModule,
     InventoryModule,
+    LocationModule,
     MedicineModule,
     NewsModule,
     UserModule,

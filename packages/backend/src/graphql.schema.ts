@@ -102,6 +102,10 @@ export class FullImplantInput {
     quality?: boolean;
 }
 
+export class LocationInput {
+    name?: string;
+}
+
 export class LoginInput {
     email: string;
     password: string;
@@ -201,7 +205,8 @@ export class InventoryItem {
 }
 
 export class Location {
-    name?: string;
+    id?: number;
+    name: string;
 }
 
 export class LoginResult {
@@ -235,6 +240,10 @@ export abstract class IMutation {
     abstract transferItem(to: number, itemId: number, amount: number): boolean | Promise<boolean>;
 
     abstract useItemGift(code: string): InventoryItem | Promise<InventoryItem>;
+
+    abstract createLocation(data: LocationInput): Location | Promise<Location>;
+
+    abstract updateLocation(id: number, data: LocationInput): Location | Promise<Location>;
 
     abstract useMedicine(code: string): boolean | Promise<boolean>;
 
@@ -290,6 +299,8 @@ export abstract class IQuery {
     abstract implants(id?: number): Implant[] | Promise<Implant[]>;
 
     abstract inventory(): InventoryItem[] | Promise<InventoryItem[]>;
+
+    abstract locations(): Location[] | Promise<Location[]>;
 
     abstract news(): News[] | Promise<News[]>;
 

@@ -50,10 +50,6 @@ input FullCharacterInput {
   locationId: Int
 }
 
-type Location {
-  name: String
-}
-
 type Property {
   name: String!
   value: String!
