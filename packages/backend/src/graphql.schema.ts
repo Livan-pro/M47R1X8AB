@@ -140,7 +140,7 @@ export class Attachment {
 export class BalanceTransfer {
     id: number;
     createdAt: Date;
-    from: Character;
+    from?: Character;
     to: Character;
     amount: number;
 }

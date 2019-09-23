@@ -1,7 +1,7 @@
 type BalanceTransfer {
   id: Int!
   createdAt: Date!
-  from: Character!
+  from: Character
   to: Character!
   amount: Int!
 }
