@@ -215,7 +215,7 @@ export default class CharactersPage extends Vue {
   }
 
   get locationOptions() {
-    return this.locations.map(loc => ({ value: loc.id, text: loc.name }));
+    return [{ value: -1, text: "Нет" }, ...this.locations.map(loc => ({ value: loc.id, text: loc.name }))];
   }
 }
 </script>
