@@ -13,6 +13,7 @@ import { NatsAsyncIterator } from "utils/nats.iterator";
 import { Client } from "nats";
 import { UserCacheService } from "cache/user-cache.service";
 import { PropertyService } from "./property.service";
+import { LocationService } from "location/location.service";
 
 @Resolver("Character")
 @Roles(Role.LoggedIn)
@@ -23,6 +24,7 @@ export class CharacterResolvers {
     private readonly file: FileService,
     private readonly uCache: UserCacheService,
     private readonly property: PropertyService,
+    private readonly location: LocationService,
     @Inject("NATS")
     private readonly nats: Client,
   ) {}
@@ -124,10 +126,14 @@ export class CharacterResolvers {
     @Args("id") id: number,
     @Args("data") data: FullCharacterInput,
   ): Promise<Partial<Character>> {
-    return await this.character.update(id, "roles" in data ? {
+    const update = await this.character.update(id, "roles" in data ? {
       ...data,
       roles: new RolesClass<typeof CharacterRole>(data.roles, CharacterRole),
     } : {...data} as unknown as Partial<Character>);
+    if (update.locationId && !update.location) {
+      update.location = await this.location.getById(update.locationId);
+    }
+    return update;
   }
 
   @Mutation()
