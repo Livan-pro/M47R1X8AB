@@ -10,7 +10,7 @@
         {{ formatDate(value) }}
       </template>
       <template v-slot:item.from.name="{ item: { from: value } }">
-        <v-layout align-center>
+        <v-layout align-center v-if="value">
           <CharacterAvatar :id="value.id" class="mr-1" :size="50" :avatar-uploaded-at="value.avatarUploadedAt" />
           {{ value.name }}
         </v-layout>
