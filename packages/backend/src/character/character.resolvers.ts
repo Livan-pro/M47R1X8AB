@@ -126,6 +126,9 @@ export class CharacterResolvers {
     @Args("id") id: number,
     @Args("data") data: FullCharacterInput,
   ): Promise<Partial<Character>> {
+    if (data.locationId < 0) {
+      data.locationId = null;
+    }
     const update = await this.character.update(id, "roles" in data ? {
       ...data,
       roles: new RolesClass<typeof CharacterRole>(data.roles, CharacterRole),
