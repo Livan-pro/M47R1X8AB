@@ -66,6 +66,11 @@ export default class DefaultLayout extends Vue {
       to: "/characters",
     },
     {
+      icon: "mdi-map-marker",
+      title: "Локации",
+      to: "/locations",
+    },
+    {
       icon: "mdi-newspaper",
       title: "Новости",
       to: "/news",

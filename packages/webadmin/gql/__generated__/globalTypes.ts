@@ -77,6 +77,10 @@ export interface FullCharacterInput {
   locationId?: number | null;
 }
 
+export interface LocationInput {
+  name?: string | null;
+}
+
 export interface NewsInput {
   title?: string | null;
   text?: string | null;
