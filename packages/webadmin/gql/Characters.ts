@@ -19,6 +19,7 @@ export default {
         deathTime
         implantsRejectTime
         location {
+          id
           name
         }
       }

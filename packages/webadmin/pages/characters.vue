@@ -87,6 +87,14 @@
           </a>
         </v-layout>
       </template>
+      <template v-slot:item.locationText="{ item }">
+        <set-location
+          :characterId="item.id"
+          :locationId="item.location ? item.location.id : null"
+          :locationName="item.locationText"
+          :locations="locationOptions"
+        />
+      </template>
       <template v-slot:item.actions="{ item }">
         <icon-btn icon="mdi-format-list-bulleted-square" tooltip="Свойства" color="blue" @click="openProperties(item)" />
       </template>
@@ -110,12 +118,16 @@ import { professionToText, professionOptions } from "shared/browser";
 import AddBalance from "~/components/AddBalance.vue";
 import DateTimeEditDialog from "~/components/DateTimeEditDialog.vue";
 import PropertiesDialog from "~/components/PropertiesDialog.vue";
+import locations from "~/gql/Locations";
+import { Locations_locations as Location } from "~/gql/__generated__/Locations";
+import SetLocation from "~/components/SetLocation.vue";
 
 @Component({
-  components: { CharacterAvatar, IconBtn, UploadQuentaButton, AddBalance, DateTimeEditDialog, PropertiesDialog },
+  components: { CharacterAvatar, IconBtn, UploadQuentaButton, AddBalance, DateTimeEditDialog, PropertiesDialog, SetLocation },
   apollo: {
     characters,
     me,
+    locations,
   },
   meta: {
     auth: true,
@@ -124,6 +136,8 @@ import PropertiesDialog from "~/components/PropertiesDialog.vue";
 export default class CharactersPage extends Vue {
   characters: Character[] = [];
   me: Me = { __typename: "User", roles: [] };
+  locations: Location[] = [];
+
   search = "";
   propertiesDialog = false;
   propertiesCharacter = {};
@@ -141,7 +155,7 @@ export default class CharactersPage extends Vue {
       { text: "Баланс", value: "balance" },
       { text: "Состояние", value: "stateText" },
       { text: "Отторжение", value: "implantsRejectTimeText" },
-      { text: "Прописка", value: "location.name" },
+      { text: "Прописка", value: "locationText" },
       { value: "actions", sortable: false }, // width: 42 * buttons + 34
     ];
   }
@@ -158,6 +172,7 @@ export default class CharactersPage extends Vue {
         stateText: this.stateText(c),
         implantsRejectTimeDate,
         implantsRejectTimeText,
+        locationText: (c.location && c.location.name) || "Нет",
       };
     });
   }
@@ -197,6 +212,10 @@ export default class CharactersPage extends Vue {
   openProperties(char: Character) {
     this.propertiesCharacter = char;
     this.propertiesDialog = true;
+  }
+
+  get locationOptions() {
+    return this.locations.map(loc => ({ value: loc.id, text: loc.name }));
   }
 }
 </script>
