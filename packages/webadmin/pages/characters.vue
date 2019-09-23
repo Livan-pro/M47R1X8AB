@@ -1,5 +1,6 @@
 <template>
   <v-card>
+    <properties-dialog v-model="propertiesDialog" :id="propertiesCharacter.id" :name="propertiesCharacter.name" />
     <v-card-title>
       Персонажи
       <v-spacer></v-spacer>
@@ -86,7 +87,9 @@
           </a>
         </v-layout>
       </template>
-      <template v-slot:item.actions="{ item }"> </template>
+      <template v-slot:item.actions="{ item }">
+        <icon-btn icon="mdi-format-list-bulleted-square" tooltip="Свойства" color="blue" @click="openProperties(item)" />
+      </template>
     </v-data-table>
   </v-card>
 </template>
@@ -106,9 +109,10 @@ import { createMutation } from "~/gql/UpdateCharacter";
 import { professionToText, professionOptions } from "shared/browser";
 import AddBalance from "~/components/AddBalance.vue";
 import DateTimeEditDialog from "~/components/DateTimeEditDialog.vue";
+import PropertiesDialog from "~/components/PropertiesDialog.vue";
 
 @Component({
-  components: { CharacterAvatar, IconBtn, UploadQuentaButton, AddBalance, DateTimeEditDialog },
+  components: { CharacterAvatar, IconBtn, UploadQuentaButton, AddBalance, DateTimeEditDialog, PropertiesDialog },
   apollo: {
     characters,
     me,
@@ -121,6 +125,8 @@ export default class CharactersPage extends Vue {
   characters: Character[] = [];
   me: Me = { __typename: "User", roles: [] };
   search = "";
+  propertiesDialog = false;
+  propertiesCharacter = {};
 
   get headers() {
     return [
@@ -186,6 +192,11 @@ export default class CharactersPage extends Vue {
     if (char.state === CharacterState.Pollution) return `Загрязнение (${char.pollution})`;
     if (char.state === CharacterState.SevereWound) return `Тяжёлое ранение (${this.formatDate(char.deathTime)})`;
     if (char.state === CharacterState.Death) return `Смерть (${this.formatDate(char.deathTime)})`;
+  }
+
+  openProperties(char: Character) {
+    this.propertiesCharacter = char;
+    this.propertiesDialog = true;
   }
 }
 </script>
