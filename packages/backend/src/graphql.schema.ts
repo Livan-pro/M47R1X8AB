@@ -239,6 +239,8 @@ export abstract class IMutation {
 
     abstract transferItem(to: number, itemId: number, amount: number): boolean | Promise<boolean>;
 
+    abstract addItem(characterId: number, itemId: number, amount: number): InventoryItem | Promise<InventoryItem>;
+
     abstract useItemGift(code: string): InventoryItem | Promise<InventoryItem>;
 
     abstract createLocation(data: LocationInput): Location | Promise<Location>;

@@ -6,7 +6,7 @@ import { User, UserRole as Role } from "matrix-database";
 import { Roles } from "auth/roles.decorator";
 import { Client } from "nats";
 import { CustomError } from "CustomError";
-import { InventoryItem as GInventoryItem } from "graphql.schema";
+import { InventoryItem as GInventoryItem, InventoryItem } from "graphql.schema";
 
 @Resolver()
 @Roles(Role.LoggedIn)
@@ -40,6 +40,17 @@ export class InventoryResolvers {
   ): Promise<void> {
     if (to === user.mainCharacterId) throw new CustomError("Вы не можете передать предмет себе!");
     await this.inventory.transfer(user.mainCharacterId, to, itemId, amount);
+  }
+
+  @Mutation()
+  @Roles(Role.Admin)
+  async addItem(
+    @Args("characterId") characterId: number,
+    @Args("itemId") itemId: number,
+    @Args("amount") amount: number,
+  ): Promise<InventoryItem> {
+    await this.inventory.add(characterId, itemId, amount);
+    return await this.inventory.getByCharacterIdAndItemId(characterId, itemId);
   }
 
   @Mutation()

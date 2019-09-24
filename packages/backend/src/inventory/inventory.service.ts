@@ -18,6 +18,23 @@ export class InventoryService {
     return await this.repo.find({where: {characterId}});
   }
 
+  async getByCharacterIdAndItemId(characterId: number, itemId: number) {
+    return await this.repo.findOne({where: {characterId, itemId}});
+  }
+
+  async add(
+    characterId: number,
+    itemId: number,
+    amount: number,
+  ) {
+    const sql = this.repo.createQueryBuilder()
+      .insert()
+      .into(InventoryItem)
+      .values({characterId, itemId, amount})
+      .getSql() + " ON DUPLICATE KEY UPDATE `amount` = `amount` + VALUES(`amount`)";
+    await this.repo.query(sql, [characterId, itemId, amount]);
+  }
+
   @Transaction()
   async transfer(
     fromCharacterId: number,
