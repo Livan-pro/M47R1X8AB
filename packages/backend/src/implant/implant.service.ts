@@ -25,10 +25,12 @@ export class ImplantService {
     return implant;
   }
 
-  async update(id: number, data: Partial<Implant>): Promise<void> {
+  async update(id: number, data: Partial<Implant>): Promise<Partial<Implant>> {
     const implant = this.repo.create(data);
     await this.repo.update(id, implant);
-    this.nats.publish("backend.implant.update", {...implant, id});
+    const update = {...implant, id};
+    this.nats.publish("backend.implant.update", update);
+    return update;
   }
 
   @Transaction()

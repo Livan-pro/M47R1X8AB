@@ -56,12 +56,11 @@ export class ImplantResolvers {
   async createImplant(
     @Args("data") data: FullImplantInput,
     @GetUser() user: User,
-  ): Promise<number> {
+  ): Promise<Implant> {
     if (data.characterId === user.mainCharacterId && !user.roles.has(Role.Admin)) throw new CustomError("Вы не можете добавить имплант себе!");
     if (!user.roles.has(Role.Admin) || !Object.prototype.hasOwnProperty.call(data, "working")) data.working = true;
     if (!user.roles.has(Role.Admin) || !Object.prototype.hasOwnProperty.call(data, "quality")) data.quality = false;
-    const implant = await this.implant.create(data);
-    return implant.id;
+    return await this.implant.create(data);
   }
 
   @Mutation()
@@ -69,9 +68,8 @@ export class ImplantResolvers {
   async updateImplant(
     @Args("id") id: number,
     @Args("data") data: FullImplantInput,
-  ): Promise<boolean> {
-    await this.implant.update(id, data);
-    return true;
+  ): Promise<Partial<Implant>> {
+    return await this.implant.update(id, data);
   }
 
   @Mutation()

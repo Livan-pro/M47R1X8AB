@@ -185,10 +185,10 @@ export class CharacterUpdate {
 
 export class Implant {
     id: number;
-    name: string;
-    type: ImplantType;
-    working: boolean;
-    quality: boolean;
+    name?: string;
+    type?: ImplantType;
+    working?: boolean;
+    quality?: boolean;
 }
 
 export class ImplantUpdate {
@@ -229,9 +229,9 @@ export abstract class IMutation {
 
     abstract editProperty(characterId: number, name: string, value: string): boolean | Promise<boolean>;
 
-    abstract createImplant(data: FullImplantInput): number | Promise<number>;
+    abstract createImplant(data: FullImplantInput): Implant | Promise<Implant>;
 
-    abstract updateImplant(id: number, data: FullImplantInput): boolean | Promise<boolean>;
+    abstract updateImplant(id: number, data: FullImplantInput): Implant | Promise<Implant>;
 
     abstract prolongImplants(code: string): boolean | Promise<boolean>;
 
