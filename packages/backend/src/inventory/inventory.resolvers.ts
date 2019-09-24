@@ -35,7 +35,12 @@ export class InventoryResolvers {
     } catch (e) {
       throw new CustomError("Неверный код!");
     }
-    return codeToString(await this.inventory.createItemGift(buf, itemId, amount));
+    try {
+      return codeToString(await this.inventory.createItemGift(buf, itemId, amount));
+    } catch (err) {
+      if (err.code && err.code === "ER_DUP_ENTRY") throw new CustomError("QR-код с таким кодом уже существует");
+      throw err;
+    }
   }
 
   @Query("inventory")

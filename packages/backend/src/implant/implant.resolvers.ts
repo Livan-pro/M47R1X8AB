@@ -40,7 +40,12 @@ export class ImplantResolvers {
     } catch (e) {
       throw new CustomError("Неверный код!");
     }
-    return codeToString(await this.implant.createImplantProlongation(buf, time));
+    try {
+      return codeToString(await this.implant.createImplantProlongation(buf, time));
+    } catch (err) {
+      if (err.code && err.code === "ER_DUP_ENTRY") throw new CustomError("QR-код с таким кодом уже существует");
+      throw err;
+    }
   }
 
   @Query()

@@ -37,7 +37,12 @@ export class MedicineResolvers {
     } catch (e) {
       throw new CustomError("Неверный код!");
     }
-    return codeToString(await this.medicine.createMedicine(buf));
+    try {
+      return codeToString(await this.medicine.createMedicine(buf));
+    } catch (err) {
+      if (err.code && err.code === "ER_DUP_ENTRY") throw new CustomError("QR-код с таким кодом уже существует");
+      throw err;
+    }
   }
 
   @Mutation()
@@ -50,7 +55,12 @@ export class MedicineResolvers {
     } catch (e) {
       throw new CustomError("Неверный код!");
     }
-    return codeToString(await this.medicine.createMedpack(buf));
+    try {
+      return codeToString(await this.medicine.createMedpack(buf));
+    } catch (err) {
+      if (err.code && err.code === "ER_DUP_ENTRY") throw new CustomError("QR-код с таким кодом уже существует");
+      throw err;
+    }
   }
 
   @Mutation()
