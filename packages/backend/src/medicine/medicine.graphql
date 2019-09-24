@@ -23,4 +23,6 @@ type Mutation {
   useMedicine(code: String!): Boolean
   useMedpack(code: String!): Boolean
   heal(characterId: Int!): Boolean
+  createMedicine(code: String!): Medicine!
+  createMedpack(code: String!): Medpack!
 }

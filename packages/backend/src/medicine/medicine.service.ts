@@ -24,6 +24,14 @@ export class MedicineService {
     return this.repoMedpack.find({relations: ["usedBy"]});
   }
 
+  async createMedicine(code: Buffer) {
+    return this.repo.save({code});
+  }
+
+  async createMedpack(code: Buffer) {
+    return this.repoMedpack.save({code});
+  }
+
   @Transaction()
   async useMedicine(
     code: Buffer,

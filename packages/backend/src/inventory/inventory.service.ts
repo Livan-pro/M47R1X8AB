@@ -20,6 +20,10 @@ export class InventoryService {
     return this.repoIG.find({relations: ["usedBy"]});
   }
 
+  async createItemGift(code: Buffer, itemId: number, amount: number) {
+    return this.repoIG.save({code, itemId, amount});
+  }
+
   async getByCharacterId(characterId: number) {
     return await this.repo.find({where: {characterId}});
   }

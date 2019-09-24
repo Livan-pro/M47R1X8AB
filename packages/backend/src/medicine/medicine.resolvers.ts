@@ -2,7 +2,7 @@ import { Resolver, Mutation, Args, Query } from "@nestjs/graphql";
 import { Logger } from "@nestjs/common";
 import { MedicineService } from "./medicine.service";
 import { GetUser } from "user/get-user.decorator";
-import { User, UserRole as Role, CharacterState, CharacterRole } from "matrix-database";
+import { User, UserRole as Role, CharacterState, CharacterRole, Medicine } from "matrix-database";
 import { Roles } from "auth/roles.decorator";
 import { CustomError } from "CustomError";
 import { mapCodeToString } from "utils";
@@ -25,6 +25,32 @@ export class MedicineResolvers {
   @Roles(Role.Admin)
   async listMedpack() {
     return mapCodeToString(await this.medicine.getAllMedpack());
+  }
+
+  @Mutation()
+  @Roles(Role.Admin)
+  async createMedicine(@Args("code") code: string): Promise<Medicine> {
+    if (code.length !== 16) throw new CustomError("Неверный код!");
+    let buf: Buffer;
+    try {
+      buf = Buffer.from(code, "hex");
+    } catch (e) {
+      throw new CustomError("Неверный код!");
+    }
+    return await this.medicine.createMedicine(buf);
+  }
+
+  @Mutation()
+  @Roles(Role.Admin)
+  async createMedpack(@Args("code") code: string): Promise<Medicine> {
+    if (code.length !== 16) throw new CustomError("Неверный код!");
+    let buf: Buffer;
+    try {
+      buf = Buffer.from(code, "hex");
+    } catch (e) {
+      throw new CustomError("Неверный код!");
+    }
+    return await this.medicine.createMedpack(buf);
   }
 
   @Mutation()

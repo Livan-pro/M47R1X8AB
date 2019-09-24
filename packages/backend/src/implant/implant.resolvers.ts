@@ -2,7 +2,7 @@ import { Resolver, Query, Subscription, Mutation, Args } from "@nestjs/graphql";
 import { Logger, Inject } from "@nestjs/common";
 import { ImplantService } from "./implant.service";
 import { GetUser } from "user/get-user.decorator";
-import { User, UserRole as Role, Implant, CharacterRole } from "matrix-database";
+import { User, UserRole as Role, Implant, CharacterRole, ImplantProlongation } from "matrix-database";
 import { Roles } from "auth/roles.decorator";
 import { ImplantCacheService } from "cache/implant-cache.service";
 import { UserCacheService } from "cache/user-cache.service";
@@ -28,6 +28,19 @@ export class ImplantResolvers {
   @Roles(Role.Admin)
   async listImplantProlongation() {
     return mapCodeToString(await this.implant.getAllImplantProlongations());
+  }
+
+  @Mutation()
+  @Roles(Role.Admin)
+  async createImplantProlongation(@Args("code") code: string, @Args("time") time: number): Promise<ImplantProlongation> {
+    if (code.length !== 16) throw new CustomError("Неверный код!");
+    let buf: Buffer;
+    try {
+      buf = Buffer.from(code, "hex");
+    } catch (e) {
+      throw new CustomError("Неверный код!");
+    }
+    return await this.implant.createImplantProlongation(buf, time);
   }
 
   @Query()

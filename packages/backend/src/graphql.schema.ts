@@ -272,11 +272,15 @@ export abstract class IMutation {
 
     abstract fixImplants(characterId: number): boolean | Promise<boolean>;
 
+    abstract createImplantProlongation(code: string, time: number): ImplantProlongation | Promise<ImplantProlongation>;
+
     abstract transferItem(to: number, itemId: number, amount: number): boolean | Promise<boolean>;
 
     abstract addItems(characterId: number, itemId: number, amount: number): InventoryItem | Promise<InventoryItem>;
 
     abstract useItemGift(code: string): InventoryItem | Promise<InventoryItem>;
+
+    abstract createItemGift(code: string, itemId: number, amount: number): ItemGift | Promise<ItemGift>;
 
     abstract createLocation(data: LocationInput): Location | Promise<Location>;
 
@@ -287,6 +291,10 @@ export abstract class IMutation {
     abstract useMedpack(code: string): boolean | Promise<boolean>;
 
     abstract heal(characterId: number): boolean | Promise<boolean>;
+
+    abstract createMedicine(code: string): Medicine | Promise<Medicine>;
+
+    abstract createMedpack(code: string): Medpack | Promise<Medpack>;
 
     abstract createNews(data: NewsInput): News | Promise<News>;
 

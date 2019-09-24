@@ -2,7 +2,7 @@ import { Resolver, Query, Mutation, Args } from "@nestjs/graphql";
 import { Logger, Inject } from "@nestjs/common";
 import { InventoryService } from "./inventory.service";
 import { GetUser } from "user/get-user.decorator";
-import { User, UserRole as Role } from "matrix-database";
+import { User, UserRole as Role, ItemGift } from "matrix-database";
 import { Roles } from "auth/roles.decorator";
 import { Client } from "nats";
 import { CustomError } from "CustomError";
@@ -23,6 +23,19 @@ export class InventoryResolvers {
   @Roles(Role.Admin)
   async listItemGift() {
     return mapCodeToString(await this.inventory.getAllItemGifts());
+  }
+
+  @Mutation()
+  @Roles(Role.Admin)
+  async createItemGift(@Args("code") code: string, @Args("itemId") itemId: number, @Args("amount") amount: number): Promise<ItemGift> {
+    if (code.length !== 16) throw new CustomError("Неверный код!");
+    let buf: Buffer;
+    try {
+      buf = Buffer.from(code, "hex");
+    } catch (e) {
+      throw new CustomError("Неверный код!");
+    }
+    return await this.inventory.createItemGift(buf, itemId, amount);
   }
 
   @Query("inventory")

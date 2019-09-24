@@ -21,6 +21,10 @@ export class ImplantService {
     return this.repoIP.find({relations: ["usedBy"]});
   }
 
+  async createImplantProlongation(code: Buffer, time: number) {
+    return this.repoIP.save({code, time});
+  }
+
   async getByCharacterId(characterId: number): Promise<Implant[]> {
     return await this.repo.find({where: {characterId}});
   }

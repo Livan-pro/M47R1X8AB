@@ -22,4 +22,5 @@ type Mutation {
   transferItem(to: Int!, itemId: Int!, amount: Int!): Boolean
   addItems(characterId: Int!, itemId: Int!, amount: Int!): InventoryItem!
   useItemGift(code: String!): InventoryItem
+  createItemGift(code: String!, itemId: Int!, amount: Int!): ItemGift!
 }
