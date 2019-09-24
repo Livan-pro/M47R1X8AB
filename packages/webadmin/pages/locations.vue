@@ -1,5 +1,5 @@
 <template>
-  <v-layout justify-center xs6>
+  <v-layout justify-center>
     <v-card>
       <v-card-title>
         Локации

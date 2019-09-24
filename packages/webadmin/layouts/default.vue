@@ -4,14 +4,34 @@
     <GlobalDialog />
     <v-navigation-drawer v-model="drawer" :mini-variant="miniVariant" :clipped="clipped" fixed app>
       <v-list>
-        <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact>
-          <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title v-text="item.title" />
-          </v-list-item-content>
-        </v-list-item>
+        <template v-for="(item, i) in items">
+          <v-list-item v-if="!item.childs" :key="i" :to="item.to" router exact>
+            <v-list-item-action>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title v-text="item.title" />
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-group v-else :key="i" value="true">
+            <template v-slot:activator>
+              <v-list-item-action>
+                <v-icon>{{ item.icon }}</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title v-text="item.title" />
+              </v-list-item-content>
+            </template>
+            <v-list-item v-for="(inner, j) in item.childs" :key="j" :to="inner.to" router exact>
+              <v-list-item-action>
+                <v-icon>{{ inner.icon }}</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title v-text="inner.title" />
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-group>
+        </template>
       </v-list>
     </v-navigation-drawer>
     <v-app-bar :clipped-left="clipped" fixed app dark color="#00496a">
@@ -79,6 +99,32 @@ export default class DefaultLayout extends Vue {
       icon: "mdi-bank-transfer",
       title: "Транзакции",
       to: "/transactions",
+    },
+    {
+      icon: "mdi-qrcode",
+      title: "QR-коды",
+      childs: [
+        {
+          icon: "mdi-medical-bag",
+          title: "Медпаки",
+          to: "/qr/medpacks",
+        },
+        {
+          icon: "mdi-pill",
+          title: "Лекарства",
+          to: "/qr/medicines",
+        },
+        {
+          icon: "mdi-expansion-card",
+          title: "Продления имплантов",
+          to: "/qr/implantProlongations",
+        },
+        {
+          icon: "mdi-bag-personal",
+          title: "Предметы",
+          to: "/qr/itemGifts",
+        },
+      ],
     },
   ];
   title = "Matrix Webadmin";
