@@ -21,8 +21,8 @@ export const createUpdate = (characterId: number): ((proxy: DataProxy, res: Fetc
     const query = { ...InventoryQuery, variables: { id: characterId } };
     const data = proxy.readQuery<Inventory>(query);
     const idx = data.inventory.findIndex((item): boolean => item.itemId === result.data.addItems.itemId);
-    if (idx < 0) return;
-    data.inventory[idx] = result.data.addItems;
+    if (idx < 0) data.inventory.push(result.data.addItems);
+    else data.inventory[idx] = result.data.addItems;
     data.inventory = [...data.inventory];
     proxy.writeQuery({ ...query, data });
   };
