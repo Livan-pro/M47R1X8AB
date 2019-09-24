@@ -29,6 +29,12 @@ export enum CharacterState {
   SevereWound = "SevereWound",
 }
 
+export enum ImplantType {
+  Brain = "Brain",
+  Internal = "Internal",
+  Limb = "Limb",
+}
+
 export enum Profession {
   Biotechnician = "Biotechnician",
   Chemist = "Chemist",
@@ -75,6 +81,14 @@ export interface FullCharacterInput {
   deathTime?: any | null;
   implantsRejectTime?: any | null;
   locationId?: number | null;
+}
+
+export interface FullImplantInput {
+  characterId?: number | null;
+  name?: string | null;
+  type?: ImplantType | null;
+  working?: boolean | null;
+  quality?: boolean | null;
 }
 
 export interface LocationInput {

@@ -1,6 +1,7 @@
 <template>
   <v-card>
     <properties-dialog v-model="propertiesDialog" :id="propertiesCharacter.id" :name="propertiesCharacter.name" />
+    <implants-dialog v-model="implantsDialog" :id="implantsCharacter.id" :name="implantsCharacter.name" />
     <v-card-title>
       Персонажи
       <v-spacer></v-spacer>
@@ -97,6 +98,7 @@
       </template>
       <template v-slot:item.actions="{ item }">
         <icon-btn icon="mdi-format-list-bulleted-square" tooltip="Свойства" color="blue" @click="openProperties(item)" />
+        <icon-btn icon="mdi-format-list-bulleted-triangle" tooltip="Импланты" color="blue" @click="openImplants(item)" />
       </template>
     </v-data-table>
   </v-card>
@@ -121,9 +123,10 @@ import PropertiesDialog from "~/components/PropertiesDialog.vue";
 import locations from "~/gql/Locations";
 import { Locations_locations as Location } from "~/gql/__generated__/Locations";
 import SetLocation from "~/components/SetLocation.vue";
+import ImplantsDialog from "~/components/ImplantsDialog.vue";
 
 @Component({
-  components: { CharacterAvatar, IconBtn, UploadQuentaButton, AddBalance, DateTimeEditDialog, PropertiesDialog, SetLocation },
+  components: { CharacterAvatar, IconBtn, UploadQuentaButton, AddBalance, DateTimeEditDialog, PropertiesDialog, SetLocation, ImplantsDialog },
   apollo: {
     characters,
     me,
@@ -141,6 +144,8 @@ export default class CharactersPage extends Vue {
   search = "";
   propertiesDialog = false;
   propertiesCharacter = {};
+  implantsDialog = false;
+  implantsCharacter = {};
 
   get headers() {
     return [
@@ -212,6 +217,11 @@ export default class CharactersPage extends Vue {
   openProperties(char: Character) {
     this.propertiesCharacter = char;
     this.propertiesDialog = true;
+  }
+
+  openImplants(char: Character) {
+    this.implantsCharacter = char;
+    this.implantsDialog = true;
   }
 
   get locationOptions() {
