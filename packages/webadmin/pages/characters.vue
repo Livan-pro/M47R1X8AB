@@ -2,6 +2,7 @@
   <v-card>
     <properties-dialog v-model="propertiesDialog" :id="propertiesCharacter.id" :name="propertiesCharacter.name" />
     <implants-dialog v-model="implantsDialog" :id="implantsCharacter.id" :name="implantsCharacter.name" />
+    <inventory-dialog v-model="inventoryDialog" :id="inventoryCharacter.id" :name="inventoryCharacter.name" />
     <v-card-title>
       Персонажи
       <v-spacer></v-spacer>
@@ -99,6 +100,7 @@
       <template v-slot:item.actions="{ item }">
         <icon-btn icon="mdi-format-list-bulleted-square" tooltip="Свойства" color="blue" @click="openProperties(item)" />
         <icon-btn icon="mdi-format-list-bulleted-triangle" tooltip="Импланты" color="blue" @click="openImplants(item)" />
+        <icon-btn icon="mdi-format-list-bulleted" tooltip="Инвентарь" color="blue" @click="openInventory(item)" />
       </template>
     </v-data-table>
   </v-card>
@@ -124,9 +126,20 @@ import locations from "~/gql/Locations";
 import { Locations_locations as Location } from "~/gql/__generated__/Locations";
 import SetLocation from "~/components/SetLocation.vue";
 import ImplantsDialog from "~/components/ImplantsDialog.vue";
+import InventoryDialog from "~/components/InventoryDialog.vue";
 
 @Component({
-  components: { CharacterAvatar, IconBtn, UploadQuentaButton, AddBalance, DateTimeEditDialog, PropertiesDialog, SetLocation, ImplantsDialog },
+  components: {
+    CharacterAvatar,
+    IconBtn,
+    UploadQuentaButton,
+    AddBalance,
+    DateTimeEditDialog,
+    PropertiesDialog,
+    SetLocation,
+    ImplantsDialog,
+    InventoryDialog,
+  },
   apollo: {
     characters,
     me,
@@ -146,6 +159,8 @@ export default class CharactersPage extends Vue {
   propertiesCharacter = {};
   implantsDialog = false;
   implantsCharacter = {};
+  inventoryDialog = false;
+  inventoryCharacter = {};
 
   get headers() {
     return [
@@ -199,8 +214,7 @@ export default class CharactersPage extends Vue {
   }
 
   async update(id: number, data: FullCharacterInput) {
-    console.log("update", id, data);
-    console.log("result", await this.$apollo.mutate(createMutation(id, { ...data, pollution: undefined, deathTime: undefined })));
+    await this.$apollo.mutate(createMutation(id, { ...data, pollution: undefined, deathTime: undefined }));
   }
 
   roleOptions = characterRoleOptions;
@@ -222,6 +236,11 @@ export default class CharactersPage extends Vue {
   openImplants(char: Character) {
     this.implantsCharacter = char;
     this.implantsDialog = true;
+  }
+
+  openInventory(char: Character) {
+    this.inventoryCharacter = char;
+    this.inventoryDialog = true;
   }
 
   get locationOptions() {
