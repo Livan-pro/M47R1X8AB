@@ -17,13 +17,15 @@
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 
+export type DialogCallback = (input?: string) => Promise<void> | void;
+
 export interface DialogOptions {
   title?: string;
   text?: string;
   color?: string;
   buttonText?: string;
   inputLabel?: string;
-  callback: () => Promise<void> | void;
+  callback: DialogCallback;
 }
 
 @Component
@@ -36,7 +38,7 @@ export default class GlobalDialog extends Vue {
   color = "primary";
   buttonText = "Подтвердить";
   inputLabel: string | null = null;
-  callback: () => Promise<void> | void = () => {};
+  callback: DialogCallback = () => {};
 
   inputValue: string = "";
 
