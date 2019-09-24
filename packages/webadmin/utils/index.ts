@@ -15,7 +15,8 @@ export const getAttachmentUrl = (attachment: Attachment): string => `${dataUrl}/
 export const maxChars = (amount: number): ((input: string) => boolean | string) => (input): boolean | string =>
   input.length <= amount || "Слишком длинное значение";
 
-const makeOptions = (obj: { [key: string]: string }) => Object.entries(obj).map(([k, v]): { value: string; text: string } => ({ value: k, text: v }));
+const makeOptions = (obj: { [key: string]: string }): { value: string; text: string }[] =>
+  Object.entries(obj).map(([k, v]): { value: string; text: string } => ({ value: k, text: v }));
 
 export const characterRoles: {
   [key: string]: string;
