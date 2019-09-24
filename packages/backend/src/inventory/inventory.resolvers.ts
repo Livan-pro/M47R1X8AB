@@ -19,8 +19,16 @@ export class InventoryResolvers {
   ) {}
 
   @Query("inventory")
-  async qInventory(@GetUser() user: User) {
-    return await this.inventory.getByCharacterId(user.mainCharacterId);
+  async qInventory(
+    @Args("id") id: number,
+    @GetUser() user: User,
+  ) {
+    if (id) {
+      if (!user.roles.has(Role.Admin)) {
+        throw new CustomError("У вас нет доступа к инвентарю этого персонажа!");
+      }
+      return this.inventory.getByCharacterId(id);
+    } else return await this.inventory.getByCharacterId(user.mainCharacterId);
   }
 
   @Mutation()

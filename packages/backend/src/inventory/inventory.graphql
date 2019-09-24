@@ -4,7 +4,7 @@ type InventoryItem {
 }
 
 type Query {
-  inventory: [InventoryItem!]!
+  inventory(id: Int): [InventoryItem!]!
 }
 
 type Mutation {

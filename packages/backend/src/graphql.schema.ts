@@ -298,7 +298,7 @@ export abstract class IQuery {
 
     abstract implants(id?: number): Implant[] | Promise<Implant[]>;
 
-    abstract inventory(): InventoryItem[] | Promise<InventoryItem[]>;
+    abstract inventory(id?: number): InventoryItem[] | Promise<InventoryItem[]>;
 
     abstract locations(): Location[] | Promise<Location[]>;
 
