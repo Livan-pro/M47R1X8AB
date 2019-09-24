@@ -45,7 +45,7 @@ import IconBtn from "~/components/IconBtn.vue";
 import UploadQuentaButton from "~/components/UploadQuentaButton.vue";
 import MakeAdminButton from "~/components/MakeAdminButton.vue";
 import { UserRole as Role, EditUserInput } from "~/gql/__generated__/globalTypes";
-import { dataUrl, maxChars } from "@/utils";
+import { dataUrl, maxChars, formatDate } from "@/utils";
 import { professionToText } from "shared/browser";
 import { createMutation } from "~/gql/UpdateUser";
 
@@ -94,7 +94,7 @@ export default class UsersPage extends Vue {
         ...u.mainCharacter,
         registrationProfessionText: u.mainCharacter && professionToText(u.mainCharacter.registrationProfession),
       },
-      date: this.formatDate(u.createdAt),
+      date: formatDate(u.createdAt),
     }));
   }
 
@@ -104,10 +104,6 @@ export default class UsersPage extends Vue {
 
   get isSuperAdmin() {
     return this.me.roles && this.me.roles.includes(Role.SuperAdmin);
-  }
-
-  formatDate(value: number) {
-    return new Date(value).toLocaleString();
   }
 
   max255chars(str: string) {

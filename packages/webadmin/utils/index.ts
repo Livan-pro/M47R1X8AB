@@ -56,3 +56,5 @@ export const implantTypes: {
 
 export const implantTypeOptions = makeOptions(implantTypes);
 export const implantTypeToText = (type: ImplantType): string => implantTypes[type];
+
+export const formatDate = (value: number): string => new Date(value).toLocaleString();

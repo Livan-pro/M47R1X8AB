@@ -116,7 +116,7 @@ import CharacterAvatar from "~/components/CharacterAvatar.vue";
 import IconBtn from "~/components/IconBtn.vue";
 import UploadQuentaButton from "~/components/UploadQuentaButton.vue";
 import { UserRole as Role, FullCharacterInput, CharacterState } from "~/gql/__generated__/globalTypes";
-import { dataUrl, maxChars, characterRolesToText, characterRoleOptions, stateOptions } from "@/utils";
+import { dataUrl, maxChars, characterRolesToText, characterRoleOptions, stateOptions, formatDate } from "@/utils";
 import { createMutation } from "~/gql/UpdateCharacter";
 import { professionToText, professionOptions } from "shared/browser";
 import AddBalance from "~/components/AddBalance.vue";
@@ -205,10 +205,6 @@ export default class CharactersPage extends Vue {
     return this.me.roles && this.me.roles.includes(Role.SuperAdmin);
   }
 
-  formatDate(value: number) {
-    return new Date(value).toLocaleString();
-  }
-
   get editable() {
     return [{ key: "name", rules: [maxChars(255)], name: "Имя" }];
   }
@@ -224,8 +220,8 @@ export default class CharactersPage extends Vue {
   stateText(char: Character) {
     if (char.state === CharacterState.Normal) return "Норма";
     if (char.state === CharacterState.Pollution) return `Загрязнение (${char.pollution})`;
-    if (char.state === CharacterState.SevereWound) return `Тяжёлое ранение (${this.formatDate(char.deathTime)})`;
-    if (char.state === CharacterState.Death) return `Смерть (${this.formatDate(char.deathTime)})`;
+    if (char.state === CharacterState.SevereWound) return `Тяжёлое ранение (${formatDate(char.deathTime)})`;
+    if (char.state === CharacterState.Death) return `Смерть (${formatDate(char.deathTime)})`;
   }
 
   openProperties(char: Character) {
