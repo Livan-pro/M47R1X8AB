@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <GlobalSnackbar />
-    <GlobalConfirmDialog />
+    <GlobalDialog />
     <v-navigation-drawer v-model="drawer" :mini-variant="miniVariant" :clipped="clipped" fixed app>
       <v-list>
         <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact>
@@ -37,11 +37,11 @@
 <script lang="ts">
 import { Vue, Component } from "nuxt-property-decorator";
 import GlobalSnackbar from "~/components/GlobalSnackbar.vue";
-import GlobalConfirmDialog from "~/components/GlobalConfirmDialog.vue";
+import GlobalDialog from "~/components/GlobalDialog.vue";
 import LogoutButton from "~/components/LogoutButton.vue";
 
 @Component({
-  components: { GlobalSnackbar, GlobalConfirmDialog, LogoutButton },
+  components: { GlobalSnackbar, GlobalDialog, LogoutButton },
   meta: {
     auth: true,
   },
