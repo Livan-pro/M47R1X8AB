@@ -44,7 +44,7 @@ export class InventoryResolvers {
 
   @Mutation()
   @Roles(Role.Admin)
-  async addItem(
+  async addItems(
     @Args("characterId") characterId: number,
     @Args("itemId") itemId: number,
     @Args("amount") amount: number,

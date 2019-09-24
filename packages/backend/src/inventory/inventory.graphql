@@ -9,6 +9,6 @@ type Query {
 
 type Mutation {
   transferItem(to: Int!, itemId: Int!, amount: Int!): Boolean
-  addItem(characterId: Int!, itemId: Int!, amount: Int!): InventoryItem!
+  addItems(characterId: Int!, itemId: Int!, amount: Int!): InventoryItem!
   useItemGift(code: String!): InventoryItem
 }
