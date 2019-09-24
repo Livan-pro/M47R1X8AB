@@ -10,7 +10,7 @@ import { NatsAsyncIterator } from "utils/nats.iterator";
 import { Client } from "nats";
 import { FullImplantInput } from "graphql.schema";
 import { CustomError } from "CustomError";
-import { mapCodeToString } from "utils";
+import { mapCodeToString, codeToString } from "utils";
 
 @Resolver()
 @Roles(Role.LoggedIn)
@@ -40,7 +40,7 @@ export class ImplantResolvers {
     } catch (e) {
       throw new CustomError("Неверный код!");
     }
-    return await this.implant.createImplantProlongation(buf, time);
+    return codeToString(await this.implant.createImplantProlongation(buf, time));
   }
 
   @Query()

@@ -5,7 +5,7 @@ import { GetUser } from "user/get-user.decorator";
 import { User, UserRole as Role, CharacterState, CharacterRole, Medicine } from "matrix-database";
 import { Roles } from "auth/roles.decorator";
 import { CustomError } from "CustomError";
-import { mapCodeToString } from "utils";
+import { mapCodeToString, codeToString } from "utils";
 
 @Resolver()
 @Roles(Role.LoggedIn)
@@ -37,7 +37,7 @@ export class MedicineResolvers {
     } catch (e) {
       throw new CustomError("Неверный код!");
     }
-    return await this.medicine.createMedicine(buf);
+    return codeToString(await this.medicine.createMedicine(buf));
   }
 
   @Mutation()
@@ -50,7 +50,7 @@ export class MedicineResolvers {
     } catch (e) {
       throw new CustomError("Неверный код!");
     }
-    return await this.medicine.createMedpack(buf);
+    return codeToString(await this.medicine.createMedpack(buf));
   }
 
   @Mutation()

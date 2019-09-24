@@ -7,7 +7,7 @@ import { Roles } from "auth/roles.decorator";
 import { Client } from "nats";
 import { CustomError } from "CustomError";
 import { InventoryItem as GInventoryItem, InventoryItem } from "graphql.schema";
-import { mapCodeToString } from "utils";
+import { mapCodeToString, codeToString } from "utils";
 
 @Resolver()
 @Roles(Role.LoggedIn)
@@ -35,7 +35,7 @@ export class InventoryResolvers {
     } catch (e) {
       throw new CustomError("Неверный код!");
     }
-    return await this.inventory.createItemGift(buf, itemId, amount);
+    return codeToString(await this.inventory.createItemGift(buf, itemId, amount));
   }
 
   @Query("inventory")
