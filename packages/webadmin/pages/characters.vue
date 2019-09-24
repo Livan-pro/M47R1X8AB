@@ -99,8 +99,8 @@
       </template>
       <template v-slot:item.actions="{ item }">
         <icon-btn icon="mdi-format-list-bulleted-square" tooltip="Свойства" color="blue" @click="openProperties(item)" />
-        <icon-btn icon="mdi-format-list-bulleted-triangle" tooltip="Импланты" color="blue" @click="openImplants(item)" />
-        <icon-btn icon="mdi-format-list-bulleted" tooltip="Инвентарь" color="blue" @click="openInventory(item)" />
+        <icon-btn icon="mdi-expansion-card-variant" tooltip="Импланты" color="blue" @click="openImplants(item)" />
+        <icon-btn icon="mdi-bag-personal-outline" tooltip="Инвентарь" color="blue" @click="openInventory(item)" />
       </template>
     </v-data-table>
   </v-card>

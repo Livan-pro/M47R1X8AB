@@ -115,12 +115,12 @@ export default class DefaultLayout extends Vue {
           to: "/qr/medicines",
         },
         {
-          icon: "mdi-expansion-card",
+          icon: "mdi-expansion-card-variant",
           title: "Продления имплантов",
           to: "/qr/implantProlongations",
         },
         {
-          icon: "mdi-bag-personal",
+          icon: "mdi-bag-personal-outline",
           title: "Предметы",
           to: "/qr/itemGifts",
         },
