@@ -32,7 +32,6 @@ export const characterRoles: {
 export const characterRoleOptions = makeOptions(characterRoles);
 
 export function characterRolesToText(roles: CharacterRole[]): string {
-  console.log(roles, typeof roles);
   return roles.map((role): string => characterRoles[role]).join(", ");
 }
 

@@ -76,7 +76,6 @@ export default class NewsPage extends Vue {
   }
 
   get items() {
-    console.log(this.search);
     const news = this.news.map(item => {
       const datetime = new Date(item.datetime);
       return { ...item, datetime, date: datetime.toLocaleDateString() };

@@ -72,11 +72,11 @@ export default class LocationsPage extends Vue {
   }
 
   async update(id: number, data: LocationInput) {
-    console.log("result", await this.$apollo.mutate(createMutation(id, data)));
+    await this.$apollo.mutate(createMutation(id, data));
   }
 
   async create() {
-    console.log("result", await this.$apollo.mutate({ ...CreateLocation, variables: { data: { name: this.newName } } }));
+    await this.$apollo.mutate({ ...CreateLocation, variables: { data: { name: this.newName } } });
   }
 
   get rules() {

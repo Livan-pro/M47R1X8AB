@@ -126,7 +126,6 @@ export default class UsersPage extends Vue {
   }
 
   async update(id: number, data: EditUserInput) {
-    console.log("update", id, data);
     await this.$apollo.mutate(createMutation(id, data));
   }
 }

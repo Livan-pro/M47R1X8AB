@@ -18,8 +18,7 @@ export default class AddBalance extends Vue {
   amount = 0;
 
   async addBalance(id: number, amount: number) {
-    console.log("addBalance", id, amount);
-    console.log("resultBalance", await this.$apollo.mutate({ ...AddBalanceMutation, variables: { id, amount } }));
+    await this.$apollo.mutate({ ...AddBalanceMutation, variables: { id, amount } });
   }
 }
 </script>

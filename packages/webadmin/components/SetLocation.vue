@@ -27,7 +27,6 @@ export default class SetLocation extends Vue {
 
   @Watch("locationId")
   updateLocId(locationId: number) {
-    console.log(`updateLocId: ${this.locationId}`);
     this.locId = locationId;
   }
 
