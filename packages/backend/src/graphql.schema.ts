@@ -191,6 +191,15 @@ export class Implant {
     quality?: boolean;
 }
 
+export class ImplantProlongation {
+    id: number;
+    createdAt: Date;
+    code: string;
+    usedBy?: Character;
+    usedAt?: Date;
+    time: number;
+}
+
 export class ImplantUpdate {
     _id: number;
     name?: string;
@@ -204,6 +213,16 @@ export class InventoryItem {
     amount: number;
 }
 
+export class ItemGift {
+    id: number;
+    createdAt: Date;
+    code: string;
+    usedBy?: Character;
+    usedAt?: Date;
+    itemId: number;
+    amount: number;
+}
+
 export class Location {
     id?: number;
     name: string;
@@ -212,6 +231,22 @@ export class Location {
 export class LoginResult {
     email: string;
     token: string;
+}
+
+export class Medicine {
+    id: number;
+    createdAt: Date;
+    code: string;
+    usedBy?: Character;
+    usedAt?: Date;
+}
+
+export class Medpack {
+    id: number;
+    createdAt: Date;
+    code: string;
+    usedBy?: Character;
+    usedAt?: Date;
 }
 
 export abstract class IMutation {
@@ -300,9 +335,17 @@ export abstract class IQuery {
 
     abstract implants(id?: number): Implant[] | Promise<Implant[]>;
 
+    abstract listImplantProlongation(): ImplantProlongation[] | Promise<ImplantProlongation[]>;
+
+    abstract listItemGift(): ItemGift[] | Promise<ItemGift[]>;
+
     abstract inventory(id?: number): InventoryItem[] | Promise<InventoryItem[]>;
 
     abstract locations(): Location[] | Promise<Location[]>;
+
+    abstract listMedpack(): Medpack[] | Promise<Medpack[]>;
+
+    abstract listMedicine(): Medicine[] | Promise<Medicine[]>;
 
     abstract news(): News[] | Promise<News[]>;
 

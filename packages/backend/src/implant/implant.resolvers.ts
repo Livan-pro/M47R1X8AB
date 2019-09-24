@@ -10,6 +10,7 @@ import { NatsAsyncIterator } from "utils/nats.iterator";
 import { Client } from "nats";
 import { FullImplantInput } from "graphql.schema";
 import { CustomError } from "CustomError";
+import { mapCodeToString } from "utils";
 
 @Resolver()
 @Roles(Role.LoggedIn)
@@ -22,6 +23,12 @@ export class ImplantResolvers {
     @Inject("NATS")
     private readonly nats: Client,
   ) {}
+
+  @Query()
+  @Roles(Role.Admin)
+  async listImplantProlongation() {
+    return mapCodeToString(await this.implant.getAllImplantProlongations());
+  }
 
   @Query()
   async implants(

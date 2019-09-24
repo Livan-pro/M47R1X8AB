@@ -7,6 +7,7 @@ import { Roles } from "auth/roles.decorator";
 import { Client } from "nats";
 import { CustomError } from "CustomError";
 import { InventoryItem as GInventoryItem, InventoryItem } from "graphql.schema";
+import { mapCodeToString } from "utils";
 
 @Resolver()
 @Roles(Role.LoggedIn)
@@ -17,6 +18,12 @@ export class InventoryResolvers {
     @Inject("NATS")
     private readonly nats: Client,
   ) {}
+
+  @Query()
+  @Roles(Role.Admin)
+  async listItemGift() {
+    return mapCodeToString(await this.inventory.getAllItemGifts());
+  }
 
   @Query("inventory")
   async qInventory(

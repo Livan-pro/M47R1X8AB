@@ -12,8 +12,14 @@ export class ImplantService {
   constructor(
     @InjectRepository(Implant)
     private readonly repo: Repository<Implant>,
+    @InjectRepository(ImplantProlongation)
+    private readonly repoIP: Repository<ImplantProlongation>,
     @Inject("NATS") private readonly nats: Client,
   ) {}
+
+  async getAllImplantProlongations() {
+    return this.repoIP.find({relations: ["usedBy"]});
+  }
 
   async getByCharacterId(characterId: number): Promise<Implant[]> {
     return await this.repo.find({where: {characterId}});

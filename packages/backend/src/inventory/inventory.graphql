@@ -3,7 +3,18 @@ type InventoryItem {
   amount: Int!
 }
 
+type ItemGift {
+  id: Int!
+  createdAt: Date!
+  code: String!
+  usedBy: Character
+  usedAt: Date
+  itemId: Int!
+  amount: Int!
+}
+
 type Query {
+  listItemGift: [ItemGift!]
   inventory(id: Int): [InventoryItem!]!
 }
 

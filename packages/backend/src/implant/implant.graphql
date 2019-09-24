@@ -12,6 +12,15 @@ type Implant {
   quality: Boolean
 }
 
+type ImplantProlongation {
+  id: Int!
+  createdAt: Date!
+  code: String!
+  usedBy: Character
+  usedAt: Date
+  time: Int!
+}
+
 type ImplantUpdate {
   _id: Int!
   name: String
@@ -30,6 +39,7 @@ input FullImplantInput {
 
 type Query {
   implants(id: Int): [Implant!]!
+  listImplantProlongation: [ImplantProlongation!]
 }
 
 type Mutation {

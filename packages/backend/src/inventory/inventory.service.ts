@@ -11,8 +11,14 @@ export class InventoryService {
   constructor(
     @InjectRepository(InventoryItem)
     private readonly repo: Repository<InventoryItem>,
+    @InjectRepository(ItemGift)
+    private readonly repoIG: Repository<ItemGift>,
     @Inject("NATS") private readonly nats: Client,
   ) {}
+
+  async getAllItemGifts() {
+    return this.repoIG.find({relations: ["usedBy"]});
+  }
 
   async getByCharacterId(characterId: number) {
     return await this.repo.find({where: {characterId}});
