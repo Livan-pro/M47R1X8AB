@@ -41,7 +41,7 @@ export const createMutation = (id: number, data: FullImplantInput, currentCharac
         const query = { ...ImplantsQuery, variables: { id: currentCharacterId } };
         const data = proxy.readQuery<Implants>(query);
         const idx = data.implants.findIndex((implant): boolean => implant.id === id);
-        if (id > -1) {
+        if (idx > -1) {
           data.implants.splice(idx, 1);
           proxy.writeQuery({ ...query, data });
         }
