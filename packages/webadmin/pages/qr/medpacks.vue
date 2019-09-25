@@ -1,6 +1,6 @@
 <template>
   <v-layout justify-center>
-    <QRCodeEditor title="QR-коды медпаков" createTitle="Создание QR-кода медпака" :list="medpacks" :create="createMedpack" />
+    <QRCodeEditor title="QR-коды медпаков" createTitle="Создание QR-кода медпака" :list="medpacks" :create="createMedpack" :getQrText="getQrText" />
   </v-layout>
 </template>
 
@@ -27,6 +27,10 @@ export default class MedpacksPage extends Vue {
 
   async createMedpack(variables: object) {
     await this.$apollo.mutate({ ...CreateMedpack, variables });
+  }
+
+  getQrText(item: Medpack) {
+    return item ? `cbrpnk://mp/${item.code}` : "";
   }
 }
 </script>

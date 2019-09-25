@@ -1,6 +1,13 @@
 <template>
   <v-layout justify-center>
-    <QRCodeEditor title="QR-коды предметов" createTitle="Создание QR-кода предмета" :list="itemGifts" :create="createItemGift" :fields="fields" />
+    <QRCodeEditor
+      title="QR-коды предметов"
+      createTitle="Создание QR-кода предмета"
+      :list="itemGifts"
+      :create="createItemGift"
+      :fields="fields"
+      :getQrText="getQrText"
+    />
   </v-layout>
 </template>
 
@@ -31,6 +38,10 @@ export default class ItemGiftsPage extends Vue {
 
   async createItemGift(variables: object) {
     await this.$apollo.mutate({ ...CreateItemGift, variables });
+  }
+
+  getQrText(item: ItemGift) {
+    return item ? `cbrpnk://ig/${item.code}` : "";
   }
 }
 </script>

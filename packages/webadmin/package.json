@@ -20,6 +20,7 @@
     "nuxt-property-decorator": "^2.3.0",
     "shared": "^1.1.0",
     "vue-meta": "^2.2.2",
+    "vue-qr": "^2.1.0",
     "vuetify": "^2.0.18"
   },
   "devDependencies": {

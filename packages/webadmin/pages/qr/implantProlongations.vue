@@ -6,6 +6,7 @@
       :list="implantProlongations"
       :create="createImplantProlongation"
       :fields="fields"
+      :getQrText="getQrText"
     />
   </v-layout>
 </template>
@@ -37,6 +38,10 @@ export default class ImplantProlongationsPage extends Vue {
 
   async createImplantProlongation(variables: object) {
     await this.$apollo.mutate({ ...CreateImplantProlongation, variables });
+  }
+
+  getQrText(item: ImplantProlongation) {
+    return item ? `cbrpnk://ip/${item.code}` : "";
   }
 }
 </script>

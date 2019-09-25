@@ -1,9 +1,12 @@
 <template>
   <v-card>
     <QRCodeCreateDialog v-model="dialog" :title="createTitle" :create="create" :fields="fields" />
+    <QRCodeSettings v-model="settingsDialog" />
+    <QRCodeDialog v-model="qrDialog" :text="getQrText(qrItem)" />
     <v-card-title>
       {{ title }}
       <icon-btn class="ml-2" icon="mdi-plus" color="green" tooltip="Создать" @click="createQRCode" />
+      <icon-btn class="ml-2" icon="mdi-qrcode-edit" iconSize="16" color="orange" tooltip="Настройки" @click="settingsDialog = true" />
       <v-spacer />
       <v-text-field v-model="search" append-icon="mdi-search" label="Поиск" single-line hide-details></v-text-field>
     </v-card-title>
@@ -23,6 +26,9 @@
         </v-layout>
         <span v-else>{{ item.usedByText }}</span>
       </template>
+      <template v-slot:item.actions="{ item }">
+        <icon-btn icon="mdi-qrcode" color="primary" tooltip="QR-код" @click="generateQRCode(item)" />
+      </template>
     </v-data-table>
   </v-card>
 </template>
@@ -34,6 +40,8 @@ import { formatDate } from "~/utils";
 import CharacterAvatar from "~/components/CharacterAvatar.vue";
 import IconBtn from "~/components/IconBtn.vue";
 import QRCodeCreateDialog from "~/components/QRCodeCreateDialog.vue";
+import QRCodeSettings from "~/components/QRCodeSettings.vue";
+import QRCodeDialog from "~/components/QRCodeDialog.vue";
 
 export interface QRCode {
   id: number;
@@ -58,6 +66,8 @@ export interface FieldDescription {
     CharacterAvatar,
     IconBtn,
     QRCodeCreateDialog,
+    QRCodeSettings,
+    QRCodeDialog,
   },
   meta: {
     auth: true,
@@ -69,9 +79,13 @@ export default class QRCodeEditor<T extends QRCode> extends Vue {
   @Prop({ type: Array, default: () => [] }) list!: T[];
   @Prop({ type: Function, default: () => null }) create!: (variables: object) => Promise<void>;
   @Prop({ type: Array, default: () => [] }) fields!: FieldDescription[];
+  @Prop({ type: Function, default: () => "" }) getQrText!: (item: T) => string;
 
   search = "";
   dialog = false;
+  settingsDialog = false;
+  qrDialog = false;
+  qrItem: T | null = null;
 
   get headers() {
     return [
@@ -81,6 +95,7 @@ export default class QRCodeEditor<T extends QRCode> extends Vue {
       { text: "Кем использован", value: "usedByText" },
       { text: "Дата использования", value: "usedAtText", width: 180 },
       ...this.fields.map(f => ({ text: f.label, value: f.name })),
+      { value: "actions", sortable: false },
     ];
   }
 
@@ -100,5 +115,16 @@ export default class QRCodeEditor<T extends QRCode> extends Vue {
   createQRCode() {
     this.dialog = true;
   }
+
+  generateQRCode(item: T) {
+    this.qrItem = item;
+    this.qrDialog = true;
+  }
 }
 </script>
+
+<style lang="sass">
+tr td:last-child
+  width: 1%
+  white-space: nowrap
+</style>

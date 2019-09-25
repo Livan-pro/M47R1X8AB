@@ -3,8 +3,11 @@
     <properties-dialog v-model="propertiesDialog" :id="propertiesCharacter.id" :name="propertiesCharacter.name" />
     <implants-dialog v-model="implantsDialog" :id="implantsCharacter.id" :name="implantsCharacter.name" />
     <inventory-dialog v-model="inventoryDialog" :id="inventoryCharacter.id" :name="inventoryCharacter.name" />
+    <QRCodeSettings v-model="qrSettingsDialog" />
+    <QRCodeDialog v-model="qrDialog" :text="qrText" />
     <v-card-title>
       Персонажи
+      <icon-btn class="ml-2" icon="mdi-qrcode-edit" iconSize="16" color="orange" tooltip="Настройки" @click="qrSettingsDialog = true" />
       <v-spacer></v-spacer>
       <v-text-field v-model="search" append-icon="mdi-search" label="Поиск" single-line hide-details></v-text-field>
     </v-card-title>
@@ -101,6 +104,7 @@
         <icon-btn icon="mdi-format-list-bulleted-square" tooltip="Свойства" color="blue" @click="openProperties(item)" />
         <icon-btn icon="mdi-expansion-card-variant" tooltip="Импланты" color="blue" @click="openImplants(item)" />
         <icon-btn icon="mdi-bag-personal-outline" tooltip="Инвентарь" color="blue" @click="openInventory(item)" />
+        <icon-btn icon="mdi-qrcode" color="primary" tooltip="QR-код" @click="openQr(item)" />
       </template>
     </v-data-table>
   </v-card>
@@ -127,6 +131,8 @@ import { Locations_locations as Location } from "~/gql/__generated__/Locations";
 import SetLocation from "~/components/SetLocation.vue";
 import ImplantsDialog from "~/components/ImplantsDialog.vue";
 import InventoryDialog from "~/components/InventoryDialog.vue";
+import QRCodeSettings from "~/components/QRCodeSettings.vue";
+import QRCodeDialog from "~/components/QRCodeDialog.vue";
 
 @Component({
   components: {
@@ -139,6 +145,8 @@ import InventoryDialog from "~/components/InventoryDialog.vue";
     SetLocation,
     ImplantsDialog,
     InventoryDialog,
+    QRCodeSettings,
+    QRCodeDialog,
   },
   apollo: {
     characters,
@@ -161,6 +169,9 @@ export default class CharactersPage extends Vue {
   implantsCharacter = {};
   inventoryDialog = false;
   inventoryCharacter = {};
+  qrSettingsDialog = false;
+  qrDialog = false;
+  qrText = "";
 
   get headers() {
     return [
@@ -237,6 +248,11 @@ export default class CharactersPage extends Vue {
   openInventory(char: Character) {
     this.inventoryCharacter = char;
     this.inventoryDialog = true;
+  }
+
+  openQr(char: Character) {
+    this.qrText = `cbrpnk://c/${char.id}`;
+    this.qrDialog = true;
   }
 
   get locationOptions() {
