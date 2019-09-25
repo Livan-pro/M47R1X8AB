@@ -24,6 +24,7 @@ export class UserResolvers {
     @Args("user", ValidationPipe) userData: CreateUser,
     @Args("character") characterData: CreateCharacter,
   ): Promise<boolean> {
+    throw new CustomError("Предварительная регистрация закрыта. Вы можете зарегистрироваться на полигоне");
     try {
       const uData = {...userData, birthday: new Date(0)};
       uData.password = await this.auth.hashPassword(uData.password);
