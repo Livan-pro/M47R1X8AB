@@ -2,7 +2,7 @@ import { Resolver, Query, Subscription, Mutation, Args } from "@nestjs/graphql";
 import { Logger, Inject } from "@nestjs/common";
 import { ImplantService } from "./implant.service";
 import { GetUser } from "user/get-user.decorator";
-import { User, UserRole as Role, Implant, CharacterRole } from "matrix-database";
+import { User, UserRole as Role, Implant, CharacterRole, ImplantProlongation } from "matrix-database";
 import { Roles } from "auth/roles.decorator";
 import { ImplantCacheService } from "cache/implant-cache.service";
 import { UserCacheService } from "cache/user-cache.service";
@@ -10,6 +10,7 @@ import { NatsAsyncIterator } from "utils/nats.iterator";
 import { Client } from "nats";
 import { FullImplantInput } from "graphql.schema";
 import { CustomError } from "CustomError";
+import { mapCodeToString, codeToString } from "utils";
 
 @Resolver()
 @Roles(Role.LoggedIn)
@@ -22,6 +23,30 @@ export class ImplantResolvers {
     @Inject("NATS")
     private readonly nats: Client,
   ) {}
+
+  @Query()
+  @Roles(Role.Admin)
+  async listImplantProlongation() {
+    return mapCodeToString(await this.implant.getAllImplantProlongations());
+  }
+
+  @Mutation()
+  @Roles(Role.Admin)
+  async createImplantProlongation(@Args("code") code: string, @Args("time") time: number): Promise<ImplantProlongation> {
+    if (code.length !== 16) throw new CustomError("Неверный код!");
+    let buf: Buffer;
+    try {
+      buf = Buffer.from(code, "hex");
+    } catch (e) {
+      throw new CustomError("Неверный код!");
+    }
+    try {
+      return codeToString(await this.implant.createImplantProlongation(buf, time));
+    } catch (err) {
+      if (err.code && err.code === "ER_DUP_ENTRY") throw new CustomError("QR-код с таким кодом уже существует");
+      throw err;
+    }
+  }
 
   @Query()
   async implants(
@@ -56,12 +81,11 @@ export class ImplantResolvers {
   async createImplant(
     @Args("data") data: FullImplantInput,
     @GetUser() user: User,
-  ): Promise<number> {
+  ): Promise<Implant> {
     if (data.characterId === user.mainCharacterId && !user.roles.has(Role.Admin)) throw new CustomError("Вы не можете добавить имплант себе!");
     if (!user.roles.has(Role.Admin) || !Object.prototype.hasOwnProperty.call(data, "working")) data.working = true;
     if (!user.roles.has(Role.Admin) || !Object.prototype.hasOwnProperty.call(data, "quality")) data.quality = false;
-    const implant = await this.implant.create(data);
-    return implant.id;
+    return await this.implant.create(data);
   }
 
   @Mutation()
@@ -69,9 +93,8 @@ export class ImplantResolvers {
   async updateImplant(
     @Args("id") id: number,
     @Args("data") data: FullImplantInput,
-  ): Promise<boolean> {
-    await this.implant.update(id, data);
-    return true;
+  ): Promise<Partial<Implant>> {
+    return await this.implant.update(id, data);
   }
 
   @Mutation()

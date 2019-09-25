@@ -6,10 +6,19 @@ enum ImplantType {
 
 type Implant {
   id: Int!
-  name: String!
-  type: ImplantType!
-  working: Boolean!
-  quality: Boolean!
+  name: String
+  type: ImplantType
+  working: Boolean
+  quality: Boolean
+}
+
+type ImplantProlongation {
+  id: Int!
+  createdAt: Date!
+  code: String!
+  usedBy: Character
+  usedAt: Date
+  time: Int!
 }
 
 type ImplantUpdate {
@@ -30,13 +39,15 @@ input FullImplantInput {
 
 type Query {
   implants(id: Int): [Implant!]!
+  listImplantProlongation: [ImplantProlongation!]
 }
 
 type Mutation {
-  createImplant(data: FullImplantInput!): Int!
-  updateImplant(id: Int!, data: FullImplantInput!): Boolean
+  createImplant(data: FullImplantInput!): Implant!
+  updateImplant(id: Int!, data: FullImplantInput!): Implant!
   prolongImplants(code: String!): Boolean
   fixImplants(characterId: Int!): Boolean
+  createImplantProlongation(code: String!, time: Int!): ImplantProlongation!
 }
 
 type Subscription {

@@ -6,11 +6,10 @@ import { CreateUser, CreateCharacter, EditUser, ChangePassword } from "shared/no
 import { Response } from "express";
 import { GetUser } from "./get-user.decorator";
 import { User, UserRole as Role, Character, CharacterState } from "matrix-database";
-import { LoginResult, UserRole as GqlRole } from "graphql.schema";
+import { LoginResult, UserRole as GqlRole, EditUserInput } from "graphql.schema";
 import { CustomError } from "CustomError";
 import { Roles } from "auth/roles.decorator";
 import { CharacterService } from "character/character.service";
-import { States } from "auth/states.decorator";
 
 @Resolver("User")
 export class UserResolvers {
@@ -156,5 +155,15 @@ export class UserResolvers {
       mainCharacterId: character.id,
     });
     return character;
+  }
+
+  @Mutation()
+  @Roles(Role.Admin)
+  async updateUser(
+    @Args("id") id: number,
+    @Args("data") data: EditUserInput,
+  ): Promise<Partial<User>> {
+    await this.user.update(id, data);
+    return {...data, id};
   }
 }

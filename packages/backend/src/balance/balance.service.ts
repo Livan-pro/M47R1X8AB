@@ -34,4 +34,17 @@ export class BalanceService {
     const transfer = historyRepo.create({fromId, toId, amount});
     await historyRepo.save(transfer);
   }
+
+  @Transaction()
+  async addBalance(
+    toId: number,
+    amount: number,
+    @TransactionManager() manager?: EntityManager,
+  ): Promise<void> {
+    const repo = manager.getRepository(Character);
+    await repo.increment({id: toId}, "balance", amount);
+    const historyRepo = manager.getRepository(BalanceTransfer);
+    const transfer = historyRepo.create({toId, amount});
+    await historyRepo.save(transfer);
+  }
 }

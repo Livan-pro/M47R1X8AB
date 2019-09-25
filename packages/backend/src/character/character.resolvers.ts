@@ -1,5 +1,5 @@
 import { Resolver, Mutation, Args, Query, Parent, ResolveProperty, Subscription } from "@nestjs/graphql";
-import { Logger, Inject } from "@nestjs/common";
+import { Logger, Inject, ForbiddenException } from "@nestjs/common";
 import { CharacterService } from "./character.service";
 import { CreateCharacter } from "shared/node";
 import { GetUser } from "user/get-user.decorator";
@@ -9,11 +9,11 @@ import * as imageSizeSync from "image-size";
 import { CustomError } from "CustomError";
 import { Roles } from "auth/roles.decorator";
 import { FullCharacterInput } from "graphql.schema";
-import { States } from "auth/states.decorator";
 import { NatsAsyncIterator } from "utils/nats.iterator";
 import { Client } from "nats";
 import { UserCacheService } from "cache/user-cache.service";
 import { PropertyService } from "./property.service";
+import { LocationService } from "location/location.service";
 
 @Resolver("Character")
 @Roles(Role.LoggedIn)
@@ -24,6 +24,7 @@ export class CharacterResolvers {
     private readonly file: FileService,
     private readonly uCache: UserCacheService,
     private readonly property: PropertyService,
+    private readonly location: LocationService,
     @Inject("NATS")
     private readonly nats: Client,
   ) {}
@@ -34,19 +35,32 @@ export class CharacterResolvers {
   }
 
   @Query()
-  @States(CharacterState.Normal, CharacterState.Pollution)
   async characters(@GetUser() user: User): Promise<Character[]> {
-    const fields: Array<keyof Character> = ["id", "userId", "name", "avatarUploadedAt", "profession"];
-    const relations = [];
-    if (user.roles.has(Role.Admin)) {
-      fields.push("quenta", "roles");
-      relations.push("location");
+    if (!user.roles.has(Role.Admin) && user.mainCharacter.state !== CharacterState.Normal && user.mainCharacter.state !== CharacterState.Pollution) {
+      throw new ForbiddenException();
     }
-    return await this.character.getAll(fields, relations);
+    const fields: Array<keyof Character> = ["id", "userId", "name", "avatarUploadedAt", "profession", "professionLevel"];
+    const relations = ["location"];
+    if (user.roles.has(Role.Admin)) {
+      fields.push("quenta", "roles", "registrationProfession", "balance", "state", "pollution", "deathTime", "implantsRejectTime");
+    }
+    const chars = await this.character.getAll(fields, relations);
+    if (!user.roles.has(Role.Admin)) {
+      chars.map(c => {
+        if (c.userId !== user.id) {
+          c.location = null;
+          c.professionLevel = null;
+        }
+        c.userId = null;
+        return c;
+      });
+    }
+
+    return chars;
   }
 
   @Query("character")
-  @States(CharacterState.Normal, CharacterState.Pollution)
+  @Roles([Role.Admin], [CharacterState.Normal, CharacterState.Pollution])
   async getCharacter(@GetUser() user: User, @Args("id") id: number): Promise<Character | undefined> {
     const fields: Array<keyof Character> = ["id", "userId", "name", "avatarUploadedAt", "profession", "professionLevel", "location"];
     if (user.roles.has(Role.Admin)) fields.push("quenta", "roles");
@@ -55,6 +69,7 @@ export class CharacterResolvers {
     }
     const char = await this.character.findById(id, fields, ["location", "properties"]);
     if (!char) return null;
+    if (!user.roles.has(Role.Admin)) char.userId = null;
     if (char.userId !== user.id && !user.roles.has(Role.Admin)) {
       char.location = null;
       char.professionLevel = null;
@@ -74,7 +89,7 @@ export class CharacterResolvers {
   }
 
   @Mutation()
-  @States(CharacterState.Normal, CharacterState.Pollution)
+  @Roles(CharacterState.Normal, CharacterState.Pollution)
   async uploadAvatar(
     @Args("id") id: number,
     @Args("avatar") avatar: string,
@@ -110,12 +125,18 @@ export class CharacterResolvers {
   async updateCharacter(
     @Args("id") id: number,
     @Args("data") data: FullCharacterInput,
-  ): Promise<boolean> {
-    await this.character.update(id, "roles" in data ? {
+  ): Promise<Partial<Character>> {
+    if (data.locationId < 0) {
+      data.locationId = null;
+    }
+    const update = await this.character.update(id, "roles" in data ? {
       ...data,
       roles: new RolesClass<typeof CharacterRole>(data.roles, CharacterRole),
     } : {...data} as unknown as Partial<Character>);
-    return true;
+    if (update.locationId && !update.location) {
+      update.location = await this.location.getById(update.locationId);
+    }
+    return update;
   }
 
   @Mutation()

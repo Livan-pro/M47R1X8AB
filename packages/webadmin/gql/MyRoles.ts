@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 
-export default {
+const obj = ({
   query: gql`
     query MyRoles {
       me {
@@ -9,4 +9,7 @@ export default {
     }
   `,
   fetchPolicy: "cache-and-network",
-};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+} as unknown) as { query: any };
+
+export default obj;

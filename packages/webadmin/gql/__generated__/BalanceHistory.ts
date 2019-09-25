@@ -24,7 +24,7 @@ export interface BalanceHistory_allBalanceHistory {
   __typename: "BalanceTransfer";
   id: number;
   createdAt: any;
-  from: BalanceHistory_allBalanceHistory_from;
+  from: BalanceHistory_allBalanceHistory_from | null;
   to: BalanceHistory_allBalanceHistory_to;
   amount: number;
 }

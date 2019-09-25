@@ -1,7 +1,7 @@
 type BalanceTransfer {
   id: Int!
   createdAt: Date!
-  from: Character!
+  from: Character
   to: Character!
   amount: Int!
 }
@@ -12,4 +12,5 @@ type Query {
 
 type Mutation {
   moneyTransfer(id: Int!, amount: Int!): Boolean
+  addBalance(id: Int!, amount: Int!): Character
 }

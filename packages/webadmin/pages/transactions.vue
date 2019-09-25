@@ -10,7 +10,7 @@
         {{ formatDate(value) }}
       </template>
       <template v-slot:item.from.name="{ item: { from: value } }">
-        <v-layout align-center>
+        <v-layout align-center v-if="value">
           <CharacterAvatar :id="value.id" class="mr-1" :size="50" :avatar-uploaded-at="value.avatarUploadedAt" />
           {{ value.name }}
         </v-layout>
@@ -30,6 +30,7 @@ import { Vue, Component } from "nuxt-property-decorator";
 import allBalanceHistory from "~/gql/BalanceHistory";
 import { BalanceHistory_allBalanceHistory as BalanceTransfer } from "~/gql/__generated__/BalanceHistory";
 import CharacterAvatar from "~/components/CharacterAvatar.vue";
+import { formatDate } from "~/utils";
 
 @Component({
   components: { CharacterAvatar },
@@ -58,9 +59,7 @@ export default class TransactionsPage extends Vue {
     return this.allBalanceHistory.map(t => ({ ...t, date: this.formatDate(t.createdAt) }));
   }
 
-  formatDate(value: number) {
-    return new Date(value).toLocaleString();
-  }
+  formatDate = formatDate;
 }
 </script>
 

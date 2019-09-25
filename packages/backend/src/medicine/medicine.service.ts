@@ -11,8 +11,26 @@ export class MedicineService {
   constructor(
     @InjectRepository(Medicine)
     private readonly repo: Repository<Medicine>,
+    @InjectRepository(Medpack)
+    private readonly repoMedpack: Repository<Medpack>,
     @Inject("NATS") private readonly nats: Client,
   ) {}
+
+  async getAllMedicine() {
+    return this.repo.find({relations: ["usedBy"]});
+  }
+
+  async getAllMedpack() {
+    return this.repoMedpack.find({relations: ["usedBy"]});
+  }
+
+  async createMedicine(code: Buffer) {
+    return this.repo.save({code});
+  }
+
+  async createMedpack(code: Buffer) {
+    return this.repoMedpack.save({code});
+  }
 
   @Transaction()
   async useMedicine(

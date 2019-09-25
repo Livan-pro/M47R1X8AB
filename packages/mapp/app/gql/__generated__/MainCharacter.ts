@@ -10,7 +10,7 @@ import { Profession, CharacterState } from "./globalTypes";
 
 export interface MainCharacter_me_mainCharacter_location {
   __typename: "Location";
-  name: string | null;
+  name: string;
 }
 
 export interface MainCharacter_me_mainCharacter {

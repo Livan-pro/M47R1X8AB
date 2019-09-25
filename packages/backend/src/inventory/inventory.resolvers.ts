@@ -2,11 +2,12 @@ import { Resolver, Query, Mutation, Args } from "@nestjs/graphql";
 import { Logger, Inject } from "@nestjs/common";
 import { InventoryService } from "./inventory.service";
 import { GetUser } from "user/get-user.decorator";
-import { User, UserRole as Role } from "matrix-database";
+import { User, UserRole as Role, ItemGift } from "matrix-database";
 import { Roles } from "auth/roles.decorator";
 import { Client } from "nats";
 import { CustomError } from "CustomError";
-import { InventoryItem as GInventoryItem } from "graphql.schema";
+import { InventoryItem as GInventoryItem, InventoryItem } from "graphql.schema";
+import { mapCodeToString, codeToString } from "utils";
 
 @Resolver()
 @Roles(Role.LoggedIn)
@@ -18,9 +19,41 @@ export class InventoryResolvers {
     private readonly nats: Client,
   ) {}
 
+  @Query()
+  @Roles(Role.Admin)
+  async listItemGift() {
+    return mapCodeToString(await this.inventory.getAllItemGifts());
+  }
+
+  @Mutation()
+  @Roles(Role.Admin)
+  async createItemGift(@Args("code") code: string, @Args("itemId") itemId: number, @Args("amount") amount: number): Promise<ItemGift> {
+    if (code.length !== 16) throw new CustomError("Неверный код!");
+    let buf: Buffer;
+    try {
+      buf = Buffer.from(code, "hex");
+    } catch (e) {
+      throw new CustomError("Неверный код!");
+    }
+    try {
+      return codeToString(await this.inventory.createItemGift(buf, itemId, amount));
+    } catch (err) {
+      if (err.code && err.code === "ER_DUP_ENTRY") throw new CustomError("QR-код с таким кодом уже существует");
+      throw err;
+    }
+  }
+
   @Query("inventory")
-  async qInventory(@GetUser() user: User) {
-    return await this.inventory.getByCharacterId(user.mainCharacterId);
+  async qInventory(
+    @Args("id") id: number,
+    @GetUser() user: User,
+  ) {
+    if (id) {
+      if (!user.roles.has(Role.Admin)) {
+        throw new CustomError("У вас нет доступа к инвентарю этого персонажа!");
+      }
+      return this.inventory.getByCharacterId(id);
+    } else return await this.inventory.getByCharacterId(user.mainCharacterId);
   }
 
   @Mutation()
@@ -32,6 +65,17 @@ export class InventoryResolvers {
   ): Promise<void> {
     if (to === user.mainCharacterId) throw new CustomError("Вы не можете передать предмет себе!");
     await this.inventory.transfer(user.mainCharacterId, to, itemId, amount);
+  }
+
+  @Mutation()
+  @Roles(Role.Admin)
+  async addItems(
+    @Args("characterId") characterId: number,
+    @Args("itemId") itemId: number,
+    @Args("amount") amount: number,
+  ): Promise<InventoryItem> {
+    await this.inventory.add(characterId, itemId, amount);
+    return await this.inventory.getByCharacterIdAndItemId(characterId, itemId);
   }
 
   @Mutation()

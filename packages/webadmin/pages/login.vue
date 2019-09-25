@@ -8,8 +8,8 @@
         <v-alert v-if="errorMsg" value="true" type="error">
           {{ errorMsg }}
         </v-alert>
-        <v-text-field v-model="form.email" prepend-icon="person" label="Логин" type="text" />
-        <v-text-field v-model="form.password" prepend-icon="lock" label="Пароль" type="password" />
+        <v-text-field v-model="form.email" prepend-icon="mdi-account" label="Логин" type="text" />
+        <v-text-field v-model="form.password" prepend-icon="mdi-lock" label="Пароль" type="password" />
         <v-checkbox v-model="form.rememberMe" label="Запомнить меня" />
       </v-card-text>
       <v-card-actions>

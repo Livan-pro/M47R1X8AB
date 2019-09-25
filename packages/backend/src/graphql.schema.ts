@@ -102,6 +102,10 @@ export class FullImplantInput {
     quality?: boolean;
 }
 
+export class LocationInput {
+    name?: string;
+}
+
 export class LoginInput {
     email: string;
     password: string;
@@ -136,13 +140,14 @@ export class Attachment {
 export class BalanceTransfer {
     id: number;
     createdAt: Date;
-    from: Character;
+    from?: Character;
     to: Character;
     amount: number;
 }
 
 export class Character {
     id: number;
+    userId?: number;
     name: string;
     quenta?: string;
     roles?: CharacterRole[];
@@ -180,10 +185,19 @@ export class CharacterUpdate {
 
 export class Implant {
     id: number;
-    name: string;
-    type: ImplantType;
-    working: boolean;
-    quality: boolean;
+    name?: string;
+    type?: ImplantType;
+    working?: boolean;
+    quality?: boolean;
+}
+
+export class ImplantProlongation {
+    id: number;
+    createdAt: Date;
+    code: string;
+    usedBy?: Character;
+    usedAt?: Date;
+    time: number;
 }
 
 export class ImplantUpdate {
@@ -199,8 +213,19 @@ export class InventoryItem {
     amount: number;
 }
 
+export class ItemGift {
+    id: number;
+    createdAt: Date;
+    code: string;
+    usedBy?: Character;
+    usedAt?: Date;
+    itemId: number;
+    amount: number;
+}
+
 export class Location {
-    name?: string;
+    id?: number;
+    name: string;
 }
 
 export class LoginResult {
@@ -208,8 +233,26 @@ export class LoginResult {
     token: string;
 }
 
+export class Medicine {
+    id: number;
+    createdAt: Date;
+    code: string;
+    usedBy?: Character;
+    usedAt?: Date;
+}
+
+export class Medpack {
+    id: number;
+    createdAt: Date;
+    code: string;
+    usedBy?: Character;
+    usedAt?: Date;
+}
+
 export abstract class IMutation {
     abstract moneyTransfer(id: number, amount: number): boolean | Promise<boolean>;
+
+    abstract addBalance(id: number, amount: number): Character | Promise<Character>;
 
     abstract editCharacter(id: number, character: CharacterInput): boolean | Promise<boolean>;
 
@@ -217,27 +260,41 @@ export abstract class IMutation {
 
     abstract suicide(): Date | Promise<Date>;
 
-    abstract updateCharacter(id: number, data: FullCharacterInput): boolean | Promise<boolean>;
+    abstract updateCharacter(id: number, data: FullCharacterInput): Character | Promise<Character>;
 
     abstract editProperty(characterId: number, name: string, value: string): boolean | Promise<boolean>;
 
-    abstract createImplant(data: FullImplantInput): number | Promise<number>;
+    abstract createImplant(data: FullImplantInput): Implant | Promise<Implant>;
 
-    abstract updateImplant(id: number, data: FullImplantInput): boolean | Promise<boolean>;
+    abstract updateImplant(id: number, data: FullImplantInput): Implant | Promise<Implant>;
 
     abstract prolongImplants(code: string): boolean | Promise<boolean>;
 
     abstract fixImplants(characterId: number): boolean | Promise<boolean>;
 
+    abstract createImplantProlongation(code: string, time: number): ImplantProlongation | Promise<ImplantProlongation>;
+
     abstract transferItem(to: number, itemId: number, amount: number): boolean | Promise<boolean>;
 
+    abstract addItems(characterId: number, itemId: number, amount: number): InventoryItem | Promise<InventoryItem>;
+
     abstract useItemGift(code: string): InventoryItem | Promise<InventoryItem>;
+
+    abstract createItemGift(code: string, itemId: number, amount: number): ItemGift | Promise<ItemGift>;
+
+    abstract createLocation(data: LocationInput): Location | Promise<Location>;
+
+    abstract updateLocation(id: number, data: LocationInput): Location | Promise<Location>;
 
     abstract useMedicine(code: string): boolean | Promise<boolean>;
 
     abstract useMedpack(code: string): boolean | Promise<boolean>;
 
     abstract heal(characterId: number): boolean | Promise<boolean>;
+
+    abstract createMedicine(code: string): Medicine | Promise<Medicine>;
+
+    abstract createMedpack(code: string): Medpack | Promise<Medpack>;
 
     abstract createNews(data: NewsInput): News | Promise<News>;
 
@@ -258,6 +315,8 @@ export abstract class IMutation {
     abstract setUserRole(id: number, role: UserRole, value?: boolean): boolean | Promise<boolean>;
 
     abstract setMainCharacter(characterId: number): Character | Promise<Character>;
+
+    abstract updateUser(id: number, data?: EditUserInput): User | Promise<User>;
 }
 
 export class News {
@@ -284,7 +343,17 @@ export abstract class IQuery {
 
     abstract implants(id?: number): Implant[] | Promise<Implant[]>;
 
-    abstract inventory(): InventoryItem[] | Promise<InventoryItem[]>;
+    abstract listImplantProlongation(): ImplantProlongation[] | Promise<ImplantProlongation[]>;
+
+    abstract listItemGift(): ItemGift[] | Promise<ItemGift[]>;
+
+    abstract inventory(id?: number): InventoryItem[] | Promise<InventoryItem[]>;
+
+    abstract locations(): Location[] | Promise<Location[]>;
+
+    abstract listMedpack(): Medpack[] | Promise<Medpack[]>;
+
+    abstract listMedicine(): Medicine[] | Promise<Medicine[]>;
 
     abstract news(): News[] | Promise<News[]>;
 

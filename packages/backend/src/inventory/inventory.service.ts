@@ -11,11 +11,38 @@ export class InventoryService {
   constructor(
     @InjectRepository(InventoryItem)
     private readonly repo: Repository<InventoryItem>,
+    @InjectRepository(ItemGift)
+    private readonly repoIG: Repository<ItemGift>,
     @Inject("NATS") private readonly nats: Client,
   ) {}
 
+  async getAllItemGifts() {
+    return this.repoIG.find({relations: ["usedBy"]});
+  }
+
+  async createItemGift(code: Buffer, itemId: number, amount: number) {
+    return this.repoIG.save({code, itemId, amount});
+  }
+
   async getByCharacterId(characterId: number) {
     return await this.repo.find({where: {characterId}});
+  }
+
+  async getByCharacterIdAndItemId(characterId: number, itemId: number) {
+    return await this.repo.findOne({where: {characterId, itemId}});
+  }
+
+  async add(
+    characterId: number,
+    itemId: number,
+    amount: number,
+  ) {
+    const sql = this.repo.createQueryBuilder()
+      .insert()
+      .into(InventoryItem)
+      .values({characterId, itemId, amount})
+      .getSql() + " ON DUPLICATE KEY UPDATE `amount` = `amount` + VALUES(`amount`)";
+    await this.repo.query(sql, [characterId, itemId, amount]);
   }
 
   @Transaction()

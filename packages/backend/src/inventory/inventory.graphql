@@ -3,11 +3,24 @@ type InventoryItem {
   amount: Int!
 }
 
+type ItemGift {
+  id: Int!
+  createdAt: Date!
+  code: String!
+  usedBy: Character
+  usedAt: Date
+  itemId: Int!
+  amount: Int!
+}
+
 type Query {
-  inventory: [InventoryItem!]!
+  listItemGift: [ItemGift!]
+  inventory(id: Int): [InventoryItem!]!
 }
 
 type Mutation {
   transferItem(to: Int!, itemId: Int!, amount: Int!): Boolean
+  addItems(characterId: Int!, itemId: Int!, amount: Int!): InventoryItem!
   useItemGift(code: String!): InventoryItem
+  createItemGift(code: String!, itemId: Int!, amount: Int!): ItemGift!
 }

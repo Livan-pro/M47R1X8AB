@@ -12,8 +12,18 @@ export class ImplantService {
   constructor(
     @InjectRepository(Implant)
     private readonly repo: Repository<Implant>,
+    @InjectRepository(ImplantProlongation)
+    private readonly repoIP: Repository<ImplantProlongation>,
     @Inject("NATS") private readonly nats: Client,
   ) {}
+
+  async getAllImplantProlongations() {
+    return this.repoIP.find({relations: ["usedBy"]});
+  }
+
+  async createImplantProlongation(code: Buffer, time: number) {
+    return this.repoIP.save({code, time});
+  }
 
   async getByCharacterId(characterId: number): Promise<Implant[]> {
     return await this.repo.find({where: {characterId}});
@@ -25,10 +35,12 @@ export class ImplantService {
     return implant;
   }
 
-  async update(id: number, data: Partial<Implant>): Promise<void> {
+  async update(id: number, data: Partial<Implant>): Promise<Partial<Implant>> {
     const implant = this.repo.create(data);
     await this.repo.update(id, implant);
-    this.nats.publish("backend.implant.update", {...implant, id});
+    const update = {...implant, id};
+    this.nats.publish("backend.implant.update", update);
+    return update;
   }
 
   @Transaction()

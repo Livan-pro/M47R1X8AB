@@ -10,7 +10,7 @@ import { Profession } from "./globalTypes";
 
 export interface CharacterById_character_location {
   __typename: "Location";
-  name: string | null;
+  name: string;
 }
 
 export interface CharacterById_character_properties {

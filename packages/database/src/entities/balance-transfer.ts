@@ -14,7 +14,7 @@ export class BalanceTransfer {
   @JoinColumn({name: "fromId"})
   from: Character;
 
-  @Column({nullable: false})
+  @Column({nullable: true})
   fromId: number;
 
   @ManyToOne(type => Character)

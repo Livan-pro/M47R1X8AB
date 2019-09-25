@@ -11,10 +11,10 @@ import { ImplantType } from "./globalTypes";
 export interface Implants_implants {
   __typename: "Implant";
   id: number;
-  name: string;
-  type: ImplantType;
-  working: boolean;
-  quality: boolean;
+  name: string | null;
+  type: ImplantType | null;
+  working: boolean | null;
+  quality: boolean | null;
 }
 
 export interface Implants {
