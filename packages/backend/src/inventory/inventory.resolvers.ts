@@ -2,7 +2,7 @@ import { Resolver, Query, Mutation, Args } from "@nestjs/graphql";
 import { Logger, Inject } from "@nestjs/common";
 import { InventoryService } from "./inventory.service";
 import { GetUser } from "user/get-user.decorator";
-import { User, UserRole as Role, ItemGift } from "matrix-database";
+import { User, UserRole as Role, ItemGift, Profession, CharacterRole } from "matrix-database";
 import { Roles } from "auth/roles.decorator";
 import { Client } from "nats";
 import { CustomError } from "CustomError";
@@ -91,5 +91,23 @@ export class InventoryResolvers {
       throw new CustomError("Неверный код предмета!");
     }
     return await this.inventory.useItemGift(buf, user.mainCharacterId);
+  }
+
+  @Mutation()
+  @Roles([Profession.Chemist], [CharacterRole.Technician])
+  async consumeItem(
+    @Args("itemId") itemId: number,
+    @Args("amount") amount: number,
+    @GetUser() user: User,
+  ): Promise<InventoryItem> {
+    if (!(
+      (itemId === 1 && user.mainCharacter.roles.has(CharacterRole.Technician)) ||
+      (itemId === 2 && user.mainCharacter.profession === Profession.Chemist)
+    )) {
+      throw new CustomError("У вас нет возможности списывать этот предмет!");
+    }
+    if (amount < 1) throw new CustomError("Неверное количество предметов!");
+    await this.inventory.add(user.mainCharacterId, itemId, -amount);
+    return await this.inventory.getByCharacterIdAndItemId(user.mainCharacterId, itemId);
   }
 }

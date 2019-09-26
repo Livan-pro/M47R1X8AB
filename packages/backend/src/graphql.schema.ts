@@ -282,6 +282,8 @@ export abstract class IMutation {
 
     abstract createItemGift(code: string, itemId: number, amount: number): ItemGift | Promise<ItemGift>;
 
+    abstract consumeItem(itemId: number, amount: number): InventoryItem | Promise<InventoryItem>;
+
     abstract createLocation(data: LocationInput): Location | Promise<Location>;
 
     abstract updateLocation(id: number, data: LocationInput): Location | Promise<Location>;

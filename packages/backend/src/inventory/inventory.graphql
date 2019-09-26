@@ -23,4 +23,5 @@ type Mutation {
   addItems(characterId: Int!, itemId: Int!, amount: Int!): InventoryItem!
   useItemGift(code: String!): InventoryItem
   createItemGift(code: String!, itemId: Int!, amount: Int!): ItemGift!
+  consumeItem(itemId: Int!, amount: Int!): InventoryItem!
 }
