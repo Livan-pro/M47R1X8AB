@@ -26,10 +26,13 @@ import { items } from "@/utils/items";
   apollo: {
     character: {
       ...CharacterById,
-      variables() {
+      variables(this: ItemTransferAmountModal) {
         return {
-          id: (this as ItemTransferAmountModal).characterId,
+          id: this.characterId,
         };
+      },
+      skip(this: ItemTransferAmountModal) {
+        return this.characterId < 0;
       },
     },
   },
