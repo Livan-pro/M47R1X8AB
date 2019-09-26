@@ -41,6 +41,7 @@ export default class MoneyPage extends Vue {
         title: "Перевод",
         action: async () => {
           const id = await this.$showModal(SelectCharacter, { fullscreen: true });
+          if (typeof id !== "number") return;
           await this.$showModal(MoneyTransferAmount, { props: { id } });
         },
       },

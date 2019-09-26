@@ -24,6 +24,7 @@ export default class InventoryItem extends Vue {
 
   async transfer() {
     const characterId = await this.$showModal(SelectCharacter, { fullscreen: true });
+    if (typeof characterId !== "number") return;
     await this.$showModal(ItemTransferAmount, { props: { characterId, itemId: this.data.itemId } });
   }
 
