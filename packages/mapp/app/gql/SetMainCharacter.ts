@@ -18,6 +18,9 @@ export default {
         pollution
         deathTime
         implantsRejectTime
+        location {
+          name
+        }
       }
     }
   `,
