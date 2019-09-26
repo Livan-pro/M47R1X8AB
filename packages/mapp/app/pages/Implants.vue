@@ -6,7 +6,7 @@
         <StackLayout class="hr-light m-y-10" />
         <Label text="Импланты" class="h1 text-center" />
         <StackLayout class="hr-light" />
-        <Label :text="stateText" class="h2 text-center" :class="{ rejected }" />
+        <Label v-if="isStateVisible" :text="stateText" class="h2 text-center" :class="{ rejected }" />
         <template v-for="(item, i) in implants">
           <StackLayout :key="'hr-' + i" class="hr-light m-b-10" />
           <ImplantItem :key="i" :data="item" />
@@ -99,6 +99,10 @@ export default class ImplantsPage extends Vue {
 
   get stateText() {
     return this.rejected ? "Импланты отторглись" : `Отторжение через: ${this.timerText}`;
+  }
+
+  get isStateVisible() {
+    return this.implants.length > 0;
   }
 }
 </script>
