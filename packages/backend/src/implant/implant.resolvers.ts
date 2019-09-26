@@ -2,7 +2,7 @@ import { Resolver, Query, Subscription, Mutation, Args } from "@nestjs/graphql";
 import { Logger, Inject } from "@nestjs/common";
 import { ImplantService } from "./implant.service";
 import { GetUser } from "user/get-user.decorator";
-import { User, UserRole as Role, Implant, CharacterRole, ImplantProlongation } from "matrix-database";
+import { User, UserRole as Role, Implant, CharacterRole, ImplantProlongation, Profession } from "matrix-database";
 import { Roles } from "auth/roles.decorator";
 import { ImplantCacheService } from "cache/implant-cache.service";
 import { UserCacheService } from "cache/user-cache.service";
@@ -54,7 +54,7 @@ export class ImplantResolvers {
     @GetUser() user: User,
   ) {
     if (id) {
-      if (!user.roles.has(Role.Admin) && !user.mainCharacter.roles.has(CharacterRole.Medic)) {
+      if (!user.roles.has(Role.Admin) && user.mainCharacter.profession !== Profession.Biotechnician) {
         throw new CustomError("У вас нет доступа к имплантам этого персонажа!");
       }
       return this.implant.getByCharacterId(id);
@@ -77,7 +77,7 @@ export class ImplantResolvers {
   }
 
   @Mutation()
-  @Roles([Role.Admin], [CharacterRole.Medic])
+  @Roles([Role.Admin], [Profession.Biotechnician])
   async createImplant(
     @Args("data") data: FullImplantInput,
     @GetUser() user: User,
@@ -98,7 +98,7 @@ export class ImplantResolvers {
   }
 
   @Mutation()
-  @Roles([CharacterRole.Medic], [Role.Admin])
+  @Roles([Profession.Biotechnician], [Role.Admin])
   async fixImplants(
     @Args("characterId") characterId: number,
     @GetUser() user: User,
