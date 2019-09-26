@@ -64,6 +64,7 @@ export class InventoryResolvers {
     @GetUser() user: User,
   ): Promise<void> {
     if (to === user.mainCharacterId) throw new CustomError("Вы не можете передать предмет себе!");
+    if (amount < 1) throw new CustomError("Неверное количество предметов!");
     await this.inventory.transfer(user.mainCharacterId, to, itemId, amount);
   }
 
