@@ -98,7 +98,8 @@ export default class CharacterPage extends Vue {
   get isMedic() {
     return (
       this.me.roles.includes(UserRole.Admin) ||
-      (this.me.mainCharacter.roles.includes(CharacterRole.Medic) && this.me.mainCharacter.id !== this.character.id)
+      (this.me.mainCharacter.id !== this.character.id &&
+        (this.me.mainCharacter.profession === Profession.Biotechnician || this.me.mainCharacter.roles.includes(CharacterRole.Medic)))
     );
   }
 
