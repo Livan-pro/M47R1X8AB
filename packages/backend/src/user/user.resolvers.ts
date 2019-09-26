@@ -148,7 +148,7 @@ export class UserResolvers {
   ): Promise<Character> {
     let character: Character;
     try {
-      character = await this.character.getByIdAndOwner(characterId, user.id);
+      character = await this.character.getByIdAndOwner(characterId, user.id, ["location"]);
     } catch (e) {
       throw new CustomError("Этот персонаж не принадлежит вам");
     }
