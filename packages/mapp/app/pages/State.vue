@@ -24,10 +24,10 @@ import ChangeCharacterPage from "./ChangeCharacter.vue";
 import me from "@/gql/MyStateExtended";
 import { MyStateExtended_me as Me } from "@/gql/__generated__/MyStateExtended";
 import { CharacterState, Profession } from "@/gql/__generated__/globalTypes";
-import suicide, { createUpdate } from "@/gql/Suicide";
 import { logout } from "@/vue-apollo";
 import { month } from "@/utils";
 import CharacterPage from "./Character.vue";
+import ConfirmSuicide from "@/modals/ConfirmSuicide.vue";
 
 const states = Object.freeze({
   [CharacterState.Normal]: "Норма",
@@ -90,7 +90,7 @@ export default class StatePage extends Vue {
   }
 
   async suicide() {
-    await this.$apollo.mutate({ ...suicide, update: createUpdate(this.character.id) });
+    await this.$showModal(ConfirmSuicide, { props: { character: this.character } });
   }
 
   onTap(id: number) {
