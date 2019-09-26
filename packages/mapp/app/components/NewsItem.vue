@@ -3,16 +3,10 @@
     <StackLayout class="hr-light m-b-10" />
     <Label :text="title" dock="left" class="h2" />
     <Label :text="formattedTime" dock="right" class="h3 text-right" />
-    <Label :text="text" textWrap="true" />
-    <Image v-if="attachment && attachment.type === 'Image'" :src="getAttachmentUrl(attachment)" />
-    <VideoPlayer
-      v-if="attachment && attachment.type === 'Video'"
-      controls="true"
-      autoplay="false"
-      minHeight="200"
-      :src="getAttachmentUrl(attachment)"
-    />
-    <VideoPlayer v-if="attachment && attachment.type === 'Audio'" controls="true" autoplay="false" height="100" :src="getAttachmentUrl(attachment)" />
+    <Label v-if="text.length > 0" :text="text" textWrap="true" />
+    <Image v-if="attachment && attachment.type === 'Image'" :src="getAttachmentUrl(attachment)" class="m-t-10" />
+    <VideoButton v-if="attachment && attachment.type === 'Video'" :src="getAttachmentUrl(attachment)" class="m-t-10" />
+    <AudioButton v-if="attachment && attachment.type === 'Audio'" :src="getAttachmentUrl(attachment)" class="m-t-10" />
   </StackLayout>
 </template>
 
@@ -20,11 +14,12 @@
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
 import { getAttachmentUrl } from "@/utils";
+import VideoButton from "@/components/VideoButton.vue";
+import AudioButton from "@/components/AudioButton.vue";
 
-// TODO: improve video & audio player:
-// size on rotation, audio background?, always visible controls?
-
-@Component
+@Component({
+  components: { VideoButton, AudioButton },
+})
 export default class NewsItem extends Vue {
   @Prop({ type: String, default: "" }) title!: string;
   @Prop() time!: Date | string;
