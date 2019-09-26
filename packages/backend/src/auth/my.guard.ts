@@ -2,7 +2,7 @@ import { Injectable, CanActivate, ExecutionContext } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { User, UserRole, CharacterState, CharacterRole, Profession } from "matrix-database";
 import { GqlAuthGuard } from "./gql-auth.guard";
-import { RolesDecoratorData } from "./roles.decorator";
+import { RolesDecoratorData, Value } from "./roles.decorator";
 
 interface ISeparatedRoles {
   user: UserRole[];
@@ -59,13 +59,13 @@ export class MyGuard extends GqlAuthGuard implements CanActivate {
     for (const val of [classValue, handlerValue]) {
       if (!Array.isArray(val)) continue;
       if (val.length < 1) continue;
-      if (Array.isArray(val[0])) value.push((val as Array<Array<UserRole | CharacterRole>>).map(arr => this.separateRoles(arr)));
-      else value.push([this.separateRoles(val as Array<UserRole | CharacterRole>)]);
+      if (Array.isArray(val[0])) value.push((val as Value[][]).map(arr => this.separateRoles(arr)));
+      else value.push([this.separateRoles(val as Value[])]);
     }
     return value;
   }
 
-  separateRoles(input: Array<UserRole | CharacterRole>): ISeparatedRoles {
+  separateRoles(input: Value[]): ISeparatedRoles {
     return input.reduce((acc, r) => {
       if (UserRole[r]) acc.user.push(r);
       else if (CharacterRole[r]) acc.character.push(r);
