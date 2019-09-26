@@ -102,11 +102,12 @@ export default class App extends Vue {
       props: this.state === CharacterState.SevereWound ? { whitelist: ["mp"] } : {},
     });
     tab(!criticalState, { title: "\uf0c9", component: "Menu" });
+    this.selectedIndex = 0;
     return tabs;
   }
 
   get tabsId() {
-    return `${this.tabs.reduce((id, tab) => id + tab.id, "tabs_")}+${this.me.mainCharacter.id}`;
+    return this.tabs.reduce((id, tab) => id + tab.id, "tabs_");
   }
 
   get loading() {

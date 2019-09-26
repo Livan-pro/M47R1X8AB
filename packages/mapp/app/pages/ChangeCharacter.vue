@@ -1,15 +1,13 @@
 <template>
   <Page actionBarHidden="true">
-    <ScrollView>
-      <StackLayout class="p-x-20 p-y-10">
-        <Label text="Ваши персонажи" class="h1 text-center" />
-        <template v-for="(item, i) in me.characters">
-          <StackLayout :key="'hr-' + i" class="hr-light m-b-10" />
-          <CharacterItem :key="i" :data="item" @tap="selectCharacter" />
-        </template>
-        <StackLayout class="hr-light" />
-      </StackLayout>
-    </ScrollView>
+    <StackLayout class="p-x-20 p-y-10">
+      <Label text="Ваши персонажи" class="h1 text-center hr-bottom" />
+      <ListView for="item in me.characters" height="100%" @itemTap="selectCharacter">
+        <v-template>
+          <CharacterItem :data="item" class="hr-bottom p-y-10" />
+        </v-template>
+      </ListView>
+    </StackLayout>
   </Page>
 </template>
 
@@ -21,6 +19,7 @@ import CharacterItem from "@/components/CharacterItem.vue";
 import me from "@/gql/MyCharacters";
 import { MyCharacters_me as Me } from "@/gql/__generated__/MyCharacters";
 import SetMainCharacter from "@/gql/SetMainCharacter";
+import Menu from "@/pages/Menu.vue";
 
 @Component({
   components: { CharacterItem },
@@ -34,8 +33,10 @@ export default class ChangeCharacterPage extends Vue {
     characters: [],
   };
 
-  selectCharacter(id: number) {
-    this.$apollo.mutate({ ...SetMainCharacter, variables: { id } });
+  async selectCharacter({ item: { id } }: { item: { id: number } }) {
+    const frame = this.$root.currentFrame;
+    await this.$apollo.mutate({ ...SetMainCharacter, variables: { id } });
+    this.$navigateTo(Menu, { frame, clearHistory: true });
   }
 }
 </script>

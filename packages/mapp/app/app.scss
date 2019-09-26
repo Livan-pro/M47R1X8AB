@@ -47,11 +47,16 @@ ActivityIndicator {
 }
 
 ListView {
-  separator-color: white;
+  separator-color: transparent;
 }
 
 .hr {
   border-top: 1px dashed $primary;
+}
+
+.hr-bottom {
+  border-bottom-color: white;
+  border-bottom-width: 1;
 }
 
 .far {

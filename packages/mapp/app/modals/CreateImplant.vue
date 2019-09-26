@@ -14,7 +14,6 @@
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
-import CharacterItem from "@/components/CharacterItem.vue";
 
 import CharacterById from "@/gql/CharacterById";
 import CreateImplant from "@/gql/CreateImplant";
@@ -22,7 +21,6 @@ import { CharacterById_character as Character } from "@/gql/__generated__/Charac
 import { implantTypes } from "@/utils";
 
 @Component({
-  components: { CharacterItem },
   apollo: {
     character: {
       ...CharacterById,

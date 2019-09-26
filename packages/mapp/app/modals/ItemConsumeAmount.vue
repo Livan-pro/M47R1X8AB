@@ -14,14 +14,11 @@
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
-import CharacterItem from "@/components/CharacterItem.vue";
 
 import ItemConsume from "@/gql/ItemConsume";
 import { items } from "@/utils/items";
 
-@Component({
-  components: { CharacterItem },
-})
+@Component
 export default class ItemConsumeAmountModal extends Vue {
   @Prop({ type: Number, default: -1 }) itemId!: number;
   @Prop({ type: Number, default: -1 }) total!: number;

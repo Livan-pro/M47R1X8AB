@@ -2,7 +2,7 @@
   <Page actionBarHidden="true">
     <ScrollView>
       <StackLayout class="p-x-20 p-y-10">
-        <CharacterAvatar :id="id" :avatarUploadedAt="character.avatarUploadedAt" :size="200" @tap="onTap" />
+        <CharacterAvatar :id="id" :avatarUploadedAt="character.avatarUploadedAt" :size="200" :tap="onTap" />
         <Label :text="character.name" class="h1 text-center" :class="{ own: character.own }" />
         <Label :text="profession" class="h2 text-center" />
         <Label v-if="location" :text="location" class="h2 text-center" />
@@ -11,11 +11,16 @@
           <StackLayout class="hr-light m-y-10" />
           <Label text="Свойства" class="h2 text-center" />
           <StackLayout class="hr-light m-t-10" />
-          <ListView for="prop in properties" :height="75 * properties.length" @itemTap="onPropertyTap">
-            <v-template>
-              <Label class="p-y-20 text-center" :text="`${prop.name}: ${prop.value}`" textWrap="true" />
-            </v-template>
-          </ListView>
+          <StackLayout class="m-b-10">
+            <Label
+              v-for="prop in properties"
+              :key="prop.name"
+              class="p-y-20 text-center hr-bottom"
+              :text="`${prop.name}: ${prop.value}`"
+              textWrap="true"
+              @itemTap="onPropertyTap(prop)"
+            />
+          </StackLayout>
           <Button v-if="canEditProperty" text="Добавить" @tap="addProperty" />
         </template>
       </StackLayout>
@@ -87,7 +92,7 @@ export default class CharacterPage extends Vue {
     this.$navigateTo(MedicPage, { frame: this.$root.currentFrame, props: { id: this.id } });
   }
 
-  async onPropertyTap({ item }: { item: Property }) {
+  async onPropertyTap(item: Property) {
     if (!this.canEditProperty) return;
     await this.$showModal(EditPropertyModal, { props: { id: this.id, name: item.name, value: item.value }, fullscreen: true });
   }

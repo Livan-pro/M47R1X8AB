@@ -1,15 +1,13 @@
 <template>
   <Page actionBarHidden="true">
-    <ScrollView>
-      <StackLayout class="p-x-20 p-y-10">
-        <Label text="Персонажи" class="h1 text-center" />
-        <template v-for="(item, i) in characters">
-          <StackLayout :key="'hr-' + i" class="hr-light m-b-10" />
-          <CharacterItem :key="i" :data="item" @tap="onTap" />
-        </template>
-        <StackLayout class="hr-light" />
-      </StackLayout>
-    </ScrollView>
+    <StackLayout class="p-x-20 p-y-10">
+      <Label text="Персонажи" class="h1 text-center hr-bottom" />
+      <ListView for="item in characters" height="100%" @itemTap="onTap">
+        <v-template>
+          <CharacterItem :data="item" class="hr-bottom p-y-10" />
+        </v-template>
+      </ListView>
+    </StackLayout>
   </Page>
 </template>
 
@@ -32,7 +30,7 @@ import { Characters_characters as Character } from "@/gql/__generated__/Characte
 export default class CharactersPage extends Vue {
   characters: Character[] = [];
 
-  onTap(id: number) {
+  onTap({ item: { id } }: { item: { id: number } }) {
     this.$navigateTo(CharacterPage, { frame: this.$root.currentFrame, props: { id } });
   }
 }

@@ -21,14 +21,11 @@ import { ImageSource } from "tns-core-modules/image-source";
 import * as imagepicker from "nativescript-imagepicker";
 import * as camera from "nativescript-camera";
 import { ImageCropper } from "nativescript-imagecropper";
-import CharacterAvatar from "@/components/CharacterAvatar.vue";
 import { ImageAsset } from "tns-core-modules/image-asset/image-asset";
 
 import UploadAvatarM, { createUpdate } from "@/gql/UploadAvatar";
 
-@Component({
-  components: { CharacterAvatar },
-})
+@Component
 export default class UploadAvatar extends Vue {
   @Prop({ type: Number, default: -1 }) id!: number;
   context: imagepicker.ImagePicker;

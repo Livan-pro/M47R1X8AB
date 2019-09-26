@@ -1,7 +1,7 @@
 <template>
   <Page actionBarHidden="true">
     <StackLayout class="p-x-20 p-y-10">
-      <CharacterItem :data="character" :avatarSize="50" :hideBalance="true" @tap="onTap" />
+      <CharacterItem :data="character" :avatarSize="50" :hideBalance="true" :tap="onTap" />
       <StackLayout class="hr-light m-y-10" />
       <Label :text="stateText" :class="color" class="h1 text-center m-y-10" />
       <Label v-if="isDeathTimeVisible" :text="deathTimeText" class="h2 text-center" />

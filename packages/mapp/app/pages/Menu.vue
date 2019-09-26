@@ -1,8 +1,8 @@
 <template>
   <Page actionBarHidden="true">
     <StackLayout class="p-x-20 p-y-10">
-      <CharacterItem :data="character" :avatarSize="50" :hideBalance="true" @tap="onTap" />
-      <StackLayout class="hr-light m-y-10" />
+      <CharacterItem :data="character" :avatarSize="50" :hideBalance="true" :tap="onTap" />
+      <StackLayout class="hr-light m-t-10" />
       <Menu :items="items" />
     </StackLayout>
   </Page>

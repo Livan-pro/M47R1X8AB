@@ -1,7 +1,7 @@
 <template>
   <ListView for="item in items" :height="75 * items.length" @itemTap="onItemTap">
     <v-template>
-      <Label class="p-y-20 text-center item-title" :class="{ 'item-disabled': item.disabled }" :text="item.title" />
+      <Label class="p-y-20 text-center item-title hr-bottom" :class="{ 'item-disabled': item.disabled }" :text="item.title" />
     </v-template>
   </ListView>
 </template>
@@ -12,6 +12,7 @@ import Vue, { NativeScriptVueConstructor } from "nativescript-vue";
 
 export interface MenuItem {
   title: string;
+  disabled?: boolean;
   action?: () => void;
   open?: NativeScriptVueConstructor;
   modal?: NativeScriptVueConstructor;
@@ -22,7 +23,7 @@ export interface MenuItem {
 export default class Menu extends Vue {
   @Prop({ type: Array, default: [] }) items: MenuItem[];
 
-  async onItemTap({ item }) {
+  async onItemTap({ item }: { item: MenuItem }) {
     if (item.disabled) return;
     if (item.action) await item.action.call(this);
     if (item.open) this.$navigateTo(item.open, { frame: this.$root.currentFrame, props: item.props });

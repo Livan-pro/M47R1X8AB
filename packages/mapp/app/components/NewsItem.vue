@@ -1,6 +1,5 @@
 <template>
-  <StackLayout class="p-b-10">
-    <StackLayout class="hr-light m-b-10" />
+  <StackLayout>
     <Label :text="title" dock="left" class="h2" />
     <Label :text="formattedTime" dock="right" class="h3 text-right" />
     <Label v-if="text.length > 0" :text="text" textWrap="true" />

@@ -1,5 +1,5 @@
 <template>
-  <StackLayout class="p-b-10" orientation="horizontal" @tap="onTap" @longPress="$emit('longPress')">
+  <StackLayout orientation="horizontal" v-on="on">
     <CharacterAvatar :id="data.id" :avatarUploadedAt="data.avatarUploadedAt" :size="avatarSize" />
     <StackLayout>
       <Label :text="data.name" dock="left" class="h2" :class="{ own: data.own }" />
@@ -31,13 +31,18 @@ export default class CharacterItem extends Vue {
   };
   @Prop({ type: Boolean, default: false }) hideBalance!: boolean;
   @Prop({ type: Boolean, default: false }) hideProfession!: boolean;
-
-  onTap() {
-    this.$emit("tap", this.data.id);
-  }
+  @Prop({ type: Function, default: null }) tap!: ((id: number) => void) | null;
+  @Prop({ type: Function, default: null }) longPress!: ((id: number) => void) | null;
 
   getProfessionText() {
     return getProfessionText(this.data.profession, this.data.professionLevel);
+  }
+
+  get on() {
+    const on: { tap?: () => void; longPress?: () => void } = {};
+    if (this.tap) on.tap = () => this.tap(this.data.id);
+    if (this.longPress) on.longPress = () => this.longPress(this.data.id);
+    return on;
   }
 }
 </script>
