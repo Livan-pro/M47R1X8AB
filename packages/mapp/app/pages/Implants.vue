@@ -33,18 +33,24 @@ import { CharacterById_character as Character } from "@/gql/__generated__/Charac
   apollo: {
     implants: {
       ...implants,
-      variables() {
+      variables(this: ImplantsPage) {
         return {
-          id: (this as ImplantsPage).id,
+          id: this.id,
         };
+      },
+      skip(this: ImplantsPage) {
+        return this.id < 0;
       },
     },
     character: {
       ...character,
-      variables() {
+      variables(this: ImplantsPage) {
         return {
-          id: (this as ImplantsPage).id,
+          id: this.id,
         };
+      },
+      skip(this: ImplantsPage) {
+        return this.id < 0;
       },
     },
   },
