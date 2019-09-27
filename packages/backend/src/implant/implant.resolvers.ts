@@ -53,7 +53,7 @@ export class ImplantResolvers {
     @Args("id") id: number,
     @GetUser() user: User,
   ) {
-    if (id) {
+    if (id && id !== user.mainCharacterId) {
       if (!user.roles.has(Role.Admin) && user.mainCharacter.profession !== Profession.Biotechnician) {
         throw new CustomError("У вас нет доступа к имплантам этого персонажа!");
       }
