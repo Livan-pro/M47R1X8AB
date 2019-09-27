@@ -1,19 +1,17 @@
 <template>
   <Page actionBarHidden="true">
-    <ScrollView>
-      <StackLayout class="p-x-20 p-y-10">
-        <CharacterItem :data="character" :avatarSize="50" :hideBalance="true" />
-        <StackLayout class="hr-light m-y-10" />
-        <Label text="Импланты" class="h1 text-center" />
-        <StackLayout class="hr-light" />
-        <Label v-if="isStateVisible" :text="stateText" class="h2 text-center" :class="{ rejected }" />
-        <template v-for="(item, i) in implants">
-          <StackLayout :key="'hr-' + i" class="hr-light m-b-10" />
-          <ImplantItem :key="i" :data="item" />
-        </template>
-        <StackLayout class="hr-light" />
-      </StackLayout>
-    </ScrollView>
+    <StackLayout class="p-x-20 p-y-10">
+      <CharacterItem :data="character" :avatarSize="50" :hideBalance="true" />
+      <StackLayout class="hr-light m-y-10" />
+      <Label text="Импланты" class="h1 text-center" />
+      <StackLayout class="hr-light" />
+      <Label v-if="isStateVisible" :text="stateText" class="h2 text-center hr-bottom" :class="{ rejected }" />
+      <ListView for="item in implants" height="100%">
+        <v-template>
+          <ImplantItem :data="item" class="hr-bottom p-y-10" />
+        </v-template>
+      </ListView>
+    </StackLayout>
   </Page>
 </template>
 

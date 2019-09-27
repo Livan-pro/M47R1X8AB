@@ -1,5 +1,5 @@
 <template>
-  <StackLayout class="p-b-10" orientation="horizontal">
+  <StackLayout orientation="horizontal">
     <StackLayout>
       <Label :text="data.name" dock="left" class="h2" />
       <Label :text="typeText" dock="left" class="h3" />
