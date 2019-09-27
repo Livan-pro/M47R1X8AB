@@ -1,6 +1,6 @@
 {
   "name": "matrix-mobile-app",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "Matrix's native mobile application",
   "author": "Livan <livanerror@gmail.com>",
   "private": true,
