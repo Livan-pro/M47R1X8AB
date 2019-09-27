@@ -10,6 +10,7 @@ import { SubscriptionClient } from "subscriptions-transport-ws";
 
 import App from "./pages/App.vue";
 import Login from "./pages/Login.vue";
+import { NavigationEntryVue } from "nativescript-vue";
 
 let token: string | undefined = appSettings.getString("token");
 
@@ -43,7 +44,7 @@ export function login(newToken: string): void {
 export function logout(): void {
   if (token) {
     unsetToken();
-    vue.$navigateTo(Login);
+    vue.$navigateTo(Login, ({ clearHistory: true } as unknown) as NavigationEntryVue);
   }
 }
 
