@@ -76,7 +76,7 @@ export default class MedicPage extends Vue {
     if (this.me.mainCharacter.profession === Profession.Biotechnician)
       items.push(
         { title: "Починить импланты", action: () => this.fixImplants() },
-        { title: "Создание импланта", modal: CreateImplant, props: { id: this.id } },
+        { title: "Создание импланта", open: CreateImplant, props: { id: this.id } },
       );
     return items;
   }
