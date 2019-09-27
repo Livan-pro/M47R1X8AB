@@ -37,10 +37,8 @@ export class CharacterResolvers {
   }
 
   @Query()
+  @Roles([Role.Admin], [CharacterState.Normal, CharacterState.Pollution])
   async characters(@GetUser() user: User): Promise<Character[]> {
-    if (!user.roles.has(Role.Admin) && user.mainCharacter.state !== CharacterState.Normal && user.mainCharacter.state !== CharacterState.Pollution) {
-      throw new ForbiddenException();
-    }
     const fields: Array<keyof Character> = ["id", "userId", "name", "avatarUploadedAt", "profession", "professionLevel"];
     const relations = ["location"];
     if (user.roles.has(Role.Admin)) {
@@ -143,7 +141,7 @@ export class CharacterResolvers {
   }
 
   @Mutation()
-  @Roles([Role.Admin], [Profession.Marshal])
+  @Roles([Role.Admin], [Profession.Marshal, CharacterState.Normal, CharacterState.Pollution])
   async editProperty(
     @Args("characterId") characterId: number,
     @Args("name") name: string,

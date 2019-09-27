@@ -2,7 +2,7 @@ import { Resolver, Query, Subscription, Mutation, Args } from "@nestjs/graphql";
 import { Logger, Inject } from "@nestjs/common";
 import { ImplantService } from "./implant.service";
 import { GetUser } from "user/get-user.decorator";
-import { User, UserRole as Role, Implant, CharacterRole, ImplantProlongation, Profession } from "matrix-database";
+import { User, UserRole as Role, Implant, CharacterRole, ImplantProlongation, Profession, CharacterState } from "matrix-database";
 import { Roles } from "auth/roles.decorator";
 import { ImplantCacheService } from "cache/implant-cache.service";
 import { UserCacheService } from "cache/user-cache.service";
@@ -77,7 +77,7 @@ export class ImplantResolvers {
   }
 
   @Mutation()
-  @Roles([Role.Admin], [Profession.Biotechnician])
+  @Roles([Role.Admin], [Profession.Biotechnician, CharacterState.Normal, CharacterState.Pollution])
   async createImplant(
     @Args("data") data: FullImplantInput,
     @GetUser() user: User,
@@ -98,7 +98,7 @@ export class ImplantResolvers {
   }
 
   @Mutation()
-  @Roles([Profession.Biotechnician], [Role.Admin])
+  @Roles([Profession.Biotechnician, CharacterState.Normal, CharacterState.Pollution], [Role.Admin])
   async fixImplants(
     @Args("characterId") characterId: number,
     @GetUser() user: User,

@@ -2,7 +2,7 @@ import { Resolver, Query, Mutation, Args } from "@nestjs/graphql";
 import { Logger, Inject } from "@nestjs/common";
 import { InventoryService } from "./inventory.service";
 import { GetUser } from "user/get-user.decorator";
-import { User, UserRole as Role, ItemGift, Profession, CharacterRole } from "matrix-database";
+import { User, UserRole as Role, ItemGift, Profession, CharacterRole, CharacterState } from "matrix-database";
 import { Roles } from "auth/roles.decorator";
 import { Client } from "nats";
 import { CustomError } from "CustomError";
@@ -95,7 +95,10 @@ export class InventoryResolvers {
   }
 
   @Mutation()
-  @Roles([Profession.Chemist], [CharacterRole.Technician])
+  @Roles(
+    [Profession.Chemist, CharacterState.Normal, CharacterState.Pollution],
+    [CharacterRole.Technician, CharacterState.Normal, CharacterState.Pollution],
+  )
   async consumeItem(
     @Args("itemId") itemId: number,
     @Args("amount") amount: number,

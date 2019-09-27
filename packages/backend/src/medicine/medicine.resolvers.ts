@@ -100,7 +100,7 @@ export class MedicineResolvers {
   }
 
   @Mutation()
-  @Roles([CharacterRole.Medic], [Role.Admin])
+  @Roles([CharacterRole.Medic, CharacterState.Normal, CharacterState.Pollution], [Role.Admin])
   async heal(
     @Args("characterId") characterId: number,
     @GetUser() user: User,
