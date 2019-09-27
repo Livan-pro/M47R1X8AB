@@ -14,11 +14,13 @@ import { Client } from "nats";
 import { UserCacheService } from "cache/user-cache.service";
 import { PropertyService } from "./property.service";
 import { LocationService } from "location/location.service";
+import { Config } from "config";
 
 @Resolver("Character")
 @Roles(Role.LoggedIn)
 export class CharacterResolvers {
   private readonly log = new Logger(CharacterResolvers.name);
+  private readonly suicideEnabled = Config.getBoolean("SUICIDE_ENABLED", false);
   constructor(
     private readonly character: CharacterService,
     private readonly file: FileService,
@@ -114,6 +116,7 @@ export class CharacterResolvers {
   async suicide(
     @GetUser() user: User,
   ): Promise<Date> {
+    if (!this.suicideEnabled) throw new CustomError("Суицид временно отключён!");
     if (user.mainCharacter.state === CharacterState.Death) return user.mainCharacter.deathTime;
     const deathTime = new Date();
     await this.character.update(user.mainCharacter.id, {state: CharacterState.Death, deathTime});
