@@ -49,10 +49,13 @@ import EditPropertyModal from "@/modals/EditProperty.vue";
   apollo: {
     character: {
       ...CharacterById,
-      variables() {
+      variables(this: CharacterPage) {
         return {
-          id: (this as CharacterPage).id,
+          id: this.id,
         };
+      },
+      skip(this: CharacterPage) {
+        return this.id < 0;
       },
     },
     me,

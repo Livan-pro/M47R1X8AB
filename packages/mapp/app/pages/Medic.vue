@@ -30,10 +30,13 @@ import { MyRoles_me as Me } from "@/gql/__generated__/MyRoles";
   apollo: {
     character: {
       ...CharacterById,
-      variables() {
+      variables(this: MedicPage) {
         return {
-          id: (this as MedicPage).id,
+          id: this.id,
         };
+      },
+      skip(this: MedicPage) {
+        return this.id < 0;
       },
     },
     me,

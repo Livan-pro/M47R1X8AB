@@ -24,10 +24,13 @@ import { implantTypes } from "@/utils";
   apollo: {
     character: {
       ...CharacterById,
-      variables() {
+      variables(this: CreateImplantModal) {
         return {
-          id: (this as CreateImplantModal).id,
+          id: this.id,
         };
+      },
+      skip(this: CreateImplantModal) {
+        return this.id < 0;
       },
     },
   },

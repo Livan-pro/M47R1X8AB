@@ -21,10 +21,13 @@ import { CharacterById_character as Character } from "@/gql/__generated__/Charac
   apollo: {
     character: {
       ...CharacterById,
-      variables() {
+      variables(this: ConfirmQRMoneyTransfer) {
         return {
-          id: (this as ConfirmQRMoneyTransfer).id,
+          id: this.id,
         };
+      },
+      skip(this: ConfirmQRMoneyTransfer) {
+        return this.id < 0;
       },
     },
   },
