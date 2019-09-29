@@ -11,6 +11,6 @@ type Query {
 }
 
 type Mutation {
-  moneyTransfer(id: Int!, amount: Int!): Boolean
+  moneyTransfer(id: Int!, amount: Int!): Character
   addBalance(id: Int!, amount: Int!): Character
 }

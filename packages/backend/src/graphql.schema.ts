@@ -250,7 +250,7 @@ export class Medpack {
 }
 
 export abstract class IMutation {
-    abstract moneyTransfer(id: number, amount: number): boolean | Promise<boolean>;
+    abstract moneyTransfer(id: number, amount: number): Character | Promise<Character>;
 
     abstract addBalance(id: number, amount: number): Character | Promise<Character>;
 
