@@ -6,8 +6,14 @@
 // GraphQL mutation operation: MoneyTransfer
 // ====================================================
 
+export interface MoneyTransfer_moneyTransfer {
+  __typename: "Character";
+  id: number;
+  balance: number | null;
+}
+
 export interface MoneyTransfer {
-  moneyTransfer: boolean | null;
+  moneyTransfer: MoneyTransfer_moneyTransfer | null;
 }
 
 export interface MoneyTransferVariables {

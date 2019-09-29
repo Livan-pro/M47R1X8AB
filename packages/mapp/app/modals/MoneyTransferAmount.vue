@@ -17,7 +17,7 @@ import Vue from "nativescript-vue";
 import CharacterItem from "@/components/CharacterItem.vue";
 
 import CharacterById from "@/gql/CharacterById";
-import MoneyTransfer, { createUpdate } from "@/gql/MoneyTransfer";
+import MoneyTransfer from "@/gql/MoneyTransfer";
 import { CharacterById_character as Character } from "@/gql/__generated__/CharacterById";
 
 @Component({
@@ -63,7 +63,6 @@ export default class MoneyTransferAmountModal extends Vue {
           id: this.id,
           amount,
         },
-        update: createUpdate(amount),
       });
       await alert({
         title: "Успех",

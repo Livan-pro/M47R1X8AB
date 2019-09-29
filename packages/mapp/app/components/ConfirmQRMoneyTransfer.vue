@@ -13,7 +13,7 @@ import Vue from "nativescript-vue";
 import CharacterItem from "./CharacterItem.vue";
 
 import CharacterById from "@/gql/CharacterById";
-import MoneyTransfer, { createUpdate } from "@/gql/MoneyTransfer";
+import MoneyTransfer from "@/gql/MoneyTransfer";
 import { CharacterById_character as Character } from "@/gql/__generated__/CharacterById";
 
 @Component({
@@ -59,7 +59,6 @@ export default class ConfirmQRMoneyTransfer extends Vue {
           id: this.id,
           amount: this.amount,
         },
-        update: createUpdate(this.amount),
       });
       await alert({
         title: "Успех",
