@@ -20,6 +20,7 @@ import me from "@/gql/MyCharacters";
 import { MyCharacters_me as Me } from "@/gql/__generated__/MyCharacters";
 import SetMainCharacter from "@/gql/SetMainCharacter";
 import Menu from "@/pages/Menu.vue";
+import State from "@/pages/State.vue";
 
 @Component({
   components: { CharacterItem },
@@ -36,7 +37,7 @@ export default class ChangeCharacterPage extends Vue {
   async selectCharacter({ item: { id } }: { item: { id: number } }) {
     const frame = this.$root.currentFrame;
     await this.$apollo.mutate({ ...SetMainCharacter, variables: { id } });
-    this.$navigateTo(Menu, { frame, clearHistory: true });
+    this.$navigateTo(frame === "f4" ? Menu : State, { frame, clearHistory: true });
   }
 }
 </script>
