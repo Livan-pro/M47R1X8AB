@@ -6,7 +6,8 @@
         <Label :text="character.name" class="h1 text-center" :class="{ own: character.own }" />
         <Label :text="profession" class="h2 text-center" />
         <Label v-if="location" :text="location" class="h2 text-center" />
-        <Button v-if="isMedic" text="Экран медика" @tap="openMedic" />
+        <Button v-if="isMedic" text="Отправить деньги" @tap="sendMoney" />
+        <Button v-if="isMedic" text="Экран медика" class="m-t-10" @tap="openMedic" />
         <template v-if="properties.length">
           <StackLayout class="hr-light m-y-10" />
           <Label text="Свойства" class="h2 text-center" />
@@ -43,6 +44,7 @@ import { MyRoles_me as MyRoles } from "@/gql/__generated__/MyRoles";
 import { getProfessionText } from "../utils";
 import { UserRole, CharacterRole, Profession } from "@/gql/__generated__/globalTypes";
 import EditPropertyModal from "@/modals/EditProperty.vue";
+import MoneyTransferAmount from "@/modals/MoneyTransferAmount.vue";
 
 @Component({
   components: { CharacterAvatar },
@@ -93,6 +95,10 @@ export default class CharacterPage extends Vue {
 
   openMedic() {
     this.$navigateTo(MedicPage, { frame: this.$root.currentFrame, props: { id: this.id } });
+  }
+
+  async sendMoney() {
+    await this.$showModal(MoneyTransferAmount, { props: { id: this.id } });
   }
 
   async onPropertyTap(item: Property) {
