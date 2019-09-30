@@ -2,7 +2,7 @@
   <StackLayout class="p-b-10" orientation="horizontal">
     <StackLayout>
       <Label :text="name" dock="left" class="h2" />
-      <Button text="Передать" @tap="transfer" />
+      <Button v-if="isTransferable" text="Передать" @tap="transfer" />
       <Button v-if="isConsumable" text="Использовать" class="m-t-10" @tap="consume" />
     </StackLayout>
   </StackLayout>
@@ -24,6 +24,7 @@ export default class InventoryItem extends Vue {
     amount: number;
   };
   @Prop({ type: Boolean, default: false }) isConsumable!: boolean;
+  @Prop({ type: Boolean, default: true }) isTransferable!: boolean;
 
   async transfer() {
     const characterId = await this.$showModal(SelectCharacter, { fullscreen: true });
