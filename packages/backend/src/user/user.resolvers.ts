@@ -10,10 +10,12 @@ import { LoginResult, UserRole as GqlRole, EditUserInput } from "graphql.schema"
 import { CustomError } from "CustomError";
 import { Roles } from "auth/roles.decorator";
 import { CharacterService } from "character/character.service";
+import { Config } from "config";
 
 @Resolver("User")
 export class UserResolvers {
   private readonly log = new Logger(UserResolvers.name);
+  private readonly radioUrl: string | null = Config.get("RADIO_URL", null);
   constructor(
     private readonly user: UserService,
     private readonly auth: AuthService,
@@ -92,6 +94,12 @@ export class UserResolvers {
   @Roles(Role.Admin)
   async users(@GetUser() user: User): Promise<User[]> {
     return await this.user.getAllWithMainCharacter();
+  }
+
+  @Query("radioUrl")
+  @Roles(Role.LoggedIn)
+  async getRadioUrl(): Promise<string> {
+    return this.radioUrl;
   }
 
   @Mutation()

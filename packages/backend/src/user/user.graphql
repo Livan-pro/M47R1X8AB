@@ -59,6 +59,7 @@ type LoginResult {
 type Query {
   me: User
   users: [User!]!
+  radioUrl: String
 }
 
 type Mutation {

@@ -362,6 +362,8 @@ export abstract class IQuery {
     abstract me(): User | Promise<User>;
 
     abstract users(): User[] | Promise<User[]>;
+
+    abstract radioUrl(): string | Promise<string>;
 }
 
 export abstract class ISubscription {
