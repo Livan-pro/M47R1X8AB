@@ -4,6 +4,7 @@ android {
   defaultConfig {  
     generatedDensities = []
     applicationId = "pro.livan.matrix8ab"
+    minSdkVersion 17
   }
   aaptOptions {  
     additionalParameters "--no-version-vectors"  
