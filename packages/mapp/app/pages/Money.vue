@@ -13,7 +13,7 @@ import { Component } from "vue-property-decorator";
 import Vue from "nativescript-vue";
 
 import Menu from "@/components/Menu.vue";
-import SelectCharacter from "@/modals/SelectCharacter.vue";
+import SelectCharacter from "@/pages/Characters.vue";
 import MoneyTransferAmount from "@/modals/MoneyTransferAmount.vue";
 import MoneyTransferQRPage from "./MoneyTransferQR.vue";
 
@@ -40,7 +40,7 @@ export default class MoneyPage extends Vue {
       {
         title: "Перевод",
         action: async () => {
-          const id = await this.$showModal(SelectCharacter, { fullscreen: true });
+          const id = await this.$showModal(SelectCharacter, { fullscreen: true, props: { modal: true } });
           if (typeof id !== "number") return;
           await this.$showModal(MoneyTransferAmount, { props: { id } });
         },

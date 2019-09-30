@@ -13,7 +13,7 @@ import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
 import { items } from "@/utils/items";
 
-import SelectCharacter from "@/modals/SelectCharacter.vue";
+import SelectCharacter from "@/pages/Characters.vue";
 import ItemTransferAmount from "@/modals/ItemTransferAmount.vue";
 import ItemConsumeAmount from "@/modals/ItemConsumeAmount.vue";
 
@@ -27,7 +27,7 @@ export default class InventoryItem extends Vue {
   @Prop({ type: Boolean, default: true }) isTransferable!: boolean;
 
   async transfer() {
-    const characterId = await this.$showModal(SelectCharacter, { fullscreen: true });
+    const characterId = await this.$showModal(SelectCharacter, { fullscreen: true, props: { modal: true } });
     if (typeof characterId !== "number") return;
     await this.$showModal(ItemTransferAmount, { props: { characterId, itemId: this.data.itemId } });
   }

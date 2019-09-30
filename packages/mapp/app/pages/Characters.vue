@@ -1,7 +1,7 @@
 <template>
   <Page actionBarHidden="true">
     <StackLayout class="p-x-20 p-y-10">
-      <Label text="Персонажи" class="h1 text-center hr-bottom" />
+      <Label :text="modal ? 'Выберите персонажа' : 'Персонажи'" class="text-center hr-bottom" :class="modal ? 'h2' : 'h1'" />
       <TextField v-model="search" hint="Поиск..." returnKeyType="done" />
       <StackLayout class="hr-light m-t-5" />
       <ListView for="item in items" height="100%" @itemTap="onTap">
@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { Component } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
 
 import CharacterItem from "@/components/CharacterItem.vue";
@@ -30,11 +30,13 @@ import { Characters_characters as Character } from "@/gql/__generated__/Characte
   },
 })
 export default class CharactersPage extends Vue {
+  @Prop({ type: Boolean, default: false }) modal!: boolean;
   characters: Character[] = [];
   search = "";
 
   onTap({ item: { id } }: { item: { id: number } }) {
-    this.$navigateTo(CharacterPage, { frame: this.$root.currentFrame, props: { id } });
+    if (this.modal) this.$modal.close(id);
+    else this.$navigateTo(CharacterPage, { frame: this.$root.currentFrame, props: { id } });
   }
 
   get items() {
