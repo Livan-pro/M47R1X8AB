@@ -72,6 +72,7 @@ export default class App extends Vue {
   };
 
   selectedIndex: number = 0;
+  lastCriticalState: boolean | null = null;
 
   onSelectedIndexChange({ value, oldValue }) {
     this.selectedIndex = value;
@@ -102,7 +103,8 @@ export default class App extends Vue {
       props: this.state === CharacterState.SevereWound ? { whitelist: ["mp"] } : {},
     });
     tab(!criticalState, { title: "\uf0c9", component: "Menu" });
-    this.selectedIndex = 0;
+    if (this.lastCriticalState !== criticalState) this.selectedIndex = 0;
+    this.lastCriticalState = criticalState;
     return tabs;
   }
 
