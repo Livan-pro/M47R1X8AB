@@ -21,17 +21,20 @@ import InventoryPage from "./Inventory.vue";
 import CharacterPage from "./Character.vue";
 
 import me from "@/gql/MainCharacter";
+import radioUrl from "@/gql/RadioUrl";
 import { MainCharacter_me as MainCharacter } from "@/gql/__generated__/MainCharacter";
 import ChangeCharacterPage from "./ChangeCharacter.vue";
 import QRCode from "@/components/QRCode.vue";
 import StatePage from "./State.vue";
 import { CharacterState } from "@/gql/__generated__/globalTypes";
 import MessagesPage from "./Messages.vue";
+import { openUrl } from "tns-core-modules/utils/utils";
 
 @Component({
   components: { CharacterItem, Menu },
   apollo: {
     me,
+    radioUrl,
   },
 })
 export default class MenuPage extends Vue {
@@ -52,6 +55,7 @@ export default class MenuPage extends Vue {
       location: null,
     },
   };
+  radioUrl = null;
 
   onTap(id: number) {
     this.$navigateTo(CharacterPage, { frame: this.$root.currentFrame, props: { id } });
@@ -66,6 +70,20 @@ export default class MenuPage extends Vue {
       { title: "Импланты", open: ImplantsPage, props: { id: this.character.id } },
       { title: "Мой QR-код", modal: QRCode, props: { text: `cbrpnk://c/${this.character.id}` } },
       { title: "Сменить персонажа", open: ChangeCharacterPage },
+      {
+        title: "Радио",
+        action: async () => {
+          if (!this.radioUrl) {
+            await alert({
+              title: "Ошибка",
+              message: "Данная функция временно отключена",
+              okButtonText: "ОК",
+            });
+          } else {
+            openUrl(this.radioUrl);
+          }
+        },
+      },
       { title: "Выход", action: logout },
     ];
   }
