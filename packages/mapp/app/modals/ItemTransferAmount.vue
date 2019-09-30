@@ -4,7 +4,7 @@
       <StackLayout class="p-x-20 p-y-10">
         <Label text="Передача предмета" dock="left" class="h2" />
         <CharacterItem :data="character" />
-        <TextField v-model="amount" hint="Количество" keyboardType="number" returnKeyType="done" @returnPress="doTransfer" />
+        <TextField v-model="amount" hint="Количество" keyboardType="number" returnKeyType="done" class="m-t-5" @returnPress="doTransfer" />
         <Button text="Передать" @tap="doTransfer" />
       </StackLayout>
     </ScrollView>
