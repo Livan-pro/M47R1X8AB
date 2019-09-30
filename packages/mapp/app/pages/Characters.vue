@@ -2,7 +2,7 @@
   <Page actionBarHidden="true">
     <StackLayout class="p-x-20 p-y-10">
       <Label text="Персонажи" class="h1 text-center hr-bottom" />
-      <ListView for="item in characters" height="100%" @itemTap="onTap">
+      <ListView for="item in items" height="100%" @itemTap="onTap">
         <v-template>
           <CharacterItem :data="item" class="hr-bottom p-y-10" />
         </v-template>
@@ -32,6 +32,14 @@ export default class CharactersPage extends Vue {
 
   onTap({ item: { id } }: { item: { id: number } }) {
     this.$navigateTo(CharacterPage, { frame: this.$root.currentFrame, props: { id } });
+  }
+
+  get items() {
+    return this.characters.sort((a, b) => {
+      const aName = a.name.toLowerCase();
+      const bName = b.name.toLowerCase();
+      return aName > bName ? 1 : aName < bName ? -1 : 0;
+    });
   }
 }
 </script>
