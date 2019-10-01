@@ -1,8 +1,8 @@
 <template>
   <Page actionBarHidden="true">
     <StackLayout class="p-x-20 p-y-10">
-      <CharacterItem :data="character" :avatarSize="50" :hideBalance="true" />
-      <StackLayout class="hr-light m-y-10" />
+      <CharacterItem :data="character" :avatarSize="50" :hideBalance="true" class="p-b-10 m-b-10 hr-bottom" />
+      <Label v-if="character.state" :text="stateText" :class="color" class="h1 text-center p-b-10 hr-bottom" />
       <Menu :items="items" />
     </StackLayout>
   </Page>
@@ -17,19 +17,20 @@ import CharacterItem from "@/components/CharacterItem.vue";
 import Menu from "@/components/Menu.vue";
 import CreateImplant from "@/modals/CreateImplant.vue";
 
-import CharacterById from "@/gql/CharacterById";
-import { CharacterById_character as Character } from "@/gql/__generated__/CharacterById";
+import MedicalInfoById from "@/gql/MedicalInfoById";
+import { MedicalInfoById_character as Character } from "@/gql/__generated__/MedicalInfoById";
 import Heal from "@/gql/Heal";
 import FixImplants from "@/gql/FixImplants";
-import { Profession, CharacterRole } from "../gql/__generated__/globalTypes";
+import { Profession, CharacterRole, CharacterState } from "../gql/__generated__/globalTypes";
 import me from "@/gql/MyRoles";
 import { MyRoles_me as Me } from "@/gql/__generated__/MyRoles";
+import { stateColor, stateText } from "@/utils";
 
 @Component({
   components: { CharacterItem, Menu },
   apollo: {
     character: {
-      ...CharacterById,
+      ...MedicalInfoById,
       variables(this: MedicPage) {
         return {
           id: this.id,
@@ -53,9 +54,9 @@ export default class MedicPage extends Vue {
     avatarUploadedAt: null,
     profession: null,
     professionLevel: null,
-    location: null,
+    state: null,
+    pollution: null,
     implantsRejectTime: null,
-    properties: [],
   };
   me: Me = {
     __typename: "User",
@@ -119,6 +120,16 @@ export default class MedicPage extends Vue {
         okButtonText: "ОК",
       });
     }
+  }
+
+  get stateText() {
+    let text = stateText[this.character.state];
+    if (this.character.state === CharacterState.Pollution) text += ` (${this.character.pollution}%)`;
+    return text;
+  }
+
+  get color() {
+    return stateColor[this.character.state];
   }
 }
 </script>

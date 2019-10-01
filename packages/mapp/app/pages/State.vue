@@ -25,23 +25,9 @@ import me from "@/gql/MyStateExtended";
 import { MyStateExtended_me as Me } from "@/gql/__generated__/MyStateExtended";
 import { CharacterState, Profession } from "@/gql/__generated__/globalTypes";
 import { logout } from "@/vue-apollo";
-import { month } from "@/utils";
+import { month, stateColor, stateText } from "@/utils";
 import CharacterPage from "./Character.vue";
 import ConfirmSuicide from "@/modals/ConfirmSuicide.vue";
-
-const states = Object.freeze({
-  [CharacterState.Normal]: "Норма",
-  [CharacterState.Pollution]: "Загрязнение",
-  [CharacterState.SevereWound]: "Тяжёлое ранение",
-  [CharacterState.Death]: "Смерть",
-});
-
-const colors = Object.freeze({
-  [CharacterState.Normal]: "primary",
-  [CharacterState.Pollution]: "orange",
-  [CharacterState.SevereWound]: "red",
-  [CharacterState.Death]: "red",
-});
 
 @Component({
   components: { CharacterItem, Menu },
@@ -112,7 +98,7 @@ export default class StatePage extends Vue {
   }
 
   get stateText() {
-    let text = states[this.character.state];
+    let text = stateText[this.character.state];
     if (this.character.state === CharacterState.Pollution) text += ` (${this.character.pollution}%)`;
     return text;
   }
@@ -145,7 +131,7 @@ export default class StatePage extends Vue {
   }
 
   get color() {
-    return colors[this.character.state];
+    return stateColor[this.character.state];
   }
 
   get isSuicideVisible() {

@@ -1,5 +1,5 @@
 import { News_news_attachment as Attachment } from "../gql/__generated__/News";
-import { ImplantType } from "@/gql/__generated__/globalTypes";
+import { ImplantType, CharacterState } from "@/gql/__generated__/globalTypes";
 
 export const dataUrl = ENV_DATA_URL || "https://cyberpunk2219.tech/data";
 
@@ -35,3 +35,17 @@ export const implantTypes: {
 };
 
 export const getImplantTypeText = (type: ImplantType): string => implantTypes[type] || "";
+
+export const stateText = Object.freeze({
+  [CharacterState.Normal]: "Норма",
+  [CharacterState.Pollution]: "Загрязнение",
+  [CharacterState.SevereWound]: "Тяжёлое ранение",
+  [CharacterState.Death]: "Смерть",
+});
+
+export const stateColor = Object.freeze({
+  [CharacterState.Normal]: "primary",
+  [CharacterState.Pollution]: "orange",
+  [CharacterState.SevereWound]: "red",
+  [CharacterState.Death]: "red",
+});
