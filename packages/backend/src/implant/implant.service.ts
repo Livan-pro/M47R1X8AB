@@ -59,7 +59,7 @@ export class ImplantService {
 
     const cRepo = manager.getRepository(Character);
     const char = await cRepo.findOneOrFail({id: characterId}, {
-      select: ["implantsRejectTime"],
+      select: ["id", "implantsRejectTime"],
       lock: {mode: "pessimistic_write"},
     });
 
