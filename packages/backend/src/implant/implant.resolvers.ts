@@ -2,7 +2,7 @@ import { Resolver, Query, Subscription, Mutation, Args } from "@nestjs/graphql";
 import { Logger, Inject } from "@nestjs/common";
 import { ImplantService } from "./implant.service";
 import { GetUser } from "user/get-user.decorator";
-import { User, UserRole as Role, Implant, CharacterRole, ImplantProlongation, Profession, CharacterState } from "matrix-database";
+import { User, UserRole as Role, Implant, CharacterRole, ImplantProlongation, Profession, CharacterState, Character } from "matrix-database";
 import { Roles } from "auth/roles.decorator";
 import { ImplantCacheService } from "cache/implant-cache.service";
 import { UserCacheService } from "cache/user-cache.service";
@@ -102,9 +102,10 @@ export class ImplantResolvers {
   async fixImplants(
     @Args("characterId") characterId: number,
     @GetUser() user: User,
-  ): Promise<void> {
+  ): Promise<Partial<Character>> {
     if (characterId === user.mainCharacterId) throw new CustomError("Вы не можете чинить свои импланты!");
-    await this.implant.fix(user.mainCharacterId, characterId);
+    const implantsRejectTime = await this.implant.fix(user.mainCharacterId, characterId);
+    return {id: characterId, implantsRejectTime};
   }
 
   @Subscription("implants", {

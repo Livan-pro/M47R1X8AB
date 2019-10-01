@@ -270,7 +270,7 @@ export abstract class IMutation {
 
     abstract prolongImplants(code: string): boolean | Promise<boolean>;
 
-    abstract fixImplants(characterId: number): boolean | Promise<boolean>;
+    abstract fixImplants(characterId: number): Character | Promise<Character>;
 
     abstract createImplantProlongation(code: string, time: number): ImplantProlongation | Promise<ImplantProlongation>;
 
