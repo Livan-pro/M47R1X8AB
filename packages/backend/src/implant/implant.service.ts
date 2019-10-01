@@ -63,6 +63,14 @@ export class ImplantService {
       lock: {mode: "pessimistic_write"},
     });
 
+    const iRepo = manager.getRepository(Implant);
+    const implants = await iRepo.find({
+      where: {characterId, quality: false},
+      select: ["id"],
+      lock: {mode: "pessimistic_write"},
+    });
+    if (!implants || !implants.length) throw new CustomError("Нет имплантов для продления");
+
     const data = {implantsRejectTime: CharacterUtils.getNewRejectTime(char.implantsRejectTime, implantProlongation.time)};
     await cRepo.update(characterId, data);
     await repo.update(implantProlongation.id, {usedById: characterId, usedAt: new Date()});
