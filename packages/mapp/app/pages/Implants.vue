@@ -106,7 +106,7 @@ export default class ImplantsPage extends Vue {
   }
 
   get isStateVisible() {
-    return this.implants.length > 0;
+    return this.implants.length > 0 && this.implants.some(implant => !implant.quality);
   }
 }
 </script>
