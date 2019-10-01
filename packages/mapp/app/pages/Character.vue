@@ -9,7 +9,7 @@
         <Button text="Отправить деньги" @tap="sendMoney" />
         <Button text="Отправить предмет" class="m-t-10" @tap="sendItem" />
         <Button v-if="isMedic" text="Экран медика" class="m-t-10" @tap="openMedic" />
-        <template v-if="properties.length">
+        <template v-if="properties.length || canEditProperty">
           <StackLayout class="hr-light m-y-10" />
           <Label text="Свойства" class="h2 text-center" />
           <StackLayout class="hr-light m-t-10" />
