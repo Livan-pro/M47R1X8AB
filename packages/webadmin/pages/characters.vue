@@ -194,7 +194,7 @@ export default class CharactersPage extends Vue {
   get items() {
     return this.characters.map(c => {
       const implantsRejectTimeDate = c.implantsRejectTime ? new Date(c.implantsRejectTime) : null;
-      const implantsRejectTimeText = implantsRejectTimeDate ? implantsRejectTimeDate.toLocaleString() : "Нет";
+      const implantsRejectTimeText = implantsRejectTimeDate ? implantsRejectTimeDate.toLocaleString() : "Да";
       return {
         ...c,
         rolesText: characterRolesToText(c.roles || []),
