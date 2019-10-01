@@ -1,9 +1,9 @@
 import { Resolver, Mutation, Args, Query, Parent, ResolveProperty, Subscription } from "@nestjs/graphql";
-import { Logger, Inject, ForbiddenException } from "@nestjs/common";
+import { Logger, Inject } from "@nestjs/common";
 import { CharacterService } from "./character.service";
 import { CreateCharacter } from "shared/node";
 import { GetUser } from "user/get-user.decorator";
-import { User, UserRole as Role, Character, CharacterState, CharacterRole, Roles as RolesClass, Profession, Property } from "matrix-database";
+import { User, UserRole as Role, Character, CharacterState, CharacterRole, Roles as RolesClass, Profession, EventType } from "matrix-database";
 import { FileService } from "file/file.service";
 import * as imageSizeSync from "image-size";
 import { CustomError } from "CustomError";
@@ -15,6 +15,7 @@ import { UserCacheService } from "cache/user-cache.service";
 import { PropertyService } from "./property.service";
 import { LocationService } from "location/location.service";
 import { Config } from "config";
+import { EventService } from "event/event.service";
 
 @Resolver("Character")
 @Roles({user: Role.LoggedIn})
@@ -27,6 +28,7 @@ export class CharacterResolvers {
     private readonly uCache: UserCacheService,
     private readonly property: PropertyService,
     private readonly location: LocationService,
+    private readonly event: EventService,
     @Inject("NATS")
     private readonly nats: Client,
   ) {}
@@ -96,6 +98,7 @@ export class CharacterResolvers {
   ): Promise<boolean> {
     if (user.mainCharacterId !== id && !user.roles.has(Role.Admin)) await this.character.getByIdAndOwner(id, user.id);
     await this.character.update(id, data);
+    await this.event.emit(user.mainCharacterId, user.id, id, null, EventType.EditCharacter, data);
     return true;
   }
 
@@ -118,6 +121,7 @@ export class CharacterResolvers {
     const date = new Date(time * 1000);
     await this.file.uploadFromBuffer(buffer, ["avatar", id.toString() + "_" + time + ".png"]);
     await this.character.update(id, {avatarUploadedAt: date});
+    await this.event.emit(user.mainCharacterId, user.id, id, null, EventType.UploadAvatar, {avatarUploadedAt: date});
     return date;
   }
 
@@ -129,6 +133,7 @@ export class CharacterResolvers {
     if (user.mainCharacter.state === CharacterState.Death) return user.mainCharacter.deathTime;
     const deathTime = new Date();
     await this.character.update(user.mainCharacter.id, {state: CharacterState.Death, deathTime});
+    await this.event.emit(user.mainCharacterId, user.id, user.mainCharacter.id, user.id, EventType.Suicide);
     return deathTime;
   }
 
@@ -137,6 +142,7 @@ export class CharacterResolvers {
   async updateCharacter(
     @Args("id") id: number,
     @Args("data") data: FullCharacterInput,
+    @GetUser() user: User,
   ): Promise<Partial<Character>> {
     if (data.locationId < 0) {
       data.locationId = null;
@@ -145,6 +151,7 @@ export class CharacterResolvers {
       ...data,
       roles: new RolesClass<typeof CharacterRole>(data.roles, CharacterRole),
     } : {...data} as unknown as Partial<Character>);
+    await this.event.emit(null, user.id, id, null, EventType.UpdateCharacter, update);
     if (update.locationId && !update.location) {
       update.location = await this.location.getById(update.locationId);
     }
@@ -161,6 +168,7 @@ export class CharacterResolvers {
   ): Promise<boolean> {
     if (value && value.length) await this.property.createOrUpdate(characterId, name, value);
     else await this.property.delete(characterId, name);
+    await this.event.emit(user.mainCharacterId, user.id, characterId, null, EventType.EditProperty, {name, value});
     return true;
   }
 

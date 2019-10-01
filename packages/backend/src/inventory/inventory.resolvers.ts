@@ -2,12 +2,13 @@ import { Resolver, Query, Mutation, Args } from "@nestjs/graphql";
 import { Logger, Inject } from "@nestjs/common";
 import { InventoryService } from "./inventory.service";
 import { GetUser } from "user/get-user.decorator";
-import { User, UserRole as Role, ItemGift, Profession, CharacterRole, CharacterState } from "matrix-database";
+import { User, UserRole as Role, ItemGift, Profession, CharacterRole, CharacterState, EventType } from "matrix-database";
 import { Roles } from "auth/roles.decorator";
 import { Client } from "nats";
 import { CustomError } from "CustomError";
 import { InventoryItem as GInventoryItem, InventoryItem } from "graphql.schema";
 import { mapCodeToString, codeToString } from "utils";
+import { EventService } from "event/event.service";
 
 @Resolver()
 @Roles({user: Role.LoggedIn})
@@ -15,6 +16,7 @@ export class InventoryResolvers {
   private readonly log = new Logger(InventoryResolvers.name);
   constructor(
     private readonly inventory: InventoryService,
+    private readonly event: EventService,
     @Inject("NATS")
     private readonly nats: Client,
   ) {}
@@ -27,7 +29,12 @@ export class InventoryResolvers {
 
   @Mutation()
   @Roles({user: Role.Admin})
-  async createItemGift(@Args("code") code: string, @Args("itemId") itemId: number, @Args("amount") amount: number): Promise<ItemGift> {
+  async createItemGift(
+    @Args("code") code: string,
+    @Args("itemId") itemId: number,
+    @Args("amount") amount: number,
+    @GetUser() user: User,
+  ): Promise<ItemGift> {
     if (code.length !== 16) throw new CustomError("Неверный код!");
     let buf: Buffer;
     try {
@@ -36,7 +43,9 @@ export class InventoryResolvers {
       throw new CustomError("Неверный код!");
     }
     try {
-      return codeToString(await this.inventory.createItemGift(buf, itemId, amount));
+      const data = await this.inventory.createItemGift(buf, itemId, amount);
+      await this.event.emit(null, user.id, null, null, EventType.CreateItemGift, data);
+      return codeToString(data);
     } catch (err) {
       if (err.code && err.code === "ER_DUP_ENTRY") throw new CustomError("QR-код с таким кодом уже существует");
       throw err;
@@ -66,6 +75,7 @@ export class InventoryResolvers {
     if (to === user.mainCharacterId) throw new CustomError("Вы не можете передать предмет себе!");
     if (amount < 1) throw new CustomError("Неверное количество предметов!");
     await this.inventory.transfer(user.mainCharacterId, to, itemId, amount);
+    await this.event.emit(user.mainCharacterId, user.id, to, null, EventType.TransferItem, {itemId, amount});
   }
 
   @Mutation()
@@ -74,9 +84,12 @@ export class InventoryResolvers {
     @Args("characterId") characterId: number,
     @Args("itemId") itemId: number,
     @Args("amount") amount: number,
+    @GetUser() user: User,
   ): Promise<InventoryItem> {
     await this.inventory.add(characterId, itemId, amount);
-    return await this.inventory.getByCharacterIdAndItemId(characterId, itemId);
+    const data = await this.inventory.getByCharacterIdAndItemId(characterId, itemId);
+    await this.event.emit(user.mainCharacterId, user.id, characterId, null, EventType.AddItem, {itemId, amount});
+    return data;
   }
 
   @Mutation()
@@ -91,7 +104,9 @@ export class InventoryResolvers {
     } catch (e) {
       throw new CustomError("Неверный код предмета!");
     }
-    return await this.inventory.useItemGift(buf, user.mainCharacterId);
+    const data = await this.inventory.useItemGift(buf, user.mainCharacterId);
+    await this.event.emit(user.mainCharacterId, user.id, user.mainCharacterId, user.id, EventType.UseItemGift, data);
+    return data;
   }
 
   @Mutation()
@@ -112,6 +127,7 @@ export class InventoryResolvers {
     }
     if (amount < 1) throw new CustomError("Неверное количество предметов!");
     await this.inventory.add(user.mainCharacterId, itemId, -amount);
+    await this.event.emit(user.mainCharacterId, user.id, user.mainCharacterId, user.id, EventType.ConsumeItem, {itemId, amount});
     return await this.inventory.getByCharacterIdAndItemId(user.mainCharacterId, itemId);
   }
 }

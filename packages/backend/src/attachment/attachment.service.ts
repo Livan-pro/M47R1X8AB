@@ -1,9 +1,10 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, Transaction, TransactionRepository } from "typeorm";
-import { Attachment, AttachmentType } from "matrix-database";
+import { Attachment, AttachmentType, EventType } from "matrix-database";
 import { FileUpload } from "graphql-upload";
 import { FileService } from "file/file.service";
+import { EventService } from "event/event.service";
 
 @Injectable()
 export class AttachmentService {
@@ -12,6 +13,7 @@ export class AttachmentService {
     @InjectRepository(Attachment)
     private readonly repo: Repository<Attachment>,
     private readonly file: FileService,
+    private readonly event: EventService,
   ) {}
 
   @Transaction()
@@ -22,9 +24,10 @@ export class AttachmentService {
     @TransactionRepository(Attachment) repo?: Repository<Attachment>,
   ): Promise<Attachment> {
     const file = await filePromise;
-    const attachment = repo.create({uploaderId: userId, name: file.filename.substring(0, 255), type});
-    await repo.save(attachment);
+    let attachment = repo.create({uploaderId: userId, name: file.filename.substring(0, 255), type});
+    attachment = await repo.save(attachment);
     await this.file.upload(file, ["attachments", attachment.id.toString(), attachment.name]);
+    await this.event.emit(null, userId, null, null, EventType.UploadAttachment, attachment);
     return attachment;
   }
 }

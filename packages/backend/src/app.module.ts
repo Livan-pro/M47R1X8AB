@@ -25,6 +25,7 @@ import { MedicineModule } from "medicine/medicine.module";
 import { ImplantModule } from "implant/implant.module";
 import { InventoryModule } from "inventory/inventory.module";
 import { LocationModule } from "location/location.module";
+import { EventModule } from "event/event.module";
 
 @Global()
 @Module({
@@ -65,6 +66,7 @@ import { LocationModule } from "location/location.module";
     BalanceModule,
     CacheModule,
     CharacterModule,
+    EventModule,
     FileModule,
     ImplantModule,
     InventoryModule,

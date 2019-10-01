@@ -5,12 +5,13 @@ import { AuthService } from "auth/auth.service";
 import { CreateUser, CreateCharacter, EditUser, ChangePassword } from "shared/node";
 import { Response } from "express";
 import { GetUser } from "./get-user.decorator";
-import { User, UserRole as Role, Character, CharacterState } from "matrix-database";
+import { User, UserRole as Role, Character, CharacterState, EventType } from "matrix-database";
 import { LoginResult, UserRole as GqlRole, EditUserInput } from "graphql.schema";
 import { CustomError } from "CustomError";
 import { Roles } from "auth/roles.decorator";
 import { CharacterService } from "character/character.service";
 import { Config } from "config";
+import { EventService } from "event/event.service";
 
 @Resolver("User")
 export class UserResolvers {
@@ -20,6 +21,7 @@ export class UserResolvers {
     private readonly user: UserService,
     private readonly auth: AuthService,
     private readonly character: CharacterService,
+    private readonly event: EventService,
   ) {}
 
   @ResolveProperty()
@@ -44,6 +46,7 @@ export class UserResolvers {
       uData.password = await this.auth.hashPassword(uData.password);
       const cData = {...characterData, age: 0};
       await this.user.createWithCharacter(uData, cData);
+      await this.event.emit(null, null, null, null, EventType.CreateUserWithCharacter, {userData, characterData});
       return true;
     } catch (err) {
       if (err.errno === 1062) throw new CustomError("Пользователь с таким email уже зарегистрирован!");
@@ -69,6 +72,7 @@ export class UserResolvers {
     if (!await this.auth.verifyPassword(password, user.password)) throw new CustomError("Неверный логин или пароль");
     const token = await this.auth.createToken(email, rememberMe);
     if (res && res.cookie) res.cookie("token", token.token, { expires: token.expires, httpOnly: true });
+    await this.event.emit(null, user.id, null, user.id, EventType.Login, {rememberMe});
     return {
       email: user.email,
       token: token.token,
@@ -78,6 +82,7 @@ export class UserResolvers {
   @Mutation("logout")
   async logout(@Context("res") res: Response): Promise<boolean> {
     res.clearCookie("token");
+    await this.event.emit(null, null, null, null, EventType.Logout);
     return true;
   }
 
@@ -109,6 +114,7 @@ export class UserResolvers {
     @GetUser() user: User,
   ): Promise<boolean> {
     await this.user.update(user.id, userData);
+    await this.event.emit(null, user.id, null, user.id, EventType.EditUser, userData);
     return true;
   }
 
@@ -123,6 +129,7 @@ export class UserResolvers {
       password: await this.auth.hashPassword(data.password),
       passwordChangedAt: new Date(),
     });
+    await this.event.emit(null, user.id, null, user.id, EventType.ChangePassword);
     return true;
   }
 
@@ -143,6 +150,7 @@ export class UserResolvers {
       u.roles = u.roles.remove(Role[role]);
     }
     await this.user.update(id, {roles: u.roles});
+    await this.event.emit(null, user.id, null, id, EventType.SetUserRole, {roles: u.roles});
     return true;
   }
 
@@ -158,9 +166,9 @@ export class UserResolvers {
     } catch (e) {
       throw new CustomError("Этот персонаж не принадлежит вам");
     }
-    await this.user.update(user.id, {
-      mainCharacterId: character.id,
-    });
+    const data = {mainCharacterId: character.id};
+    await this.user.update(user.id, data);
+    await this.event.emit(null, user.id, null, null, EventType.SetMainCharacter, data);
     return character;
   }
 
@@ -169,8 +177,10 @@ export class UserResolvers {
   async updateUser(
     @Args("id") id: number,
     @Args("data") data: EditUserInput,
+    @GetUser() user: User,
   ): Promise<Partial<User>> {
     await this.user.update(id, data);
+    await this.event.emit(null, user.id, null, null, EventType.UpdateUser, {id, ...data});
     return {...data, id};
   }
 }
