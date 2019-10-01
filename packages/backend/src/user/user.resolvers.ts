@@ -1,23 +1,37 @@
-import { Resolver, Mutation, Args, Context, Query } from "@nestjs/graphql";
-import { Logger, ValidationPipe, UseGuards } from "@nestjs/common";
+import { Resolver, Mutation, Args, Context, Query, ResolveProperty, Parent } from "@nestjs/graphql";
+import { Logger, ValidationPipe } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { AuthService } from "auth/auth.service";
 import { CreateUser, CreateCharacter, EditUser, ChangePassword } from "shared/node";
 import { Response } from "express";
 import { GetUser } from "./get-user.decorator";
-import { User, Role } from "matrix-database";
-import { LoginResult, User as GqlUser, Role as GqlRole } from "graphql.schema";
+import { User, UserRole as Role, Character, CharacterState } from "matrix-database";
+import { LoginResult, UserRole as GqlRole, EditUserInput } from "graphql.schema";
 import { CustomError } from "CustomError";
 import { Roles } from "auth/roles.decorator";
-import { mapUser } from "utils";
+import { CharacterService } from "character/character.service";
+import { Config } from "config";
 
-@Resolver()
+@Resolver("User")
 export class UserResolvers {
   private readonly log = new Logger(UserResolvers.name);
+  private readonly radioUrl: string | null = Config.get("RADIO_URL", null);
   constructor(
     private readonly user: UserService,
     private readonly auth: AuthService,
+    private readonly character: CharacterService,
   ) {}
+
+  @ResolveProperty()
+  roles(@Parent() user: User) {
+    return user.roles.toStringArray();
+  }
+
+  @ResolveProperty()
+  async characters(@Parent() user: User, @GetUser() me: User) {
+    if (user.id !== me.id && !me.roles.has(Role.Admin)) return null;
+    return await this.character.findByOwner(user.id);
+  }
 
   @Mutation()
   async createUserWithCharacter(
@@ -43,7 +57,7 @@ export class UserResolvers {
     @Args("password") password: string,
     @Args("rememberMe") rememberMe: boolean,
     @Args("admin") admin: boolean,
-    @Context("res") res: Response,
+    @Context("res") res: Response | undefined,
   ): Promise<LoginResult> {
     let user: User;
     try {
@@ -54,7 +68,7 @@ export class UserResolvers {
     if (admin && !user.roles.has(Role.Admin)) throw new CustomError("Неверный логин или пароль");
     if (!await this.auth.verifyPassword(password, user.password)) throw new CustomError("Неверный логин или пароль");
     const token = await this.auth.createToken(email, rememberMe);
-    res.cookie("token", token.token, { expires: token.expires, httpOnly: true });
+    if (res && res.cookie) res.cookie("token", token.token, { expires: token.expires, httpOnly: true });
     return {
       email: user.email,
       token: token.token,
@@ -68,20 +82,26 @@ export class UserResolvers {
   }
 
   @Query("me")
-  @Roles(Role.LoggedIn)
-  async me(@GetUser() user: User): Promise<GqlUser> {
+  @Roles({user: Role.LoggedIn})
+  async me(@GetUser() user: User): Promise<User> {
     this.log.log(`Me: ${user.email}`);
-    return mapUser(user, user);
+    return user;
   }
 
   @Query("users")
-  @Roles(Role.Admin)
-  async users(@GetUser() user: User): Promise<GqlUser[]> {
-    return (await this.user.getAllWithMainCharacter()).map(u => mapUser(u, user));
+  @Roles({user: Role.Admin})
+  async users(@GetUser() user: User): Promise<User[]> {
+    return await this.user.getAllWithMainCharacter();
+  }
+
+  @Query("radioUrl")
+  @Roles({user: Role.LoggedIn})
+  async getRadioUrl(): Promise<string> {
+    return this.radioUrl;
   }
 
   @Mutation()
-  @Roles(Role.LoggedIn)
+  @Roles({user: Role.LoggedIn})
   async editUser(
     @Args("user" , new ValidationPipe({
       skipMissingProperties: true,
@@ -93,7 +113,7 @@ export class UserResolvers {
   }
 
   @Mutation()
-  @Roles(Role.LoggedIn)
+  @Roles({user: Role.LoggedIn})
   async changePassword(
     @Args("data", ValidationPipe) data: ChangePassword,
     @GetUser() user: User,
@@ -107,7 +127,7 @@ export class UserResolvers {
   }
 
   @Mutation()
-  @Roles(Role.SuperAdmin)
+  @Roles({user: Role.SuperAdmin})
   async setUserRole(
     @Args("id") id: number,
     @Args("role") role: GqlRole,
@@ -124,5 +144,33 @@ export class UserResolvers {
     }
     await this.user.update(id, {roles: u.roles});
     return true;
+  }
+
+  @Mutation()
+  @Roles({user: Role.LoggedIn})
+  async setMainCharacter(
+    @Args("characterId") characterId: number,
+    @GetUser() user: User,
+  ): Promise<Character> {
+    let character: Character;
+    try {
+      character = await this.character.getByIdAndOwner(characterId, user.id, ["location"]);
+    } catch (e) {
+      throw new CustomError("Этот персонаж не принадлежит вам");
+    }
+    await this.user.update(user.id, {
+      mainCharacterId: character.id,
+    });
+    return character;
+  }
+
+  @Mutation()
+  @Roles({user: Role.Admin})
+  async updateUser(
+    @Args("id") id: number,
+    @Args("data") data: EditUserInput,
+  ): Promise<Partial<User>> {
+    await this.user.update(id, data);
+    return {...data, id};
   }
 }

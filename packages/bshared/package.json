@@ -1,0 +1,21 @@
+{
+  "name": "bshared",
+  "version": "1.3.6",
+  "description": "Matrix backend shared code",
+  "scripts": {
+    "lint": "echo \"No linter!\" && exit 1",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rimraf dist && tsc"
+  },
+  "main": "dist/index.js",
+  "author": "Livan",
+  "private": true,
+  "dependencies": {
+    "dotenv": "^8.1.0",
+    "typescript": "^3.6.2"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^6.1.1",
+    "@types/node": "^10.14.17"
+  }
+}

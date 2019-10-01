@@ -3,12 +3,14 @@ type News {
   title: String!
   text: String!
   datetime: Date!
+  attachment: Attachment
 }
 
 input NewsInput {
   title: String
   text: String
   datetime: Date
+  attachment: AttachmentInput
 }
 
 type Query {
@@ -17,6 +19,6 @@ type Query {
 
 type Mutation {
   createNews(data: NewsInput!): News!
-  updateNews(id: Int!, data: NewsInput!): Boolean
+  updateNews(id: Int!, data: NewsInput!): News!
   deleteNews(ids: [Int!]!): Boolean
 }

@@ -1,10 +1,11 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger, Inject } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, Transaction, TransactionManager, EntityManager, TransactionRepository } from "typeorm";
-import { User, Role } from "matrix-database";
+import { User } from "matrix-database";
 import { Character } from "matrix-database";
 import { FileUpload } from "graphql-upload";
 import { FileService } from "file/file.service";
+import { Client } from "nats";
 
 @Injectable()
 export class UserService {
@@ -13,6 +14,8 @@ export class UserService {
     @InjectRepository(User)
     private readonly repo: Repository<User>,
     private readonly file: FileService,
+    @Inject("NATS")
+    private readonly nats: Client,
   ) {}
 
   async getById(id: number): Promise<User> {
@@ -27,11 +30,15 @@ export class UserService {
     return await this.repo.find({relations: ["mainCharacter"]});
   }
 
-  async getByEmailWithCharacter(email: string): Promise<User> {
+  async getByEmailWithRelations(email: string, relations: string[]): Promise<User> {
     const user = await this.repo.findOneOrFail({email}, {
-      relations: ["mainCharacter"],
+      relations,
     });
     return user;
+  }
+
+  async getByEmailWithCharacter(email: string): Promise<User> {
+    return this.getByEmailWithRelations(email, ["mainCharacter"]);
   }
 
   @Transaction()
@@ -61,6 +68,8 @@ export class UserService {
   }
 
   async update(userId: number, data: Partial<User>): Promise<void> {
-    await this.repo.update(userId, this.repo.create(data));
+    const user = this.repo.create(data);
+    await this.repo.update(userId, user);
+    this.nats.publish("backend.user.update", {...user, id: userId});
   }
 }

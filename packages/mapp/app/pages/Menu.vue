@@ -1,74 +1,99 @@
 <template>
   <Page actionBarHidden="true">
     <StackLayout class="p-x-20 p-y-10">
-      <CharacterItem :id="characterId" :avatarUploadedAt="avatarUploadedAt" :name="name" :avatarSize="50" />
-      <StackLayout class="hr-light m-y-10" />
-      <ListView for="item in items" @itemTap="onItemTap">
-        <v-template>
-          <Label class="p-y-20 text-center item-title" :text="item.title" />
-        </v-template>
-      </ListView>
+      <CharacterItem :data="character" :avatarSize="50" :hideBalance="true" :tap="onTap" />
+      <StackLayout class="hr-light m-t-10" />
+      <Menu :items="items" />
     </StackLayout>
   </Page>
 </template>
 
 <script lang="ts">
-import { Component, Prop } from "vue-property-decorator";
+import { Component } from "vue-property-decorator";
 import Vue from "nativescript-vue";
-import * as appSettings from "tns-core-modules/application-settings";
-import gql from "graphql-tag";
 import { logout } from "@/vue-apollo";
 
 import CharacterItem from "@/components/CharacterItem.vue";
-import Login from "./Login.vue";
+import Menu from "@/components/Menu.vue";
+import MoneyPage from "./Money.vue";
+import ImplantsPage from "./Implants.vue";
+import InventoryPage from "./Inventory.vue";
+import CharacterPage from "./Character.vue";
+
+import me from "@/gql/MainCharacter";
+import radioUrl from "@/gql/RadioUrl";
+import { MainCharacter_me as MainCharacter } from "@/gql/__generated__/MainCharacter";
+import ChangeCharacterPage from "./ChangeCharacter.vue";
+import QRCode from "@/components/QRCode.vue";
+import StatePage from "./State.vue";
+import { CharacterState } from "@/gql/__generated__/globalTypes";
+import MessagesPage from "./Messages.vue";
+import { openUrl } from "tns-core-modules/utils/utils";
 
 @Component({
-  components: { CharacterItem },
+  components: { CharacterItem, Menu },
   apollo: {
-    me: {
-      query: gql`{
-        me {
-          mainCharacter {
-            id
-            name
-            avatarUploadedAt
-          }
-        }
-      }`,
-      fetchPolicy: "cache-and-network",
-    },
+    me,
+    radioUrl,
   },
 })
-export default class Menu extends Vue {
-  me: any = {};
-  items = [
-    {title: "Деньги"},
-    {title: "Сообщения"},
-    {title: "Инвентарь"},
-    {title: "Свойства"},
-    {title: "Выход", action: logout},
-  ];
+export default class MenuPage extends Vue {
+  me: MainCharacter = {
+    __typename: "User",
+    mainCharacter: {
+      __typename: "Character",
+      id: -1,
+      name: "неизвестно",
+      avatarUploadedAt: null,
+      balance: 0,
+      profession: null,
+      professionLevel: null,
+      state: CharacterState.Normal,
+      pollution: 0,
+      deathTime: null,
+      implantsRejectTime: null,
+      location: null,
+    },
+  };
+  radioUrl = null;
 
-  get characterId() {
-    return (this.me && this.me.mainCharacter && this.me.mainCharacter.id) || -1;
+  onTap(id: number) {
+    this.$navigateTo(CharacterPage, { frame: this.$root.currentFrame, props: { id } });
   }
 
-  get avatarUploadedAt() {
-    return (this.me && this.me.mainCharacter && this.me.mainCharacter.avatarUploadedAt) || null;
+  get items() {
+    return [
+      { title: `Баланс: ${this.balance}`, open: MoneyPage },
+      { title: "Сообщения", open: MessagesPage },
+      { title: "Инвентарь", open: InventoryPage },
+      { title: "Состояние", open: StatePage },
+      { title: "Импланты", open: ImplantsPage, props: { id: this.character.id } },
+      { title: "Мой QR-код", modal: QRCode, props: { text: `cbrpnk://c/${this.character.id}` } },
+      { title: "Сменить персонажа", open: ChangeCharacterPage },
+      {
+        title: "Радио",
+        action: async () => {
+          if (!this.radioUrl) {
+            await alert({
+              title: "Ошибка",
+              message: "Данная функция временно отключена",
+              okButtonText: "ОК",
+            });
+          } else {
+            openUrl(this.radioUrl);
+          }
+        },
+      },
+      { title: "Выход", action: logout },
+    ];
   }
 
-  get name() {
-    return (this.me && this.me.mainCharacter && this.me.mainCharacter.name) || "unknown";
+  get character() {
+    return this.me.mainCharacter;
   }
 
-  onItemTap({ item }) {
-    if (item.action) item.action.call(this);
+  get balance() {
+    return this.character.balance;
   }
 }
 </script>
-
-<style scoped>
-.item-title {
-  font-size: 24;
-}
-</style>

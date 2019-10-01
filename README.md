@@ -1,11 +1,16 @@
 # M47R1XAB
 ## Development setup
+Download and run NATS: https://nats.io/download/nats-io/nats-server/
 ```bash
-npm i -g lerna # install lerna
-lerna link # link projects to each other
-lerna bootstrap # install dependencies
+npm ci # install deps
+npm run bootstrap-ci # install dependencies
+npx lerna run build
 
 cd packages/backend
+copy .env-example .env # copy config, you need to edit this
+npm run dev # start development server
+
+cd packages/timers
 copy .env-example .env # copy config, you need to edit this
 npm run dev # start development server
 
@@ -23,7 +28,7 @@ sudo apt install -y mysql-server
 sudo mysql_secure_installation
 mysql -uroot -p
 # Enter password...
-CREATE DATABASE matrix;
+CREATE DATABASE matrix CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER 'matrix'@'localhost' IDENTIFIED BY 'my-strong-password-here';
 GRANT ALL ON matrix.* TO 'matrix'@'localhost';
 # Optional: create other users
@@ -71,6 +76,33 @@ git config --global user.name "Your Name"
 
 # Allow access to /root for nginx
 chmod +x /root
+
+# Install NATS
+cd /tmp
+wget https://github.com/nats-io/nats-server/releases/download/v2.0.4/nats-server-v2.0.4-linux-amd64.zip
+unzip nats-server-v2.0.4-linux-amd64.zip
+cd nats-server-v2.0.4-linux-amd64/
+sudo mkdir -p /srv/nats/bin
+sudo mv ./nats-server /srv/nats/bin
+sudo echo "listen: 127.0.0.1:4222" > /srv/nats/nats.config
+sudo adduser --system --group --no-create-home --shell /bin/false nats
+sudo chown -R nats:nats /srv/nats
+sudo nano /etc/systemd/system/nats.service # paste service definition here
+sudo systemctl start nats
+sudo systemctl enable nats
+```
+NATS service definition:
+```systemd
+[Unit]
+Description=NATS messaging server
+
+[Service]
+ExecStart=/srv/nats/bin/nats-server -c /srv/nats/nats.config
+User=nats
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
 ```
 ### Deploy
 ```bash

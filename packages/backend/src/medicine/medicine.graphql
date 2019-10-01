@@ -1,0 +1,28 @@
+type Medpack {
+  id: Int!
+  createdAt: Date!
+  code: String!
+  usedBy: Character
+  usedAt: Date
+}
+
+type Medicine {
+  id: Int!
+  createdAt: Date!
+  code: String!
+  usedBy: Character
+  usedAt: Date
+}
+
+type Query {
+  listMedpack: [Medpack!]
+  listMedicine: [Medicine!]
+}
+
+type Mutation {
+  useMedicine(code: String!): Boolean
+  useMedpack(code: String!): Boolean
+  heal(characterId: Int!): Boolean
+  createMedicine(code: String!): Medicine!
+  createMedpack(code: String!): Medpack!
+}

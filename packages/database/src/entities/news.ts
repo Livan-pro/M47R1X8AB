@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from "typeorm";
+import { Attachment } from "./attachment";
 
 @Entity("news")
 export class News {
@@ -21,4 +22,11 @@ export class News {
 
   @Column()
   datetime: Date;
+
+  @ManyToOne(type => Attachment)
+  @JoinColumn({name: "attachmentId"})
+  attachment: Attachment;
+
+  @Column({nullable: true})
+  attachmentId: string;
 }

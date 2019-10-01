@@ -20,7 +20,7 @@
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from "nuxt-property-decorator";
 import UniversalForm from "@/components/UniversalForm.vue";
-import { CreateCharacter, InitForm } from "shared/browser";
+import { CreateCharacter, InitForm, professionOptions as options } from "shared/browser";
 import gql from "graphql-tag";
 
 const characterFieldsToTrim: (keyof CreateCharacter)[] = ["name"];
@@ -42,6 +42,7 @@ export default class EditCharacter extends Vue {
   onLoadingChanged(loading: boolean) {
     if (loading) return;
     this.form.name = this.initData.name;
+    this.form.registrationProfession = this.initData.registrationProfession;
   }
 
   trimSpaces() {
@@ -59,6 +60,7 @@ export default class EditCharacter extends Vue {
     let changes = {};
     if (this.form.name !== this.initData.name) changes = {...changes, name: this.form.name};
     if (this.form.quenta) changes = {...changes, quenta: this.form.quenta};
+    if (this.form.registrationProfession !== this.initData.registrationProfession) changes = {...changes, registrationProfession: this.form.registrationProfession};
     return changes;
   }
 
@@ -84,6 +86,7 @@ export default class EditCharacter extends Vue {
     return {
       name: "Имя и фамилия",
       quenta: {label: "Квента", type: "file"},
+      registrationProfession: {label: "Профессия", type: "select", options}
     };
   }
 }

@@ -11,6 +11,7 @@ export default {
         phone
         vkId
         medicalInfo
+        city
         roles
         createdAt
         mainCharacter {
@@ -18,6 +19,7 @@ export default {
           name
           quenta
           avatarUploadedAt
+          registrationProfession
         }
       }
     }

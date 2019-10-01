@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { Role } from "./globalTypes";
+import { UserRole } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: MyRoles
@@ -10,7 +10,7 @@ import { Role } from "./globalTypes";
 
 export interface MyRoles_me {
   __typename: "User";
-  roles: Role[] | null;
+  roles: UserRole[] | null;
 }
 
 export interface MyRoles {

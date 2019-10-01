@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { Role } from "./globalTypes";
+import { UserRole } from "./globalTypes";
 
 // ====================================================
 // GraphQL fragment: roles
@@ -10,5 +10,5 @@ import { Role } from "./globalTypes";
 
 export interface roles {
   __typename: "User";
-  roles: Role[] | null;
+  roles: UserRole[] | null;
 }

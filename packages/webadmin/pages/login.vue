@@ -3,18 +3,18 @@
     <v-toolbar dark color="primary">
       <v-toolbar-title>Авторизация</v-toolbar-title>
     </v-toolbar>
-    <v-form>
+    <v-form @submit.prevent="login">
       <v-card-text>
         <v-alert v-if="errorMsg" value="true" type="error">
           {{ errorMsg }}
         </v-alert>
-        <v-text-field v-model="form.email" prepend-icon="person" label="Логин" type="text" />
-        <v-text-field v-model="form.password" prepend-icon="lock" label="Пароль" type="password" />
+        <v-text-field v-model="form.email" prepend-icon="mdi-account" label="Логин" type="text" />
+        <v-text-field v-model="form.password" prepend-icon="mdi-lock" label="Пароль" type="password" />
         <v-checkbox v-model="form.rememberMe" label="Запомнить меня" />
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn color="primary" @click="login">
+        <v-btn color="primary" type="submit">
           Вход
         </v-btn>
       </v-card-actions>

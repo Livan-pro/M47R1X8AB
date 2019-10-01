@@ -1,14 +1,96 @@
+enum Profession {
+  None,
+  Netrunner,
+  Medic,
+  Chemist,
+  Marshal,
+  Hitman,
+  Biotechnician,
+  Employee,
+  Engineer,
+  Stalker,
+  Mutant,
+}
+
+enum CharacterRole {
+  None,
+  Netrunner,
+  Medic,
+  Technician,
+  Replicant,
+  Android,
+  NPC,
+}
+
+enum CharacterState {
+  Normal,
+  Pollution,
+  SevereWound,
+  Death,
+}
+
 input CharacterInput {
   name: String
   quenta: Upload
+  registrationProfession: Profession
+}
+
+input FullCharacterInput {
+  name: String
+  quenta: Upload
+  roles: [CharacterRole!]
+  profession: Profession
+  registrationProfession: Profession
+  professionLevel: Int
+  balance: Int
+  state: CharacterState
+  pollution: Int
+  deathTime: Date
+  implantsRejectTime: Date
+  locationId: Int
+}
+
+type Property {
+  name: String!
+  value: String!
 }
 
 type Character {
   id: Int!
+  userId: Int
   name: String!
   quenta: String
+  roles: [CharacterRole!]
+  profession: Profession
+  registrationProfession: Profession
+  professionLevel: Int
   own: Boolean!
   avatarUploadedAt: Date
+  balance: Int
+  state: CharacterState
+  pollution: Int
+  deathTime: Date
+  implantsRejectTime: Date
+  location: Location
+  properties: [Property!]!
+}
+
+type CharacterUpdate {
+  id: Int
+  name: String
+  quenta: String
+  roles: [CharacterRole!]
+  profession: Profession
+  registrationProfession: Profession
+  professionLevel: Int
+  avatarUploadedAt: Date
+  balance: Int
+  state: CharacterState
+  pollution: Int
+  deathTime: Date
+  implantsRejectTime: Date
+  location: Location
+  properties: [Property!]
 }
 
 type Query {
@@ -20,4 +102,11 @@ type Mutation {
   editCharacter(id: Int!, character: CharacterInput!): Boolean
   """avatar - base64-encoded image (200x200, png)"""
   uploadAvatar(id: Int!, avatar: String!): Date!
+  suicide: Date
+  updateCharacter(id: Int!, data: FullCharacterInput!): Character
+  editProperty(characterId: Int!, name: String!, value: String!): Boolean
+}
+
+type Subscription {
+  mainCharacter: CharacterUpdate
 }

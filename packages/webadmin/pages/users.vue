@@ -5,14 +5,16 @@
       <v-spacer></v-spacer>
       <v-text-field v-model="search" append-icon="mdi-search" label="Поиск" single-line hide-details></v-text-field>
     </v-card-title>
-    <v-data-table :headers="headers" :items="users" :search="search" sort-by="id" class="elevation-1" multi-sort>
-      <template v-slot:item.createdAt="{ value }">
-        {{ formatDate(value) }}
+    <v-data-table :headers="headers" :items="items" :search="search" sort-by="id" class="elevation-1" multi-sort>
+      <template v-for="edit in editable" v-slot:[`item.${edit.key}`]="{ item }">
+        <v-edit-dialog :key="edit.key" :return-value.sync="item[edit.key]" @save="update(item.id, { [edit.key]: item[edit.key] })">
+          {{ item[edit.key] }}
+          <template v-slot:input>
+            <v-text-field v-model="item[edit.key]" :rules="edit.rules" :label="edit.name" single-line counter></v-text-field>
+          </template>
+        </v-edit-dialog>
       </template>
-      <template v-slot:item.vkId="{ value }">
-        <a :href="'https://vk.com/' + value">{{ value }}</a>
-      </template>
-      <template v-slot:item.mainCharacter="{ value }">
+      <template v-slot:item.mainCharacter.name="{ item: { mainCharacter: value } }">
         <v-layout align-center>
           <CharacterAvatar :id="value.id" class="mr-1" :size="50" :avatar-uploaded-at="value.avatarUploadedAt" />
           {{ value.name }}
@@ -24,6 +26,9 @@
       <template v-slot:item.actions="{ item }">
         <make-admin-button v-if="isSuperAdmin" :id="item.id" :value="item.roles.includes('Admin')" />
         <upload-quenta-button :id="item.mainCharacter.id" />
+        <v-btn x-small text fab color="primary" :href="`https://vk.com/${item.vkId}`">
+          VK
+        </v-btn>
       </template>
     </v-data-table>
   </v-card>
@@ -33,14 +38,16 @@
 import { Vue, Component } from "nuxt-property-decorator";
 import users from "~/gql/Users";
 import me from "~/gql/MyRoles";
-import { Users_users as User, Users_users_mainCharacter as Character } from "~/gql/__generated__/Users";
+import { Users_users as User } from "~/gql/__generated__/Users";
 import { MyRoles_me as Me } from "~/gql/__generated__/MyRoles";
 import CharacterAvatar from "~/components/CharacterAvatar.vue";
 import IconBtn from "~/components/IconBtn.vue";
 import UploadQuentaButton from "~/components/UploadQuentaButton.vue";
 import MakeAdminButton from "~/components/MakeAdminButton.vue";
-import { Role } from "../gql/__generated__/globalTypes";
-import { dataUrl } from "@/utils";
+import { UserRole as Role, EditUserInput } from "~/gql/__generated__/globalTypes";
+import { dataUrl, maxChars, formatDate } from "@/utils";
+import { professionToText } from "shared/browser";
+import { createMutation } from "~/gql/UpdateUser";
 
 @Component({
   components: { CharacterAvatar, IconBtn, UploadQuentaButton, MakeAdminButton },
@@ -60,25 +67,35 @@ export default class UsersPage extends Vue {
   get headers() {
     return [
       { text: "ID", value: "id" },
-      { text: "Дата регистрации", value: "createdAt" },
+      { text: "Дата регистрации", value: "date" },
       { text: "Email", value: "email" },
       { text: "Имя", value: "firstName" },
       { text: "Фамилия", value: "lastName" },
       { text: "Телефон", value: "phone" },
       { text: "VK", value: "vkId" },
       { text: "Мед. информация", value: "medicalInfo" },
+      { text: "Город", value: "city" },
       {
         text: "Персонаж",
-        value: "mainCharacter",
-        filter: (value: Character, search: string) => value.name.toLowerCase().includes(search.toLowerCase()),
-        sort: (a: Character, b: Character) => {
-          const aName = a.name.toLowerCase();
-          const bName = b.name.toLowerCase();
-          return aName < bName ? -1 : aName > bName ? 1 : 0;
-        },
+        value: "mainCharacter.name",
+      },
+      {
+        text: "Профессия",
+        value: "mainCharacter.registrationProfessionText",
       },
       { value: "actions", sortable: false }, // width: 42 * buttons + 34
     ];
+  }
+
+  get items() {
+    return this.users.map(u => ({
+      ...u,
+      mainCharacter: {
+        ...u.mainCharacter,
+        registrationProfessionText: u.mainCharacter && professionToText(u.mainCharacter.registrationProfession),
+      },
+      date: formatDate(u.createdAt),
+    }));
   }
 
   get dataUrl() {
@@ -89,8 +106,23 @@ export default class UsersPage extends Vue {
     return this.me.roles && this.me.roles.includes(Role.SuperAdmin);
   }
 
-  formatDate(value: number) {
-    return new Date(value).toLocaleString();
+  max255chars(str: string) {
+    return str.length <= 255 || "Слишком длинная строка!";
+  }
+
+  get editable() {
+    return [
+      { key: "firstName", rules: [maxChars(255)], name: "Имя" },
+      { key: "lastName", rules: [maxChars(255)], name: "Фамилия" },
+      { key: "phone", rules: [maxChars(20)], name: "Телефон" },
+      { key: "vkId", rules: [maxChars(32)], name: "VK ID" },
+      { key: "medicalInfo", rules: [maxChars(1000)], name: "Мед. информация" },
+      { key: "city", rules: [maxChars(32)], name: "Город" },
+    ];
+  }
+
+  async update(id: number, data: EditUserInput) {
+    await this.$apollo.mutate(createMutation(id, data));
   }
 }
 </script>

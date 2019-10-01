@@ -1,4 +1,4 @@
-enum Role {
+enum UserRole {
   Admin
   SuperAdmin
 }
@@ -12,6 +12,7 @@ input UserInput {
   phone: String
   vkId: String
   medicalInfo: String
+  city: String
 }
 
 input EditUserInput {
@@ -20,6 +21,7 @@ input EditUserInput {
   phone: String
   vkId: String
   medicalInfo: String
+  city: String
 }
 
 input LoginInput {
@@ -42,9 +44,10 @@ type User {
   phone: String
   vkId: String
   medicalInfo: String
+  city: String
   characters: [Character]
   mainCharacter: Character
-  roles: [Role!]
+  roles: [UserRole!]
   createdAt: Date
 }
 
@@ -56,6 +59,7 @@ type LoginResult {
 type Query {
   me: User
   users: [User!]!
+  radioUrl: String
 }
 
 type Mutation {
@@ -64,5 +68,7 @@ type Mutation {
   logout: Boolean
   editUser(user: EditUserInput!): Boolean
   changePassword(data: ChangePasswordInput!): Boolean
-  setUserRole(id: Int!, role: Role!, value: Boolean): Boolean
+  setUserRole(id: Int!, role: UserRole!, value: Boolean): Boolean
+  setMainCharacter(characterId: Int!): Character
+  updateUser(id: Int!, data: EditUserInput): User
 }

@@ -1,8 +1,10 @@
 <template>
-  <StackLayout class="p-b-10" orientation="horizontal" @tap="onTap">
-    <CharacterAvatar :id="id" :avatarUploadedAt="avatarUploadedAt" :size="avatarSize" />
+  <StackLayout orientation="horizontal" v-on="on">
+    <CharacterAvatar :id="data.id" :avatarUploadedAt="data.avatarUploadedAt" :size="avatarSize" />
     <StackLayout>
-      <Label :text="name" dock="left" class="h2" :class="{own}" />
+      <Label :text="data.name" dock="left" class="h2" :class="{ own: data.own }" />
+      <Label v-if="data.profession && !hideProfession" :text="getProfessionText()" dock="left" class="h3" />
+      <Label v-if="data.balance && !hideBalance" :text="'Баланс: ' + data.balance" dock="left" class="h3" />
     </StackLayout>
   </StackLayout>
 </template>
@@ -10,21 +12,37 @@
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
-import Character from "@/pages/Character.vue";
 import CharacterAvatar from "@/components/CharacterAvatar.vue";
+import { getProfessionText } from "@/utils";
 
 @Component({
   components: { CharacterAvatar },
 })
 export default class CharacterItem extends Vue {
-  @Prop({type: String, default: ""}) name!: string;
-  @Prop({type: Number, default: -1}) id!: number;
-  @Prop({type: Number}) avatarUploadedAt!: number;
-  @Prop({type: Boolean, default: false}) own!: boolean;
-  @Prop({type: Number, default: 100}) avatarSize!: number;
+  @Prop({ type: Number, default: 100 }) avatarSize!: number;
+  @Prop({ type: Object, default: {} }) data!: {
+    name?: string;
+    id?: number;
+    avatarUploadedAt?: number;
+    own?: boolean;
+    balance?: number | null;
+    profession?: string | null;
+    professionLevel?: number | null;
+  };
+  @Prop({ type: Boolean, default: false }) hideBalance!: boolean;
+  @Prop({ type: Boolean, default: false }) hideProfession!: boolean;
+  @Prop({ type: Function, default: null }) tap!: ((id: number) => void) | null;
+  @Prop({ type: Function, default: null }) longPress!: ((id: number) => void) | null;
 
-  onTap() {
-    this.$navigateTo(Character, {frame: this.$root.currentFrame, props: {id: this.id}} as any);
+  getProfessionText() {
+    return getProfessionText(this.data.profession, this.data.professionLevel);
+  }
+
+  get on() {
+    const on: { tap?: () => void; longPress?: () => void } = {};
+    if (this.tap) on.tap = () => this.tap(this.data.id);
+    if (this.longPress) on.longPress = () => this.longPress(this.data.id);
+    return on;
   }
 }
 </script>

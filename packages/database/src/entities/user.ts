@@ -2,6 +2,7 @@ import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateCol
 import { Character } from "./character";
 import { RolesTransformer } from "../utils/role-transformer";
 import { Roles } from "../utils/roles";
+import { UserRole } from "../utils/user-role.enum";
 
 @Entity("users")
 export class User {
@@ -43,8 +44,11 @@ export class User {
   @Column({length: 1000, nullable: true})
   medicalInfo: string;
 
-  @Column({type: "int", default: 0, transformer: new RolesTransformer()})
-  roles: Roles;
+  @Column({type: "int", default: 0, transformer: new RolesTransformer<typeof UserRole>(UserRole)})
+  roles: Roles<typeof UserRole>;
+
+  @Column({length: 32, nullable: true})
+  city: string;
 
   @OneToOne(type => Character, character => character.user)
   @JoinColumn({name: "mainCharacterId"})

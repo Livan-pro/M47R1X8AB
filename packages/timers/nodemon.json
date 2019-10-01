@@ -1,0 +1,11 @@
+{
+  "watch": [
+    "src",
+    ".env"
+  ],
+  "ext": "ts,graphql",
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "exec": "ts-node src/main.ts | pino-pretty -t SYS:standard"
+}

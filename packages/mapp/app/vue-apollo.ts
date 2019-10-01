@@ -1,67 +1,93 @@
 import { ApolloClient } from "apollo-client";
-import { createHttpLink } from "apollo-link-http";
-import { InMemoryCache } from "apollo-cache-inmemory";
-import { setContext } from "apollo-link-context";
+import { WebSocketLink } from "apollo-link-ws";
+import { InMemoryCache, defaultDataIdFromObject } from "apollo-cache-inmemory";
 import { onError } from "apollo-link-error";
 import VueApollo from "vue-apollo";
 import * as appSettings from "tns-core-modules/application-settings";
 import { vue } from "./main";
+require("nativescript-websockets");
+import { SubscriptionClient } from "subscriptions-transport-ws";
 
 import App from "./pages/App.vue";
 import Login from "./pages/Login.vue";
+import { NavigationEntryVue } from "nativescript-vue";
+import { toIdValue, IdValue } from "apollo-utilities";
 
-const production = TNS_ENV === "production";
+let token: string | undefined = appSettings.getString("token");
 
-// HTTP connection to the API
-const httpLink = createHttpLink({
-  // You should use an absolute URL here
-  uri: production ? "https://cyberpunk2219.tech/graphql" : ENV_GRAPHQL_URL,
+const wsClient = new SubscriptionClient(
+  ENV_GRAPHQL_WS_URL,
+  {
+    reconnect: true,
+    connectionParams: (): { token: string | undefined } => ({ token }),
+  },
+  WebSocket,
+);
+const link = new WebSocketLink(wsClient);
+
+export function setToken(newToken: string): void {
+  token = newToken;
+  appSettings.setString("token", token);
+  wsClient.close(false, false); // reconnect
+}
+
+export function unsetToken(): void {
+  token = undefined;
+  appSettings.remove("token");
+  wsClient.close(false, false); // reconnect
+}
+
+export function login(newToken: string): void {
+  setToken(newToken);
+  vue.$navigateTo(App);
+}
+
+export function logout(): void {
+  if (token) {
+    unsetToken();
+    vue.$navigateTo(Login, ({ clearHistory: true } as unknown) as NavigationEntryVue);
+  }
+}
+
+const logoutLink = onError(({ graphQLErrors, networkError }): void => {
+  console.error("apollo error", networkError, graphQLErrors);
+  if (
+    graphQLErrors &&
+    graphQLErrors.length >= 1 &&
+    graphQLErrors[0].message &&
+    ((graphQLErrors[0].message as unknown) as { statusCode: number }).statusCode === 401
+  )
+    logout();
 });
 
-let token = appSettings.getString("token");
+const dataIdFromObject = defaultDataIdFromObject;
 
-const authLink = setContext((_, { headers }) => {
-  return {
-    headers: {
-      ...headers,
-      authorization: token ? `Bearer ${token}` : "",
-    },
-  };
-});
-
-const logoutLink = onError(({ graphQLErrors }) => {
-  if (graphQLErrors && graphQLErrors.length >= 1 && graphQLErrors[0].message && graphQLErrors[0].message.statusCode === 401) logout();
-});
+const fromCache = (type: string): ((_, { id }) => IdValue) => (_, { id }): IdValue => toIdValue(dataIdFromObject({ __typename: type, id }));
 
 // Cache implementation
-const cache = new InMemoryCache();
+const cache = new InMemoryCache({
+  cacheRedirects: {
+    Query: {
+      character: fromCache("Character"),
+    },
+  },
+  dataIdFromObject,
+});
 
 // Create the apollo client
 export const apolloClient = new ApolloClient({
-  link: logoutLink.concat(authLink.concat(httpLink)),
+  link: logoutLink.concat(link),
   cache,
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: "cache-and-network",
+    },
+    query: {
+      fetchPolicy: "network-only",
+    },
+  },
 });
 
 export const apolloProvider = new VueApollo({
   defaultClient: apolloClient,
 });
-
-export function setToken(newToken: string) {
-  token = newToken;
-  appSettings.setString("token", token);
-}
-
-export function unsetToken() {
-  token = undefined;
-  appSettings.remove("token");
-}
-
-export function login(newToken: string) {
-  setToken(newToken);
-  vue.$navigateTo(App);
-}
-
-export function logout() {
-  unsetToken();
-  vue.$navigateTo(Login);
-}
