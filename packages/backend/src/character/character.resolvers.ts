@@ -73,11 +73,11 @@ export class CharacterResolvers {
       [CharacterState.SevereWound, CharacterState.Death].includes(user.mainCharacter.state) &&
       char.userId !== user.id
     ) return null;
-    if (!user.roles.has(Role.Admin)) char.userId = null;
     if (char.userId !== user.id && !user.roles.has(Role.Admin)) {
       char.location = null;
       char.professionLevel = null;
     }
+    if (!user.roles.has(Role.Admin)) char.userId = null;
     return char;
   }
 
