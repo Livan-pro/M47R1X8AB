@@ -61,10 +61,10 @@ export class CharacterResolvers {
 
   @Query("character")
   async getCharacter(@GetUser() user: User, @Args("id") id: number): Promise<Character | undefined> {
-    const fields: Array<keyof Character> = ["id", "userId", "name", "avatarUploadedAt", "profession", "professionLevel", "location"];
+    const fields: Array<keyof Character> = ["id", "userId", "name", "avatarUploadedAt", "profession", "professionLevel", "location", "state"];
     if (user.roles.has(Role.Admin)) fields.push("quenta", "roles");
     if (user.roles.has(Role.Admin) || user.mainCharacter.roles.has(CharacterRole.Medic) || id === user.mainCharacterId) {
-      fields.push("implantsRejectTime", "state", "pollution");
+      fields.push("implantsRejectTime", "pollution");
     }
     const char = await this.character.findById(id, fields, ["location", "properties"]);
     if (!char) return null;
@@ -77,6 +77,12 @@ export class CharacterResolvers {
       char.location = null;
       char.professionLevel = null;
     }
+    if (
+      char.state === CharacterState.Pollution &&
+      char.userId !== user.mainCharacterId &&
+      !user.roles.has(Role.Admin) &&
+      !user.mainCharacter.roles.has(CharacterRole.Medic)
+    ) char.state = CharacterState.Normal;
     if (!user.roles.has(Role.Admin)) char.userId = null;
     return char;
   }
