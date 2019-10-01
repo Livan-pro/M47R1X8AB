@@ -39,7 +39,6 @@
     "reflect-metadata": "^0.1.13",
     "typedi": "^0.8.0",
     "typeorm": "^0.2.18",
-    "typescript": "^3.6.2",
-    "zeromq": "^5.1.0"
+    "typescript": "^3.6.2"
   }
 }
