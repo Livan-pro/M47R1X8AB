@@ -8,7 +8,7 @@
       <Label v-if="isStateVisible" :text="stateText" class="h2 text-center hr-bottom" :class="{ rejected }" />
       <ListView for="item in implants" height="100%">
         <v-template>
-          <ImplantItem :data="item" class="hr-bottom p-y-10" />
+          <ImplantItem :data="item" :rejected="rejected" class="hr-bottom p-y-10" />
         </v-template>
       </ListView>
     </StackLayout>

@@ -4,6 +4,7 @@
       <Label :text="data.name" dock="left" class="h2" />
       <Label :text="typeText" dock="left" class="h3" />
       <Label :text="workingText" dock="left" class="h3" :class="data.working ? 'working' : 'not-working'" />
+      <Label :text="rejectedText" dock="left" class="h3" :class="isRejected ? 'rejected' : 'not-rejected'" />
       <Label :text="qualityText" dock="left" class="h3" :class="data.quality ? 'good-quality' : 'bad-quality'" />
     </StackLayout>
   </StackLayout>
@@ -24,17 +25,26 @@ export default class ImplantItem extends Vue {
     working: boolean;
     quality: boolean;
   };
+  @Prop({ type: Boolean, default: false }) rejected!: boolean;
 
   get typeText() {
     return getImplantTypeText(this.data.type);
   }
 
   get workingText() {
-    return this.data.working ? "Работает" : "Сломан";
+    return this.data.working ? "Не сломан" : "Сломан";
   }
 
   get qualityText() {
     return this.data.quality ? "Качественный" : "Некачественный";
+  }
+
+  get rejectedText() {
+    return this.isRejected ? "Отторгся" : "Не отторгся";
+  }
+
+  get isRejected() {
+    return this.rejected && !this.data.quality;
   }
 }
 </script>
@@ -51,6 +61,13 @@ export default class ImplantItem extends Vue {
   color: $red;
 }
 .good-quality {
+  color: $green;
+}
+
+.rejected {
+  color: $red;
+}
+.not-rejected {
   color: $green;
 }
 </style>
