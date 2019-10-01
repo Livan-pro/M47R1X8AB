@@ -29,9 +29,7 @@ export class UserResolvers {
 
   @ResolveProperty()
   async characters(@Parent() user: User, @GetUser() me: User) {
-    if ((user.id !== me.id || ![CharacterState.Normal, CharacterState.Pollution].includes(me.mainCharacter.state)) && !me.roles.has(Role.Admin)) {
-      throw new CustomError("Доступ запрещён");
-    }
+    if (user.id !== me.id && !me.roles.has(Role.Admin)) return null;
     return await this.character.findByOwner(user.id);
   }
 

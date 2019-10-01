@@ -60,7 +60,6 @@ export class CharacterResolvers {
   }
 
   @Query("character")
-  @Roles([Role.Admin], [CharacterState.Normal, CharacterState.Pollution])
   async getCharacter(@GetUser() user: User, @Args("id") id: number): Promise<Character | undefined> {
     const fields: Array<keyof Character> = ["id", "userId", "name", "avatarUploadedAt", "profession", "professionLevel", "location"];
     if (user.roles.has(Role.Admin)) fields.push("quenta", "roles");
@@ -69,6 +68,11 @@ export class CharacterResolvers {
     }
     const char = await this.character.findById(id, fields, ["location", "properties"]);
     if (!char) return null;
+    if (
+      !user.roles.has(Role.Admin) &&
+      [CharacterState.SevereWound, CharacterState.Death].includes(user.mainCharacter.state) &&
+      char.userId !== user.id
+    ) return null;
     if (!user.roles.has(Role.Admin)) char.userId = null;
     if (char.userId !== user.id && !user.roles.has(Role.Admin)) {
       char.location = null;
