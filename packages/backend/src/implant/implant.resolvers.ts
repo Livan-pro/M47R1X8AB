@@ -13,7 +13,7 @@ import { CustomError } from "CustomError";
 import { mapCodeToString, codeToString } from "utils";
 
 @Resolver()
-@Roles(Role.LoggedIn)
+@Roles({user: Role.LoggedIn})
 export class ImplantResolvers {
   private readonly log = new Logger(ImplantResolvers.name);
   constructor(
@@ -25,13 +25,13 @@ export class ImplantResolvers {
   ) {}
 
   @Query()
-  @Roles(Role.Admin)
+  @Roles({user: Role.Admin})
   async listImplantProlongation() {
     return mapCodeToString(await this.implant.getAllImplantProlongations());
   }
 
   @Mutation()
-  @Roles(Role.Admin)
+  @Roles({user: Role.Admin})
   async createImplantProlongation(@Args("code") code: string, @Args("time") time: number): Promise<ImplantProlongation> {
     if (code.length !== 16) throw new CustomError("Неверный код!");
     let buf: Buffer;
@@ -77,7 +77,7 @@ export class ImplantResolvers {
   }
 
   @Mutation()
-  @Roles([Role.Admin], [Profession.Biotechnician, CharacterState.Normal, CharacterState.Pollution])
+  @Roles({user: Role.Admin}, {profession: Profession.Biotechnician, state: [CharacterState.Normal, CharacterState.Pollution]})
   async createImplant(
     @Args("data") data: FullImplantInput,
     @GetUser() user: User,
@@ -89,7 +89,7 @@ export class ImplantResolvers {
   }
 
   @Mutation()
-  @Roles(Role.Admin)
+  @Roles({user: Role.Admin})
   async updateImplant(
     @Args("id") id: number,
     @Args("data") data: FullImplantInput,
@@ -98,7 +98,7 @@ export class ImplantResolvers {
   }
 
   @Mutation()
-  @Roles([Profession.Biotechnician, CharacterState.Normal, CharacterState.Pollution], [Role.Admin])
+  @Roles({profession: Profession.Biotechnician, state: [CharacterState.Normal, CharacterState.Pollution]}, {user: Role.Admin})
   async fixImplants(
     @Args("characterId") characterId: number,
     @GetUser() user: User,

@@ -7,7 +7,7 @@ import { Roles } from "auth/roles.decorator";
 import { CustomError } from "CustomError";
 
 @Resolver()
-@Roles(Role.Admin)
+@Roles({user: Role.Admin})
 export class LocationResolvers {
   private readonly log = new Logger(LocationResolvers.name);
   constructor(

@@ -8,7 +8,7 @@ import { Roles } from "auth/roles.decorator";
 import { CharacterService } from "character/character.service";
 
 @Resolver()
-@Roles(Role.LoggedIn)
+@Roles({user: Role.LoggedIn})
 export class BalanceResolvers {
   private readonly log = new Logger(BalanceResolvers.name);
   constructor(
@@ -17,7 +17,7 @@ export class BalanceResolvers {
   ) {}
 
   @Mutation()
-  @Roles(CharacterState.Normal, CharacterState.Pollution)
+  @Roles({state: [CharacterState.Normal, CharacterState.Pollution]})
   async moneyTransfer(
     @Args("id") id: number,
     @Args("amount") amount: number,
@@ -30,13 +30,13 @@ export class BalanceResolvers {
   }
 
   @Query()
-  @Roles(Role.Admin)
+  @Roles({user: Role.Admin})
   async allBalanceHistory(): Promise<BalanceTransfer[]> {
     return await this.balance.getAllHistory();
   }
 
   @Mutation()
-  @Roles(Role.Admin)
+  @Roles({user: Role.Admin})
   async addBalance(
     @Args("id") id: number,
     @Args("amount") amount: number,

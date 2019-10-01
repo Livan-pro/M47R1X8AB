@@ -7,7 +7,7 @@ import { Roles } from "auth/roles.decorator";
 import { GetUser } from "user/get-user.decorator";
 
 @Resolver()
-@Roles(Role.LoggedIn)
+@Roles({user: Role.LoggedIn})
 export class NewsResolvers {
   private readonly log = new Logger(NewsResolvers.name);
   constructor(
@@ -15,13 +15,13 @@ export class NewsResolvers {
   ) {}
 
   @Query("news")
-  @Roles([Role.Admin], [CharacterState.Normal, CharacterState.Pollution])
+  @Roles({user: Role.Admin}, {state: [CharacterState.Normal, CharacterState.Pollution]})
   async getNews(): Promise<News[]> {
     return await this.news.getAll();
   }
 
   @Mutation("createNews")
-  @Roles(Role.Admin)
+  @Roles({user: Role.Admin})
   async createNews(
     @Args("data") data: NewsInput,
     @GetUser() user: User,
@@ -30,7 +30,7 @@ export class NewsResolvers {
   }
 
   @Mutation("updateNews")
-  @Roles(Role.Admin)
+  @Roles({user: Role.Admin})
   async updateNews(
     @Args("id") id: number,
     @Args("data") data: NewsInput,
@@ -41,7 +41,7 @@ export class NewsResolvers {
   }
 
   @Mutation("deleteNews")
-  @Roles(Role.Admin)
+  @Roles({user: Role.Admin})
   async deleteNews(
     @Args("ids") ids: number[],
   ) {

@@ -2,13 +2,13 @@ import { Injectable, CanActivate, ExecutionContext } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { User, UserRole, CharacterState, CharacterRole, Profession } from "matrix-database";
 import { GqlAuthGuard } from "./gql-auth.guard";
-import { RolesDecoratorData, Value } from "./roles.decorator";
+import { ISeparatedRoles, RolesDecoratorData } from "./roles.decorator";
 
-interface ISeparatedRoles {
+interface INormalizedRoles {
   user: UserRole[];
   character: CharacterRole[];
-  professions: Profession[];
-  states: CharacterState[];
+  profession: Profession[];
+  state: CharacterState[];
 }
 
 @Injectable()
@@ -38,11 +38,11 @@ export class MyGuard extends GqlAuthGuard implements CanActivate {
           rolesAnd.character.length &&
           (!user.mainCharacter || !user.mainCharacter.roles || !user.mainCharacter.roles.has(rolesAnd.character))
         ) || (
-          rolesAnd.professions.length &&
-          (!user.mainCharacter || !user.mainCharacter.profession || !rolesAnd.professions.includes(user.mainCharacter.profession))
+          rolesAnd.profession.length &&
+          (!user.mainCharacter || !user.mainCharacter.profession || !rolesAnd.profession.includes(user.mainCharacter.profession))
         ) || (
-          rolesAnd.states.length &&
-          (!user.mainCharacter || !user.mainCharacter.state || !rolesAnd.states.includes(user.mainCharacter.state))
+          rolesAnd.state.length &&
+          (!user.mainCharacter || !user.mainCharacter.state || !rolesAnd.state.includes(user.mainCharacter.state))
         )) continue;
         continue or;
       }
@@ -51,27 +51,27 @@ export class MyGuard extends GqlAuthGuard implements CanActivate {
     return true;
   }
 
-  getRolesDecoratorArray(context: ExecutionContext): ISeparatedRoles[][] | false {
+  getRolesDecoratorArray(context: ExecutionContext): INormalizedRoles[][] | false {
     const classValue = this.reflector.get<RolesDecoratorData>("roles", context.getClass());
     const handlerValue = this.reflector.get<RolesDecoratorData>("roles", context.getHandler());
     if (!classValue && !handlerValue) return false;
-    const value: ISeparatedRoles[][] = [];
+    const value: INormalizedRoles[][] = [];
     for (const val of [classValue, handlerValue]) {
       if (!Array.isArray(val)) continue;
       if (val.length < 1) continue;
-      if (Array.isArray(val[0])) value.push((val as Value[][]).map(arr => this.separateRoles(arr)));
-      else value.push([this.separateRoles(val as Value[])]);
+      value.push(this.normalizeRoles(val));
     }
     return value;
   }
 
-  separateRoles(input: Value[]): ISeparatedRoles {
-    return input.reduce((acc, r) => {
-      if (UserRole[r]) acc.user.push(r);
-      else if (CharacterRole[r]) acc.character.push(r);
-      else if (Profession[r]) acc.professions.push(r);
-      else if (CharacterState[r]) acc.states.push(r);
-      return acc;
-    }, {user: [], character: [], professions: [], states: []});
+  normalizeRoles(input: ISeparatedRoles[]): INormalizedRoles[] {
+    return input.map((roles): INormalizedRoles => {
+      return {
+        user: Array.isArray(roles.user) ? roles.user : (UserRole[roles.user] ? [roles.user] : []),
+        character: Array.isArray(roles.character) ? roles.character : (CharacterRole[roles.character] ? [roles.character] : []),
+        profession: Array.isArray(roles.profession) ? roles.profession : (Profession[roles.profession] ? [roles.profession] : []),
+        state: Array.isArray(roles.state) ? roles.state : (CharacterState[roles.state] ? [roles.state] : []),
+      };
+    });
   }
 }

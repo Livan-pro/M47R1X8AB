@@ -10,7 +10,7 @@ import { InventoryItem as GInventoryItem, InventoryItem } from "graphql.schema";
 import { mapCodeToString, codeToString } from "utils";
 
 @Resolver()
-@Roles(Role.LoggedIn)
+@Roles({user: Role.LoggedIn})
 export class InventoryResolvers {
   private readonly log = new Logger(InventoryResolvers.name);
   constructor(
@@ -20,13 +20,13 @@ export class InventoryResolvers {
   ) {}
 
   @Query()
-  @Roles(Role.Admin)
+  @Roles({user: Role.Admin})
   async listItemGift() {
     return mapCodeToString(await this.inventory.getAllItemGifts());
   }
 
   @Mutation()
-  @Roles(Role.Admin)
+  @Roles({user: Role.Admin})
   async createItemGift(@Args("code") code: string, @Args("itemId") itemId: number, @Args("amount") amount: number): Promise<ItemGift> {
     if (code.length !== 16) throw new CustomError("Неверный код!");
     let buf: Buffer;
@@ -69,7 +69,7 @@ export class InventoryResolvers {
   }
 
   @Mutation()
-  @Roles(Role.Admin)
+  @Roles({user: Role.Admin})
   async addItems(
     @Args("characterId") characterId: number,
     @Args("itemId") itemId: number,
@@ -96,8 +96,8 @@ export class InventoryResolvers {
 
   @Mutation()
   @Roles(
-    [Profession.Chemist, CharacterState.Normal, CharacterState.Pollution],
-    [CharacterRole.Technician, CharacterState.Normal, CharacterState.Pollution],
+    {profession: Profession.Chemist, state: [CharacterState.Normal, CharacterState.Pollution]},
+    {character: CharacterRole.Technician, state: [CharacterState.Normal, CharacterState.Pollution]},
   )
   async consumeItem(
     @Args("itemId") itemId: number,

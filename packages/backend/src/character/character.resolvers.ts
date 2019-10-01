@@ -17,7 +17,7 @@ import { LocationService } from "location/location.service";
 import { Config } from "config";
 
 @Resolver("Character")
-@Roles(Role.LoggedIn)
+@Roles({user: Role.LoggedIn})
 export class CharacterResolvers {
   private readonly log = new Logger(CharacterResolvers.name);
   private readonly suicideEnabled = Config.getBoolean("SUICIDE_ENABLED", false);
@@ -37,7 +37,7 @@ export class CharacterResolvers {
   }
 
   @Query()
-  @Roles([Role.Admin], [CharacterState.Normal, CharacterState.Pollution])
+  @Roles({user: Role.Admin}, {state: [CharacterState.Normal, CharacterState.Pollution]})
   async characters(@GetUser() user: User): Promise<Character[]> {
     const fields: Array<keyof Character> = ["id", "userId", "name", "avatarUploadedAt", "profession", "professionLevel"];
     const relations = ["location"];
@@ -93,7 +93,7 @@ export class CharacterResolvers {
   }
 
   @Mutation()
-  @Roles(CharacterState.Normal, CharacterState.Pollution)
+  @Roles({state: [CharacterState.Normal, CharacterState.Pollution]})
   async uploadAvatar(
     @Args("id") id: number,
     @Args("avatar") avatar: string,
@@ -126,7 +126,7 @@ export class CharacterResolvers {
   }
 
   @Mutation()
-  @Roles(Role.Admin)
+  @Roles({user: Role.Admin})
   async updateCharacter(
     @Args("id") id: number,
     @Args("data") data: FullCharacterInput,
@@ -145,7 +145,7 @@ export class CharacterResolvers {
   }
 
   @Mutation()
-  @Roles([Role.Admin], [Profession.Marshal, CharacterState.Normal, CharacterState.Pollution])
+  @Roles({user: Role.Admin}, {profession: Profession.Marshal, state: [CharacterState.Normal, CharacterState.Pollution]})
   async editProperty(
     @Args("characterId") characterId: number,
     @Args("name") name: string,

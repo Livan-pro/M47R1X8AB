@@ -82,26 +82,26 @@ export class UserResolvers {
   }
 
   @Query("me")
-  @Roles(Role.LoggedIn)
+  @Roles({user: Role.LoggedIn})
   async me(@GetUser() user: User): Promise<User> {
     this.log.log(`Me: ${user.email}`);
     return user;
   }
 
   @Query("users")
-  @Roles(Role.Admin)
+  @Roles({user: Role.Admin})
   async users(@GetUser() user: User): Promise<User[]> {
     return await this.user.getAllWithMainCharacter();
   }
 
   @Query("radioUrl")
-  @Roles(Role.LoggedIn)
+  @Roles({user: Role.LoggedIn})
   async getRadioUrl(): Promise<string> {
     return this.radioUrl;
   }
 
   @Mutation()
-  @Roles(Role.LoggedIn)
+  @Roles({user: Role.LoggedIn})
   async editUser(
     @Args("user" , new ValidationPipe({
       skipMissingProperties: true,
@@ -113,7 +113,7 @@ export class UserResolvers {
   }
 
   @Mutation()
-  @Roles(Role.LoggedIn)
+  @Roles({user: Role.LoggedIn})
   async changePassword(
     @Args("data", ValidationPipe) data: ChangePassword,
     @GetUser() user: User,
@@ -127,7 +127,7 @@ export class UserResolvers {
   }
 
   @Mutation()
-  @Roles(Role.SuperAdmin)
+  @Roles({user: Role.SuperAdmin})
   async setUserRole(
     @Args("id") id: number,
     @Args("role") role: GqlRole,
@@ -147,7 +147,7 @@ export class UserResolvers {
   }
 
   @Mutation()
-  @Roles(Role.LoggedIn)
+  @Roles({user: Role.LoggedIn})
   async setMainCharacter(
     @Args("characterId") characterId: number,
     @GetUser() user: User,
@@ -165,7 +165,7 @@ export class UserResolvers {
   }
 
   @Mutation()
-  @Roles(Role.Admin)
+  @Roles({user: Role.Admin})
   async updateUser(
     @Args("id") id: number,
     @Args("data") data: EditUserInput,

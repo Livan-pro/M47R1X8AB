@@ -8,7 +8,7 @@ import { CustomError } from "CustomError";
 import { mapCodeToString, codeToString } from "utils";
 
 @Resolver()
-@Roles(Role.LoggedIn)
+@Roles({user: Role.LoggedIn})
 export class MedicineResolvers {
   private readonly log = new Logger(MedicineResolvers.name);
   constructor(
@@ -16,19 +16,19 @@ export class MedicineResolvers {
   ) {}
 
   @Query()
-  @Roles(Role.Admin)
+  @Roles({user: Role.Admin})
   async listMedicine() {
     return mapCodeToString(await this.medicine.getAllMedicine());
   }
 
   @Query()
-  @Roles(Role.Admin)
+  @Roles({user: Role.Admin})
   async listMedpack() {
     return mapCodeToString(await this.medicine.getAllMedpack());
   }
 
   @Mutation()
-  @Roles(Role.Admin)
+  @Roles({user: Role.Admin})
   async createMedicine(@Args("code") code: string): Promise<Medicine> {
     if (code.length !== 16) throw new CustomError("Неверный код!");
     let buf: Buffer;
@@ -46,7 +46,7 @@ export class MedicineResolvers {
   }
 
   @Mutation()
-  @Roles(Role.Admin)
+  @Roles({user: Role.Admin})
   async createMedpack(@Args("code") code: string): Promise<Medicine> {
     if (code.length !== 16) throw new CustomError("Неверный код!");
     let buf: Buffer;
@@ -100,7 +100,7 @@ export class MedicineResolvers {
   }
 
   @Mutation()
-  @Roles([CharacterRole.Medic, CharacterState.Normal, CharacterState.Pollution], [Role.Admin])
+  @Roles({ character: CharacterRole.Medic, state: [CharacterState.Normal, CharacterState.Pollution]}, {user: Role.Admin})
   async heal(
     @Args("characterId") characterId: number,
     @GetUser() user: User,
