@@ -5,6 +5,7 @@ export default {
     query CharacterAdditionalInfoById($id: Int!) {
       addinfo: character(id: $id) {
         id
+        state
         location {
           name
         }

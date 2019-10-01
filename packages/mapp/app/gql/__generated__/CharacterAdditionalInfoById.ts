@@ -2,6 +2,8 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
+import { CharacterState } from "./globalTypes";
+
 // ====================================================
 // GraphQL query operation: CharacterAdditionalInfoById
 // ====================================================
@@ -20,6 +22,7 @@ export interface CharacterAdditionalInfoById_addinfo_properties {
 export interface CharacterAdditionalInfoById_addinfo {
   __typename: "Character";
   id: number;
+  state: CharacterState | null;
   location: CharacterAdditionalInfoById_addinfo_location | null;
   properties: CharacterAdditionalInfoById_addinfo_properties[];
 }

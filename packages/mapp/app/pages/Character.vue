@@ -6,7 +6,9 @@
         <Label :text="character.name" class="h1 text-center" :class="{ own: character.own }" />
         <Label :text="profession" class="h2 text-center" />
         <Label v-if="location" :text="location" class="h2 text-center" />
-        <Button text="Отправить деньги" @tap="sendMoney" />
+        <StackLayout class="hr-light m-t-10" />
+        <Label :text="stateText" :class="color" class="h1 text-center p-y-10 hr-bottom" />
+        <Button class="m-t-10" text="Отправить деньги" @tap="sendMoney" />
         <Button text="Отправить предмет" class="m-t-10" @tap="sendItem" />
         <Button v-if="isMedic" text="Экран медика" class="m-t-10" @tap="openMedic" />
         <template v-if="properties.length || canEditProperty">
@@ -47,8 +49,8 @@ import {
 import me from "@/gql/MyRoles";
 import { MyRoles_me as MyRoles } from "@/gql/__generated__/MyRoles";
 
-import { getProfessionText } from "../utils";
-import { UserRole, CharacterRole, Profession } from "@/gql/__generated__/globalTypes";
+import { getProfessionText, stateColor, stateText } from "../utils";
+import { UserRole, CharacterRole, Profession, CharacterState } from "@/gql/__generated__/globalTypes";
 import EditPropertyModal from "@/modals/EditProperty.vue";
 import MoneyTransferAmount from "@/modals/MoneyTransferAmount.vue";
 import SelectItem from "@/modals/SelectItem.vue";
@@ -96,6 +98,7 @@ export default class CharacterPage extends Vue {
   addinfo: AddInfo = {
     __typename: "Character",
     id: -1,
+    state: CharacterState.Normal,
     location: null,
     properties: [],
   };
@@ -159,6 +162,15 @@ export default class CharacterPage extends Vue {
 
   get canEditProperty() {
     return this.me.roles.includes(UserRole.Admin) || this.me.mainCharacter.profession === Profession.Marshal;
+  }
+
+  get stateText() {
+    const state = this.addinfo.state === CharacterState.Pollution ? CharacterState.Normal : this.addinfo.state;
+    return stateText[state];
+  }
+
+  get color() {
+    return stateColor[this.addinfo.state];
   }
 }
 </script>
