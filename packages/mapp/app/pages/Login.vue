@@ -19,8 +19,6 @@ import { login } from "@/vue-apollo";
 import Login from "@/gql/Login";
 import { Login as LoginType } from "@/gql/__generated__/Login";
 
-const sleep = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms));
-
 @Component
 export default class LoginPage extends Vue {
   form = {
@@ -36,9 +34,6 @@ export default class LoginPage extends Vue {
 
   async doLogin() {
     this.loading = true;
-    await sleep(500);
-    this.loading = false;
-
     try {
       const result = await this.$apollo.mutate<LoginType>({
         ...Login,
@@ -55,6 +50,7 @@ export default class LoginPage extends Vue {
         okButtonText: "ОК",
       });
     }
+    this.loading = false;
   }
 }
 </script>
