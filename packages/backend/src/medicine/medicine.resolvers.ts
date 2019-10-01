@@ -76,7 +76,7 @@ export class MedicineResolvers {
       throw new CustomError("Неверный код лекарства!");
     }
     if (user.mainCharacter.state !== CharacterState.Pollution) {
-      throw new CustomError("Вам не требуется лекарство!");
+      throw new CustomError("Нельзя использовать лекарство без загрязнения!");
     }
     await this.medicine.useMedicine(buf, user.mainCharacterId);
   }
@@ -94,7 +94,7 @@ export class MedicineResolvers {
       throw new CustomError("Неверный код медпака!");
     }
     if (user.mainCharacter.state !== CharacterState.Pollution && user.mainCharacter.state !== CharacterState.SevereWound) {
-      throw new CustomError("Вам не требуется медпак!");
+      throw new CustomError("Нельзя использовать медпак без тяжёлого ранения!");
     }
     await this.medicine.useMedpack(buf, user.mainCharacterId);
   }
