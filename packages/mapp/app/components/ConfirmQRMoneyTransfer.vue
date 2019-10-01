@@ -1,9 +1,9 @@
 <template>
   <StackLayout class="p-b-10">
     <Label text="Вы действительно хотите перевести деньги?" textWrap="true" dock="left" class="h2" />
-    <CharacterItem :data="character" />
+    <CharacterItem v-if="character" :data="character" />
     <Label :text="`Сумма: ${amount}`" textWrap="true" dock="left" class="h2" />
-    <Button text="Перевести" @tap="doTransfer" />
+    <LoadingButton :loading="loading" text="Перевести" @tap="doTransfer" />
   </StackLayout>
 </template>
 
@@ -11,13 +11,14 @@
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
 import CharacterItem from "./CharacterItem.vue";
+import LoadingButton from "@/components/LoadingButton.vue";
 
 import CharacterById from "@/gql/CharacterById";
 import MoneyTransfer from "@/gql/MoneyTransfer";
 import { CharacterById_character as Character } from "@/gql/__generated__/CharacterById";
 
 @Component({
-  components: { CharacterItem },
+  components: { CharacterItem, LoadingButton },
   apollo: {
     character: {
       ...CharacterById,

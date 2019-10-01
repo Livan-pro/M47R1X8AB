@@ -1,12 +1,10 @@
 <template>
   <Page backgroundSpanUnderStatusBar="true">
     <ActionBar title="Вход в Матрицу" android:flat="true" />
-    <StackLayout class="p-x-20">
-      <Label :text="url" />
-      <ActivityIndicator :busy="loading" />
+    <StackLayout class="p-x-20 p-t-30">
       <TextField v-model="form.email" hint="Email" returnKeyType="next" />
       <TextField v-model="form.password" hint="Пароль" returnKeyType="done" secure="true" @returnPress="doLogin" />
-      <Button text="Вход" @tap="doLogin" />
+      <LoadingButton :loading="loading" text="Вход" @tap="doLogin" />
     </StackLayout>
   </Page>
 </template>
@@ -14,12 +12,13 @@
 <script lang="ts">
 import { Component } from "vue-property-decorator";
 import Vue from "nativescript-vue";
+import LoadingButton from "@/components/LoadingButton.vue";
 import { login } from "@/vue-apollo";
 
 import Login from "@/gql/Login";
 import { Login as LoginType } from "@/gql/__generated__/Login";
 
-@Component
+@Component({ components: { LoadingButton } })
 export default class LoginPage extends Vue {
   form = {
     email: "",
@@ -27,10 +26,6 @@ export default class LoginPage extends Vue {
     rememberMe: true,
   };
   loading = false;
-
-  get url() {
-    return process.env.GRAPHQL_URL;
-  }
 
   async doLogin() {
     this.loading = true;

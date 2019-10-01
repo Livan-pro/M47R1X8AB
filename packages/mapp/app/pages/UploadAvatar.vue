@@ -7,7 +7,7 @@
         <Button class="m-t-10" text="Сделать фото" @tap="capture" />
         <template v-if="source">
           <Image class="m-t-10" :src="source" :width="200" :height="200" />
-          <Button class="m-t-10" text="Загрузить" @tap="upload" />
+          <LoadingButton :loading="loading" class="m-t-10" text="Загрузить" @tap="upload" />
         </template>
       </StackLayout>
     </ScrollView>
@@ -22,14 +22,16 @@ import * as imagepicker from "nativescript-imagepicker";
 import * as camera from "nativescript-camera";
 import { ImageCropper } from "nativescript-imagecropper";
 import { ImageAsset } from "tns-core-modules/image-asset/image-asset";
+import LoadingButton from "@/components/LoadingButton.vue";
 
 import UploadAvatarM, { createUpdate } from "@/gql/UploadAvatar";
 
-@Component
+@Component({ components: { LoadingButton } })
 export default class UploadAvatar extends Vue {
   @Prop({ type: Number, default: -1 }) id!: number;
   context: imagepicker.ImagePicker;
   source: ImageSource | null = null;
+  loading = false;
 
   created() {
     this.context = imagepicker.create({ mode: "single" });
@@ -77,6 +79,7 @@ export default class UploadAvatar extends Vue {
   }
 
   async upload() {
+    this.loading = true;
     try {
       await this.$apollo.mutate({
         ...UploadAvatarM,
@@ -97,6 +100,7 @@ export default class UploadAvatar extends Vue {
         okButtonText: "ОК",
       });
     }
+    this.loading = false;
   }
 }
 </script>

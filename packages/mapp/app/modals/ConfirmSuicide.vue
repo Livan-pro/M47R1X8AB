@@ -4,7 +4,7 @@
       <Label text="Суицид" dock="left" class="h2" />
       <CharacterItem :data="character" />
       <Label text="Вы действительно хотите совершить суицид?" dock="left" class="h3" textWrap="true" />
-      <Button text="Суицид" @tap="doSuicide" />
+      <LoadingButton :loading="loading" text="Суицид" @tap="doSuicide" />
     </StackLayout>
   </Page>
 </template>
@@ -13,12 +13,13 @@
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
 import CharacterItem from "@/components/CharacterItem.vue";
+import LoadingButton from "@/components/LoadingButton.vue";
 
 import { MainCharacterInfo_me_mainCharacter as Character } from "@/gql/__generated__/MainCharacterInfo";
 import suicide, { createUpdate } from "@/gql/Suicide";
 
 @Component({
-  components: { CharacterItem },
+  components: { CharacterItem, LoadingButton },
 })
 export default class ItemTransferAmountModal extends Vue {
   @Prop({

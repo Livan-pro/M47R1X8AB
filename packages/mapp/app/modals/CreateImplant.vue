@@ -5,7 +5,7 @@
         <Label text="Создание импланта" dock="left" class="h2" />
         <TextField v-model="name" hint="Название" returnKeyType="done" />
         <ListPicker v-model="typeIndex" :items="types" />
-        <Button text="Создать" @tap="doCreate" />
+        <LoadingButton :loading="loading" text="Создать" @tap="doCreate" />
       </StackLayout>
     </ScrollView>
   </Page>
@@ -14,6 +14,7 @@
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
+import LoadingButton from "@/components/LoadingButton.vue";
 
 import CharacterById from "@/gql/CharacterById";
 import CreateImplant from "@/gql/CreateImplant";
@@ -21,6 +22,7 @@ import { CharacterById_character as Character } from "@/gql/__generated__/Charac
 import { implantTypes } from "@/utils";
 
 @Component({
+  components: { LoadingButton },
   apollo: {
     character: {
       ...CharacterById,

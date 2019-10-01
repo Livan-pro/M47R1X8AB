@@ -5,7 +5,7 @@
         <Label text="Использование предмета" dock="left" class="h2" />
         <Label :text="`У вас: ${total}`" dock="left" class="h3" />
         <TextField v-model="amount" hint="Количество" keyboardType="number" returnKeyType="done" @returnPress="doConsume" />
-        <Button text="Использовать" @tap="doConsume" />
+        <LoadingButton :loading="loading" text="Использовать" @tap="doConsume" />
       </StackLayout>
     </ScrollView>
   </Page>
@@ -14,11 +14,12 @@
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
+import LoadingButton from "@/components/LoadingButton.vue";
 
 import ItemConsume from "@/gql/ItemConsume";
 import { items } from "@/utils/items";
 
-@Component
+@Component({ components: { LoadingButton } })
 export default class ItemConsumeAmountModal extends Vue {
   @Prop({ type: Number, default: -1 }) itemId!: number;
   @Prop({ type: Number, default: -1 }) total!: number;

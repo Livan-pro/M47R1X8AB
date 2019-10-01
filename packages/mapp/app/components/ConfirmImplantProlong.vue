@@ -2,7 +2,7 @@
   <StackLayout class="p-b-10">
     <CharacterItem :data="me.mainCharacter" />
     <Label text="Вы действительно хотите продлить срок действия имплантов?" textWrap="true" dock="left" class="h2" />
-    <Button text="Продлить" @tap="doUse" />
+    <LoadingButton :loading="loading" text="Продлить" @tap="doUse" />
   </StackLayout>
 </template>
 
@@ -10,13 +10,14 @@
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
 import CharacterItem from "./CharacterItem.vue";
+import LoadingButton from "@/components/LoadingButton.vue";
 
 import me from "@/gql/MainCharacterInfo";
 import ProlongImplants from "@/gql/ProlongImplants";
 import { MainCharacterInfo_me as Me } from "@/gql/__generated__/MainCharacterInfo";
 
 @Component({
-  components: { CharacterItem },
+  components: { CharacterItem, LoadingButton },
   apollo: {
     me,
   },

@@ -4,8 +4,8 @@
       <Label text="Редактирование свойства" dock="left" class="h2" />
       <TextField v-model="newName" hint="Название" maxLength="255" returnKeyType="next" class="m-b-10" />
       <TextField v-model="newValue" hint="Значение" maxLength="255" returnKeyType="done" class="m-b-5" @returnPress="save" />
-      <Button text="Сохранить" @tap="save" />
-      <Button text="Удалить" @tap="remove" />
+      <LoadingButton :loading="loading" text="Сохранить" @tap="save" />
+      <LoadingButton :loading="loading" text="Удалить" @tap="remove" />
     </StackLayout>
   </Page>
 </template>
@@ -13,10 +13,11 @@
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
+import LoadingButton from "@/components/LoadingButton.vue";
 
 import EditProperty, { createUpdate } from "@/gql/EditProperty";
 
-@Component
+@Component({ components: { LoadingButton } })
 export default class EditPropertyModal extends Vue {
   @Prop({ type: Number, default: -1 }) id!: number;
   @Prop({ type: String, default: "" }) name!: string;

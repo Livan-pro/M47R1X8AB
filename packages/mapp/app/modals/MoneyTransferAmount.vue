@@ -5,7 +5,7 @@
         <Label text="Перевод денег" dock="left" class="h2" />
         <CharacterItem :data="character" />
         <TextField v-model="amount" hint="Сумма" keyboardType="number" returnKeyType="done" class="m-t-5" @returnPress="doTransfer" />
-        <Button text="Перевести" @tap="doTransfer" />
+        <LoadingButton :loading="loading" text="Перевести" @tap="doTransfer" />
       </StackLayout>
     </ScrollView>
   </Page>
@@ -15,13 +15,14 @@
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
 import CharacterItem from "@/components/CharacterItem.vue";
+import LoadingButton from "@/components/LoadingButton.vue";
 
 import CharacterById from "@/gql/CharacterById";
 import MoneyTransfer from "@/gql/MoneyTransfer";
 import { CharacterById_character as Character } from "@/gql/__generated__/CharacterById";
 
 @Component({
-  components: { CharacterItem },
+  components: { CharacterItem, LoadingButton },
   apollo: {
     character: {
       ...CharacterById,

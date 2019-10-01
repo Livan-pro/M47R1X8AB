@@ -2,7 +2,7 @@
   <StackLayout class="p-b-10">
     <CharacterItem :data="me.mainCharacter" />
     <Label text="Вы действительно хотите получить предмет?" textWrap="true" dock="left" class="h2" />
-    <Button text="Получить" @tap="doUse" />
+    <LoadingButton :loading="loading" text="Получить" @tap="doUse" />
   </StackLayout>
 </template>
 
@@ -10,6 +10,7 @@
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
 import CharacterItem from "./CharacterItem.vue";
+import LoadingButton from "@/components/LoadingButton.vue";
 
 import me from "@/gql/MainCharacterInfo";
 import UseItemGift from "@/gql/UseItemGift";
@@ -18,7 +19,7 @@ import { UseItemGift as UseItemGiftType } from "@/gql/__generated__/UseItemGift"
 import { items } from "@/utils/items";
 
 @Component({
-  components: { CharacterItem },
+  components: { CharacterItem, LoadingButton },
   apollo: {
     me,
   },
