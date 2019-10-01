@@ -37,8 +37,13 @@ import CharacterAvatar from "@/components/CharacterAvatar.vue";
 import UploadAvatar from "@/pages/UploadAvatar.vue";
 import MedicPage from "@/pages/Medic.vue";
 
-import CharacterById from "@/gql/CharacterById";
-import { CharacterById_character as Character, CharacterById_character_properties as Property } from "@/gql/__generated__/CharacterById";
+import CharacterInfoById from "@/gql/CharacterInfoById";
+import CharacterAdditionalInfoById from "@/gql/CharacterAdditionalInfoById";
+import { CharacterInfoById_character as Character } from "@/gql/__generated__/CharacterInfoById";
+import {
+  CharacterAdditionalInfoById_addinfo as AddInfo,
+  CharacterAdditionalInfoById_addinfo_properties as Property,
+} from "@/gql/__generated__/CharacterAdditionalInfoById";
 import me from "@/gql/MyRoles";
 import { MyRoles_me as MyRoles } from "@/gql/__generated__/MyRoles";
 
@@ -53,7 +58,18 @@ import ItemTransferAmount from "@/modals/ItemTransferAmount.vue";
   components: { CharacterAvatar },
   apollo: {
     character: {
-      ...CharacterById,
+      ...CharacterInfoById,
+      variables(this: CharacterPage) {
+        return {
+          id: this.id,
+        };
+      },
+      skip(this: CharacterPage) {
+        return this.id < 0;
+      },
+    },
+    addinfo: {
+      ...CharacterAdditionalInfoById,
       variables(this: CharacterPage) {
         return {
           id: this.id,
@@ -76,8 +92,11 @@ export default class CharacterPage extends Vue {
     avatarUploadedAt: null,
     profession: null,
     professionLevel: null,
+  };
+  addinfo: AddInfo = {
+    __typename: "Character",
+    id: -1,
     location: null,
-    implantsRejectTime: null,
     properties: [],
   };
   me: MyRoles = {
@@ -131,11 +150,11 @@ export default class CharacterPage extends Vue {
   }
 
   get location() {
-    return this.character.location && this.character.location.name && `Прописка: ${this.character.location.name}`;
+    return this.addinfo.location && this.addinfo.location.name && `Прописка: ${this.addinfo.location.name}`;
   }
 
   get properties() {
-    return this.character.properties;
+    return this.addinfo.properties;
   }
 
   get canEditProperty() {

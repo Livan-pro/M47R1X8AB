@@ -1,6 +1,6 @@
 import { ApolloClient } from "apollo-client";
 import { WebSocketLink } from "apollo-link-ws";
-import { InMemoryCache } from "apollo-cache-inmemory";
+import { InMemoryCache, defaultDataIdFromObject } from "apollo-cache-inmemory";
 import { onError } from "apollo-link-error";
 import VueApollo from "vue-apollo";
 import * as appSettings from "tns-core-modules/application-settings";
@@ -11,6 +11,7 @@ import { SubscriptionClient } from "subscriptions-transport-ws";
 import App from "./pages/App.vue";
 import Login from "./pages/Login.vue";
 import { NavigationEntryVue } from "nativescript-vue";
+import { toIdValue, IdValue } from "apollo-utilities";
 
 let token: string | undefined = appSettings.getString("token");
 
@@ -59,8 +60,19 @@ const logoutLink = onError(({ graphQLErrors, networkError }): void => {
     logout();
 });
 
+const dataIdFromObject = defaultDataIdFromObject;
+
+const fromCache = (type: string): ((_, { id }) => IdValue) => (_, { id }): IdValue => toIdValue(dataIdFromObject({ __typename: type, id }));
+
 // Cache implementation
-const cache = new InMemoryCache();
+const cache = new InMemoryCache({
+  cacheRedirects: {
+    Query: {
+      character: fromCache("Character"),
+    },
+  },
+  dataIdFromObject,
+});
 
 // Create the apollo client
 export const apolloClient = new ApolloClient({

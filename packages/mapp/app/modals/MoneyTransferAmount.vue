@@ -17,15 +17,15 @@ import Vue from "nativescript-vue";
 import CharacterItem from "@/components/CharacterItem.vue";
 import LoadingButton from "@/components/LoadingButton.vue";
 
-import CharacterById from "@/gql/CharacterById";
+import CharacterInfoById from "@/gql/CharacterInfoById";
 import MoneyTransfer from "@/gql/MoneyTransfer";
-import { CharacterById_character as Character } from "@/gql/__generated__/CharacterById";
+import { CharacterInfoById_character as Character } from "@/gql/__generated__/CharacterInfoById";
 
 @Component({
   components: { CharacterItem, LoadingButton },
   apollo: {
     character: {
-      ...CharacterById,
+      ...CharacterInfoById,
       variables(this: MoneyTransferAmountModal) {
         return {
           id: this.id,
@@ -48,9 +48,6 @@ export default class MoneyTransferAmountModal extends Vue {
     avatarUploadedAt: null,
     profession: null,
     professionLevel: null,
-    location: null,
-    implantsRejectTime: null,
-    properties: [],
   };
   loading = false;
 

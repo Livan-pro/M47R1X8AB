@@ -2,7 +2,7 @@
   <Page actionBarHidden="true">
     <StackLayout class="p-x-20 p-y-10">
       <CharacterItem :data="character" :avatarSize="50" :hideBalance="true" class="p-b-10 m-b-10 hr-bottom" />
-      <Label v-if="character.state" :text="stateText" :class="color" class="h1 text-center p-b-10 hr-bottom" />
+      <Label v-if="medicalInfo.state" :text="stateText" :class="color" class="h1 text-center p-b-10 hr-bottom" />
       <Menu :items="items" />
     </StackLayout>
   </Page>
@@ -18,7 +18,9 @@ import Menu from "@/components/Menu.vue";
 import CreateImplant from "@/modals/CreateImplant.vue";
 
 import MedicalInfoById from "@/gql/MedicalInfoById";
-import { MedicalInfoById_character as Character } from "@/gql/__generated__/MedicalInfoById";
+import CharacterInfoById from "@/gql/CharacterInfoById";
+import { CharacterInfoById_character as Character } from "@/gql/__generated__/CharacterInfoById";
+import { MedicalInfoById_medicalInfo as MedicalInfo } from "@/gql/__generated__/MedicalInfoById";
 import Heal from "@/gql/Heal";
 import FixImplants from "@/gql/FixImplants";
 import { Profession, CharacterRole, CharacterState } from "../gql/__generated__/globalTypes";
@@ -30,6 +32,17 @@ import { stateColor, stateText } from "@/utils";
   components: { CharacterItem, Menu },
   apollo: {
     character: {
+      ...CharacterInfoById,
+      variables(this: MedicPage) {
+        return {
+          id: this.id,
+        };
+      },
+      skip(this: MedicPage) {
+        return this.id < 0;
+      },
+    },
+    medicalInfo: {
       ...MedicalInfoById,
       variables(this: MedicPage) {
         return {
@@ -54,6 +67,10 @@ export default class MedicPage extends Vue {
     avatarUploadedAt: null,
     profession: null,
     professionLevel: null,
+  };
+  medicalInfo: MedicalInfo = {
+    __typename: "Character",
+    id: -1,
     state: null,
     pollution: null,
     implantsRejectTime: null,
@@ -123,13 +140,13 @@ export default class MedicPage extends Vue {
   }
 
   get stateText() {
-    let text = stateText[this.character.state];
-    if (this.character.state === CharacterState.Pollution) text += ` (${this.character.pollution}%)`;
+    let text = stateText[this.medicalInfo.state];
+    if (this.medicalInfo.state === CharacterState.Pollution) text += ` (${this.medicalInfo.pollution}%)`;
     return text;
   }
 
   get color() {
-    return stateColor[this.character.state];
+    return stateColor[this.medicalInfo.state];
   }
 }
 </script>

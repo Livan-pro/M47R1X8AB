@@ -2,11 +2,10 @@ import gql from "graphql-tag";
 
 const obj = {
   query: gql`
-    query ImplantsRejectTime {
-      me {
-        mainCharacter {
-          implantsRejectTime
-        }
+    query ImplantsRejectTimeById($id: Int!) {
+      rejectTime: character(id: $id) {
+        id
+        implantsRejectTime
       }
     }
   `,

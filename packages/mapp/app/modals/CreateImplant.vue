@@ -16,16 +16,16 @@ import { Component, Prop } from "vue-property-decorator";
 import Vue from "nativescript-vue";
 import LoadingButton from "@/components/LoadingButton.vue";
 
-import CharacterById from "@/gql/CharacterById";
+import CharacterInfoById from "@/gql/CharacterInfoById";
 import CreateImplant from "@/gql/CreateImplant";
-import { CharacterById_character as Character } from "@/gql/__generated__/CharacterById";
+import { CharacterInfoById_character as Character } from "@/gql/__generated__/CharacterInfoById";
 import { implantTypes } from "@/utils";
 
 @Component({
   components: { LoadingButton },
   apollo: {
     character: {
-      ...CharacterById,
+      ...CharacterInfoById,
       variables(this: CreateImplantModal) {
         return {
           id: this.id,
@@ -47,9 +47,6 @@ export default class CreateImplantModal extends Vue {
     avatarUploadedAt: null,
     profession: null,
     professionLevel: null,
-    location: null,
-    implantsRejectTime: null,
-    properties: [],
   };
   loading = false;
   name = "";

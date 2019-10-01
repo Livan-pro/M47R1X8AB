@@ -22,9 +22,11 @@ import CharacterItem from "@/components/CharacterItem.vue";
 import ImplantItem from "@/components/ImplantItem.vue";
 
 import implants from "@/gql/Implants";
-import character from "@/gql/CharacterById";
+import CharacterInfoById from "@/gql/CharacterInfoById";
+import ImplantsRejectTimeById from "@/gql/ImplantsRejectTimeById";
 import { Implants_implants as Implant } from "@/gql/__generated__/Implants";
-import { CharacterById_character as Character } from "@/gql/__generated__/CharacterById";
+import { CharacterInfoById_character as Character } from "@/gql/__generated__/CharacterInfoById";
+import { ImplantsRejectTimeById_rejectTime as RejectTime } from "@/gql/__generated__/ImplantsRejectTimeById";
 
 @Component({
   components: { CharacterItem, ImplantItem },
@@ -41,7 +43,18 @@ import { CharacterById_character as Character } from "@/gql/__generated__/Charac
       },
     },
     character: {
-      ...character,
+      ...CharacterInfoById,
+      variables(this: ImplantsPage) {
+        return {
+          id: this.id,
+        };
+      },
+      skip(this: ImplantsPage) {
+        return this.id < 0;
+      },
+    },
+    rejectTime: {
+      ...ImplantsRejectTimeById,
       variables(this: ImplantsPage) {
         return {
           id: this.id,
@@ -64,9 +77,11 @@ export default class ImplantsPage extends Vue {
     avatarUploadedAt: null,
     profession: null,
     professionLevel: null,
-    location: null,
+  };
+  rejectTime: RejectTime = {
+    __typename: "Character",
+    id: -1,
     implantsRejectTime: null,
-    properties: [],
   };
 
   timerText = "00:00";
@@ -98,7 +113,7 @@ export default class ImplantsPage extends Vue {
   }
 
   get implantsRejectTime() {
-    return this.character.implantsRejectTime;
+    return this.rejectTime.implantsRejectTime;
   }
 
   get stateText() {

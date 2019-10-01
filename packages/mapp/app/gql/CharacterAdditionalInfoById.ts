@@ -2,18 +2,12 @@ import gql from "graphql-tag";
 
 export default {
   query: gql`
-    query CharacterById($id: Int!) {
-      character(id: $id) {
+    query CharacterAdditionalInfoById($id: Int!) {
+      addinfo: character(id: $id) {
         id
-        name
-        own
-        avatarUploadedAt
-        profession
-        professionLevel
         location {
           name
         }
-        implantsRejectTime
         properties {
           name
           value
