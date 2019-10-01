@@ -22,7 +22,7 @@ type Query {
 type Mutation {
   useMedicine(code: String!): Boolean
   useMedpack(code: String!): Boolean
-  heal(characterId: Int!): Boolean
+  heal(characterId: Int!): Character
   createMedicine(code: String!): Medicine!
   createMedpack(code: String!): Medpack!
 }

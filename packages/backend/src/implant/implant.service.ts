@@ -82,7 +82,7 @@ export class ImplantService {
     byCharacterId: number,
     forCharacterId: number,
     @TransactionManager() manager?: EntityManager,
-  ) {
+  ): Promise<Date | null> {
     const iRepo = manager.getRepository(Implant);
 
     const cRepo = manager.getRepository(Character);
@@ -95,5 +95,6 @@ export class ImplantService {
     await cRepo.update(forCharacterId, data);
     await iRepo.update({characterId: forCharacterId, working: false}, {working: true});
     this.nats.publish("backend.character.update", {...data, id: forCharacterId});
+    return data.implantsRejectTime;
   }
 }

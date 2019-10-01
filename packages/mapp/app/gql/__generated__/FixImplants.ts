@@ -6,8 +6,14 @@
 // GraphQL mutation operation: FixImplants
 // ====================================================
 
+export interface FixImplants_fixImplants {
+  __typename: "Character";
+  id: number;
+  implantsRejectTime: any | null;
+}
+
 export interface FixImplants {
-  fixImplants: boolean | null;
+  fixImplants: FixImplants_fixImplants | null;
 }
 
 export interface FixImplantsVariables {

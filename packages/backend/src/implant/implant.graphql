@@ -46,7 +46,7 @@ type Mutation {
   createImplant(data: FullImplantInput!): Implant!
   updateImplant(id: Int!, data: FullImplantInput!): Implant!
   prolongImplants(code: String!): Boolean
-  fixImplants(characterId: Int!): Boolean
+  fixImplants(characterId: Int!): Character
   createImplantProlongation(code: String!, time: Int!): ImplantProlongation!
 }
 
