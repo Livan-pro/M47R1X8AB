@@ -17,6 +17,7 @@ export interface MenuItem {
   open?: NativeScriptVueConstructor;
   modal?: NativeScriptVueConstructor;
   props?: object;
+  fullscreen?: boolean;
 }
 
 @Component
@@ -27,7 +28,7 @@ export default class Menu extends Vue {
     if (item.disabled) return;
     if (item.action) await item.action.call(this);
     if (item.open) this.$navigateTo(item.open, { frame: this.$root.currentFrame, props: item.props });
-    if (item.modal) this.$showModal(item.modal, { props: item.props });
+    if (item.modal) this.$showModal(item.modal, { fullscreen: !!item.fullscreen, props: item.props });
   }
 }
 </script>
