@@ -36,8 +36,19 @@ export default class ChangeCharacterPage extends Vue {
 
   async selectCharacter({ item: { id } }: { item: { id: number } }) {
     const frame = this.$root.currentFrame;
-    await this.$apollo.mutate({ ...SetMainCharacter, variables: { id } });
-    this.$navigateTo(frame === "f4" ? Menu : State, { frame, clearHistory: true });
+    try {
+      await this.$apollo.mutate({ ...SetMainCharacter, variables: { id } });
+      this.$navigateTo(frame === "f4" ? Menu : State, { frame, clearHistory: true });
+    } catch (error) {
+      // tslint:disable-next-line:no-console
+      console.error(JSON.stringify(error));
+      const message = ((error.graphQLErrors && error.graphQLErrors[0]) || error.networkError || error).message;
+      await alert({
+        title: "Ошибка",
+        message,
+        okButtonText: "ОК",
+      });
+    }
   }
 }
 </script>
