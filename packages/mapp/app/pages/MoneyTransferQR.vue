@@ -21,6 +21,22 @@ export default class MoneyTransferQRPage extends Vue {
   amount = "";
 
   async createQR() {
+    const amount = parseInt(this.amount, 10);
+    if (!(amount > 0)) {
+      if (amount < 1)
+        await alert({
+          title: "Ошибка",
+          message: "Сумма должна быть больше 0",
+          okButtonText: "ОК",
+        });
+      else
+        await alert({
+          title: "Ошибка",
+          message: "Вы должны ввести сумму для перевода",
+          okButtonText: "ОК",
+        });
+      return;
+    }
     this.$showModal(QRCode, { props: { text: `cbrpnk://mt/${this.id}/${this.amount}` } });
   }
 }
