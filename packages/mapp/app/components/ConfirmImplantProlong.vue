@@ -50,6 +50,7 @@ export default class ConfirmImplantProlong extends Vue {
         message: "Вы продлили импланты!",
         okButtonText: "ОК",
       });
+      this.$root.$emit("selectTab", 4);
     } catch (error) {
       // tslint:disable-next-line:no-console
       console.error(JSON.stringify(error));

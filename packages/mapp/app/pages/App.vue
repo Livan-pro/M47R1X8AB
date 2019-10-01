@@ -74,6 +74,20 @@ export default class App extends Vue {
   selectedIndex: number = 0;
   lastCriticalState: boolean | null = null;
 
+  created() {
+    this.$root.$on("selectTab", this.selectTab);
+  }
+
+  beforeDestroy() {
+    this.$root.$off("selectTab", this.selectTab);
+  }
+
+  selectTab(id: number) {
+    const idx = this.tabs.findIndex(tab => tab.id === `f${id}`);
+    if (idx < 0) return;
+    this.selectedIndex = idx;
+  }
+
   onSelectedIndexChange({ value, oldValue }) {
     this.selectedIndex = value;
     this.$root.currentFrame = this.tabs[value].id;

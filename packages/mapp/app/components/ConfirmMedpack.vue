@@ -50,6 +50,7 @@ export default class ConfirmMedpack extends Vue {
         message: "Вы использовали медпак!",
         okButtonText: "ОК",
       });
+      this.$root.$emit("selectTab", 4);
     } catch (error) {
       // tslint:disable-next-line:no-console
       console.error(JSON.stringify(error));

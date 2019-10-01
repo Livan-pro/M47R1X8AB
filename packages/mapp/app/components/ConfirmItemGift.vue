@@ -52,6 +52,7 @@ export default class ConfirmItemGift extends Vue {
         message: `Вы получили ${this.getItemName(result.data.useItemGift.itemId, result.data.useItemGift.amount)}!`,
         okButtonText: "ОК",
       });
+      this.$root.$emit("selectTab", 4);
     } catch (error) {
       // tslint:disable-next-line:no-console
       console.error(JSON.stringify(error));

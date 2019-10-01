@@ -65,6 +65,7 @@ export default class ConfirmQRMoneyTransfer extends Vue {
         message: `Вы перевели ${this.amount} кредитов пользователю ${(this.character as Character).name}`,
         okButtonText: "ОК",
       });
+      this.$root.$emit("selectTab", 4);
     } catch (error) {
       // tslint:disable-next-line:no-console
       console.error(JSON.stringify(error));

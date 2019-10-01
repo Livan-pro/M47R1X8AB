@@ -50,6 +50,7 @@ export default class ConfirmMedicine extends Vue {
         message: "Вы использовали лекарство!",
         okButtonText: "ОК",
       });
+      this.$root.$emit("selectTab", 4);
     } catch (error) {
       // tslint:disable-next-line:no-console
       console.error(JSON.stringify(error));
