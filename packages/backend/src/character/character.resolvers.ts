@@ -63,8 +63,9 @@ export class CharacterResolvers {
   async getCharacter(@GetUser() user: User, @Args("id") id: number): Promise<Character | undefined> {
     const fields: Array<keyof Character> = ["id", "userId", "name", "avatarUploadedAt", "profession", "professionLevel", "location", "state"];
     if (user.roles.has(Role.Admin)) fields.push("quenta", "roles");
-    if (user.roles.has(Role.Admin) || user.mainCharacter.roles.has(CharacterRole.Medic) || id === user.mainCharacterId) {
-      fields.push("implantsRejectTime", "pollution");
+    if (user.roles.has(Role.Admin) || user.mainCharacter.roles.has(CharacterRole.Medic) || id === user.mainCharacterId) fields.push("pollution");
+    if (user.roles.has(Role.Admin) || user.mainCharacter.profession === Profession.Biotechnician || id === user.mainCharacterId) {
+      fields.push("implantsRejectTime");
     }
     const char = await this.character.findById(id, fields, ["location", "properties"]);
     if (!char) return null;
