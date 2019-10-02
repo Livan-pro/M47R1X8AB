@@ -2,6 +2,7 @@ export * from "./entities/attachment";
 export * from "./entities/balance-transfer";
 export * from "./entities/character";
 export * from "./entities/event";
+export * from "./entities/firebase-token";
 export * from "./entities/implant-prolongation";
 export * from "./entities/implant";
 export * from "./entities/inventory-item";
