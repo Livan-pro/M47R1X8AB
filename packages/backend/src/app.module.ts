@@ -26,6 +26,7 @@ import { ImplantModule } from "implant/implant.module";
 import { InventoryModule } from "inventory/inventory.module";
 import { LocationModule } from "location/location.module";
 import { EventModule } from "event/event.module";
+import { FirebaseModule } from "firebase/firebase.module";
 
 @Global()
 @Module({
@@ -68,6 +69,7 @@ import { EventModule } from "event/event.module";
     CharacterModule,
     EventModule,
     FileModule,
+    FirebaseModule,
     ImplantModule,
     InventoryModule,
     LocationModule,

@@ -1,0 +1,4 @@
+type Mutation {
+  setFirebaseToken(token: String!): Boolean
+  unsetFirebaseToken(token: String!): Boolean
+}
