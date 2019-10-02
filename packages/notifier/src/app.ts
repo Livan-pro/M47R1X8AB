@@ -1,20 +1,16 @@
 import { Container, Service, Inject } from "typedi";
-import { CharacterStateService } from "./services/character-state";
 import { IService } from "./service.interface";
 import { Logger } from "pino";
-import { CharacterImplantsService } from "./services/character-implants";
-import { HomelessPollutionService } from "./services/homeless-pollution";
-import { UserCacheService } from "./services/user-cache";
-import { EventService } from "./services/event";
+import { NotifierService } from "./services/notifier";
+import { TokenCacheService } from "./services/token-cache";
+import { CharacterCacheService } from "./services/character-cache";
 
 @Service()
 export class AppService {
   private readonly serviceTypes = [
-    UserCacheService,
-    EventService,
-    CharacterStateService,
-    CharacterImplantsService,
-    HomelessPollutionService,
+    CharacterCacheService,
+    TokenCacheService,
+    NotifierService,
   ];
 
   private services: IService[];

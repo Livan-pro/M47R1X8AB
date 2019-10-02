@@ -1,0 +1,45 @@
+{
+  "name": "notifier",
+  "version": "1.3.7",
+  "description": "Matrix backend notifier",
+  "scripts": {
+    "lint": "echo \"No linter!\" && exit 1",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node src/main.ts",
+    "dev": "nodemon",
+    "prod": "cross-env NODE_ENV=production node dist/main.js",
+    "build": "rimraf dist && tsc",
+    "deploy": "pm2 reload ecosystem.config.js"
+  },
+  "author": "Livan",
+  "private": true,
+  "devDependencies": {
+    "@types/dotenv": "^6.1.1",
+    "@types/node": "^12.7.3",
+    "@types/pino": "^5.8.10",
+    "@types/zeromq": "^4.6.2",
+    "@typescript-eslint/eslint-plugin": "^2.0.0",
+    "@typescript-eslint/parser": "^2.0.0",
+    "eslint": "^6.3.0",
+    "eslint-config-prettier": "^6.1.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "matrix-database": "^1.3.7",
+    "nodemon": "^1.19.1",
+    "pino-pretty": "^3.2.1",
+    "prettier": "^1.18.2",
+    "rimraf": "^3.0.0",
+    "ts-node": "^8.3.0"
+  },
+  "dependencies": {
+    "dotenv": "^8.1.0",
+    "firebase-admin": "^8.6.0",
+    "matrix-database": "^1.3.7",
+    "mysql": "^2.17.1",
+    "nats": "^1.3.0",
+    "pino": "^5.13.2",
+    "reflect-metadata": "^0.1.13",
+    "typedi": "^0.8.0",
+    "typeorm": "^0.2.18",
+    "typescript": "^3.6.2"
+  }
+}

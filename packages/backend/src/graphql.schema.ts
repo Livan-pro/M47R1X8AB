@@ -264,6 +264,10 @@ export abstract class IMutation {
 
     abstract editProperty(characterId: number, name: string, value: string): boolean | Promise<boolean>;
 
+    abstract setFirebaseToken(token: string): boolean | Promise<boolean>;
+
+    abstract unsetFirebaseToken(token: string): boolean | Promise<boolean>;
+
     abstract createImplant(data: FullImplantInput): Implant | Promise<Implant>;
 
     abstract updateImplant(id: number, data: FullImplantInput): Implant | Promise<Implant>;

@@ -1,15 +1,17 @@
 import { Service, Inject } from "typedi";
 import { IService } from "../service.interface";
 import { Logger } from "pino";
-import { Connection, Repository, Transaction, Not, IsNull, TransactionManager, EntityManager, In } from "typeorm";
-import { Character, Implant } from "matrix-database";
+import { Connection, Repository, Transaction, Not, IsNull, TransactionManager, EntityManager } from "typeorm";
+import { Character, EventType } from "matrix-database";
 import { Client } from "nats";
+import { EventService } from "./event";
 
 @Service()
 export class CharacterImplantsService implements IService {
   private readonly log: Logger;
   private readonly repo: Repository<Character>;
   private readonly timers: Map<number, NodeJS.Timeout> = new Map();
+  @Inject() private readonly event: EventService;
   constructor(
     @Inject("LOGGER") logger: Logger,
     @Inject("CONNECTION") connection: Connection,
@@ -47,7 +49,7 @@ export class CharacterImplantsService implements IService {
     @TransactionManager() manager?: EntityManager,
   ) {
     const cRepo = manager.getRepository(Character);
-    let char = await cRepo.findOneOrFail(characterId, {
+    const char = await cRepo.findOneOrFail(characterId, {
       select: ["id", "implantsRejectTime"],
       lock: {mode: "pessimistic_read"},
     });
@@ -55,6 +57,7 @@ export class CharacterImplantsService implements IService {
       const update = {implantsRejectTime: null};
       await cRepo.update(characterId, update);
       this.nats.publish("timers.character.update", {...update, id: characterId});
+      this.event.emit(null, null, characterId, null, EventType.RejectImplants);
     }
     this.setupTimer(char);
   }

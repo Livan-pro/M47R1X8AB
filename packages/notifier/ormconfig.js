@@ -1,0 +1,1 @@
+module.exports = require("matrix-database/ormconfig.js");

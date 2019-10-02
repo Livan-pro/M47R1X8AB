@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "257840366856",
+    "firebase_url": "https://matrix8ab.firebaseio.com",
+    "project_id": "matrix8ab",
+    "storage_bucket": "matrix8ab.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:257840366856:android:5270b10318e837c51958bd",
+        "android_client_info": {
+          "package_name": "pro.livan.matrix8ab"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "257840366856-8rstbvtns74hm7rhr0etsg8oqkpfie8g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBole7IthpLATU3Pr8-kNjQtwgkNPUCkB8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "257840366856-8rstbvtns74hm7rhr0etsg8oqkpfie8g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
