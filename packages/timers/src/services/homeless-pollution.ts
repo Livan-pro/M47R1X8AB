@@ -2,15 +2,17 @@ import { Service, Inject } from "typedi";
 import { IService } from "../service.interface";
 import { Logger } from "pino";
 import { Connection, Repository, IsNull } from "typeorm";
-import { Character, CharacterState } from "matrix-database";
+import { Character, CharacterState, EventType } from "matrix-database";
 import { Client } from "nats";
 import { CharacterUtils } from "bshared";
+import { EventService } from "./event";
 
 @Service()
 export class HomelessPollutionService implements IService {
   private readonly log: Logger;
   private readonly repo: Repository<Character>;
   private timer: NodeJS.Timeout | null = null;
+  @Inject() private readonly event: EventService;
   constructor(
     @Inject("LOGGER") logger: Logger,
     @Inject("CONNECTION") connection: Connection,
@@ -42,5 +44,6 @@ export class HomelessPollutionService implements IService {
     const update = {state: CharacterState.Pollution, pollutionStartTime: new Date()};
     await this.repo.update(id, update);
     this.nats.publish("timers1.character.update", {...update, id});
+    this.event.emit(null, null, id, null, EventType.GetPollutionByHomeless);
   }
 }

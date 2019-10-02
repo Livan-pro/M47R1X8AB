@@ -2,15 +2,17 @@ import { Service, Inject } from "typedi";
 import { IService } from "../service.interface";
 import { Logger } from "pino";
 import { Connection, Repository, Transaction, TransactionRepository, In } from "typeorm";
-import { Character, CharacterState } from "matrix-database";
+import { Character, CharacterState, EventType } from "matrix-database";
 import { Client } from "nats";
 import { CharacterUtils } from "bshared";
+import { EventService } from "./event";
 
 @Service()
 export class CharacterStateService implements IService {
   private readonly log: Logger;
   private readonly repo: Repository<Character>;
   private readonly timers: Map<number, NodeJS.Timeout> = new Map();
+  @Inject() private readonly event: EventService;
   constructor(
     @Inject("LOGGER") logger: Logger,
     @Inject("CONNECTION") connection: Connection,
@@ -84,6 +86,12 @@ export class CharacterStateService implements IService {
       char = {...char, ...update};
       await repo.update(id, update);
       this.nats.publish("timers.character.update", {...update, id});
+      if (update.state) {
+        this.event.emit(
+          null, null, id, null,
+          update.state === CharacterState.SevereWound ? EventType.GetSevereWoundByPollution : EventType.DeathBySevereWound,
+        );
+      }
     }
     this.setupTimer(char);
   }
