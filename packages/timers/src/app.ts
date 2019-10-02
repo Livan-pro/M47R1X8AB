@@ -24,10 +24,10 @@ export class AppService {
   }
 
   async init() {
-    this.services.map(async s => {
+    for (const s of this.services) {
       if (!s.init) return null;
       await s.init();
       this.log.info(s.constructor.name + " initialized");
-    });
+    }
   }
 }
