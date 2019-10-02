@@ -90,7 +90,7 @@ export class ImplantResolvers {
     if (data.characterId === user.mainCharacterId && !user.roles.has(Role.Admin)) throw new CustomError("Вы не можете добавить имплант себе!");
     if (!user.roles.has(Role.Admin) || !Object.prototype.hasOwnProperty.call(data, "working")) data.working = true;
     if (!user.roles.has(Role.Admin) || !Object.prototype.hasOwnProperty.call(data, "quality")) data.quality = false;
-    const implant = await this.implant.create(data);
+    const implant = user.roles.has(Role.Admin) ? await this.implant.create(data) : await this.implant.createMax3(data);
     await this.event.emit(user.mainCharacterId, user.id, data.characterId, null, EventType.CreateImplant, implant);
     return implant;
   }
