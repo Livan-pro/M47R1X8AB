@@ -159,8 +159,9 @@ export class NotifierService {
 
   private async sendBatchNotification(tokens: string[], notification: messaging.Notification, data?: NotificationData) {
     if (!tokens || tokens.length < 1) return;
+    const info = data ? {notification, data} : {notification};
     for (let i = 0; i < tokens.length; i += 100) {
-      const response = await this.messaging.sendMulticast({tokens: tokens.slice(i, i + 100), notification, data});
+      const response = await this.messaging.sendMulticast({tokens: tokens.slice(i, i + 100), ...info});
       this.log.debug({response});
     }
   }
