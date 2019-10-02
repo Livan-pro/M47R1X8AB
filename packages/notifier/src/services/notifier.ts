@@ -76,10 +76,6 @@ export class NotifierService {
       handler: ({causedByCharacterId}: Event) => `${this.charCache.getNameByCharacterId(causedByCharacterId)} вылечил вас!`,
     } as INotificationDescription<void>,
     {
-      type: EventType.ProlongImplants,
-      handler: ({causedByCharacterId}: Event) => `${this.charCache.getNameByCharacterId(causedByCharacterId)} продлил срок действия ваших имплантов!`,
-    } as INotificationDescription<void>,
-    {
       type: EventType.RejectImplants,
       handler: () => "Ваши импланты отторглись...",
     } as INotificationDescription<void>,
