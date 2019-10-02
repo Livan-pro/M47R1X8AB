@@ -47,7 +47,7 @@ export class CharacterImplantsService implements IService {
     @TransactionManager() manager?: EntityManager,
   ) {
     const cRepo = manager.getRepository(Character);
-    let char = await cRepo.findOneOrFail(characterId, {
+    const char = await cRepo.findOneOrFail(characterId, {
       select: ["id", "implantsRejectTime"],
       lock: {mode: "pessimistic_read"},
     });
