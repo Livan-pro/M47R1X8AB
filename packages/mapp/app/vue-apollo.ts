@@ -12,8 +12,12 @@ import App from "./pages/App.vue";
 import Login from "./pages/Login.vue";
 import { NavigationEntryVue } from "nativescript-vue";
 import { toIdValue, IdValue } from "apollo-utilities";
+import SetFirebaseToken from "./gql/SetFirebaseToken";
+import UnsetFirebaseToken from "./gql/UnsetFirebaseToken";
 
 let token: string | undefined = appSettings.getString("token");
+let firebaseToken: string | null = null;
+let apolloProvider: VueApollo;
 
 const wsClient = new SubscriptionClient(
   ENV_GRAPHQL_WS_URL,
@@ -24,6 +28,21 @@ const wsClient = new SubscriptionClient(
   WebSocket,
 );
 const link = new WebSocketLink(wsClient);
+
+async function setFirebaseToken(token: string): Promise<void> {
+  await apolloProvider.defaultClient.mutate({ ...SetFirebaseToken, variables: { token } });
+}
+
+async function unsetFirebaseToken(token: string): Promise<void> {
+  await apolloProvider.defaultClient.mutate({ ...UnsetFirebaseToken, variables: { token } });
+}
+
+export async function updateFirebaseToken(fbToken: string): Promise<void> {
+  if (firebaseToken === fbToken) return;
+  firebaseToken = fbToken;
+  if (!token) return;
+  setFirebaseToken(firebaseToken);
+}
 
 export function setToken(newToken: string): void {
   token = newToken;
@@ -39,6 +58,7 @@ export function unsetToken(): void {
 
 export function login(newToken: string): void {
   setToken(newToken);
+  if (firebaseToken) setFirebaseToken(firebaseToken);
   vue.$navigateTo(App);
 }
 
@@ -47,6 +67,7 @@ export function logout(): void {
     unsetToken();
     vue.$navigateTo(Login, ({ clearHistory: true } as unknown) as NavigationEntryVue);
   }
+  if (firebaseToken) unsetFirebaseToken(firebaseToken);
 }
 
 const logoutLink = onError(({ graphQLErrors, networkError }): void => {
@@ -88,6 +109,8 @@ export const apolloClient = new ApolloClient({
   },
 });
 
-export const apolloProvider = new VueApollo({
+apolloProvider = new VueApollo({
   defaultClient: apolloClient,
 });
+
+export { apolloProvider };

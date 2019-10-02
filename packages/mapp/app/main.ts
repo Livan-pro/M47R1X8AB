@@ -2,11 +2,13 @@ import Vue from "nativescript-vue";
 import VueDevtools from "nativescript-vue-devtools";
 import * as appSettings from "tns-core-modules/application-settings";
 import VueApollo from "vue-apollo";
-import { apolloProvider } from "./vue-apollo";
+import { apolloProvider, updateFirebaseToken } from "./vue-apollo";
 
 import App from "./pages/App.vue";
 import Login from "./pages/Login.vue";
 import { VNode } from "vue";
+
+import firebase, { Message } from "nativescript-plugin-firebase";
 
 // Fix for qrcode generation & potential fix for other libs
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,6 +31,30 @@ Vue.registerElement("VideoPlayer", () => require("nativescript-videoplayer").Vid
 /* eslint-enable @typescript-eslint/explicit-function-return-type */
 
 const isLoggedIn = appSettings.hasKey("token");
+
+firebase
+  .init({
+    showNotificationsWhenInForeground: true,
+    onPushTokenReceivedCallback: (token: string): void => {
+      updateFirebaseToken(token);
+    },
+    onMessageReceivedCallback: async (message: Message): Promise<void> => {
+      if (message.foreground) {
+        await alert({
+          title: message.title,
+          message: message.body,
+        });
+      } // TODO: else => open specific activity
+    },
+  })
+  .then(
+    (): void => {
+      console.log("firebase.init done");
+    },
+    (error): void => {
+      console.log(`firebase.init error: ${error}`);
+    },
+  );
 
 export const vue = new Vue({
   apolloProvider,
