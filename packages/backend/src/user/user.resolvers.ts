@@ -183,4 +183,19 @@ export class UserResolvers {
     await this.event.emit(null, user.id, null, null, EventType.UpdateUser, {id, ...data});
     return {...data, id};
   }
+
+  @Mutation()
+  @Roles({user: Role.Admin})
+  async setPassword(
+    @Args("id") id: number,
+    @Args("password") password: string,
+    @GetUser() user: User,
+  ): Promise<boolean> {
+    await this.user.update(id, {
+      password: await this.auth.hashPassword(password),
+      passwordChangedAt: new Date(),
+    });
+    await this.event.emit(null, user.id, null, id, EventType.ChangePassword);
+    return true;
+  }
 }
