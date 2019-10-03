@@ -1,5 +1,6 @@
 <template>
   <v-card>
+    <set-password-dialog v-model="passwordDialog" :id="passwordData.id" :email="passwordData.email" />
     <v-card-title>
       Пользователи
       <v-spacer></v-spacer>
@@ -26,6 +27,7 @@
       <template v-slot:item.actions="{ item }">
         <make-admin-button v-if="isSuperAdmin" :id="item.id" :value="item.roles.includes('Admin')" />
         <upload-quenta-button :id="item.mainCharacter.id" />
+        <icon-btn icon="mdi-lock-reset" color="orange" tooltip="Сменить пароль" @click="setPassword(item)" />
         <v-btn x-small text fab color="primary" :href="`https://vk.com/${item.vkId}`">
           VK
         </v-btn>
@@ -48,9 +50,10 @@ import { UserRole as Role, EditUserInput } from "~/gql/__generated__/globalTypes
 import { dataUrl, maxChars, formatDate } from "@/utils";
 import { professionToText } from "shared/browser";
 import { createMutation } from "~/gql/UpdateUser";
+import SetPasswordDialog from "~/components/SetPasswordDialog.vue";
 
 @Component({
-  components: { CharacterAvatar, IconBtn, UploadQuentaButton, MakeAdminButton },
+  components: { CharacterAvatar, IconBtn, UploadQuentaButton, MakeAdminButton, SetPasswordDialog },
   apollo: {
     users,
     me,
@@ -63,6 +66,8 @@ export default class UsersPage extends Vue {
   users: User[] = [];
   me: Me = { __typename: "User", roles: [] };
   search = "";
+  passwordDialog = false;
+  passwordData = { id: -1, email: "" };
 
   get headers() {
     return [
@@ -123,6 +128,11 @@ export default class UsersPage extends Vue {
 
   async update(id: number, data: EditUserInput) {
     await this.$apollo.mutate(createMutation(id, data));
+  }
+
+  setPassword(user: User) {
+    this.passwordData = user;
+    this.passwordDialog = true;
   }
 }
 </script>
