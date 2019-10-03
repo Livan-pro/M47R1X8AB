@@ -1,7 +1,7 @@
 import { Service, Inject } from "typedi";
 import { Logger } from "pino";
 import { Client } from "nats";
-import { Event, EventType, Character } from "matrix-database";
+import { Event, EventType } from "matrix-database";
 import { messaging } from "firebase-admin";
 import { TokenCacheService } from "./token-cache";
 import { CharacterCacheService } from "./character-cache";
@@ -41,7 +41,7 @@ export class NotifierService {
         amount: 0,
       },
       handler: ({data: {itemId, amount}}) => amount === 0 ?
-        false : amount > 0 ? `Вам выдан ${items[itemId]} (${amount})!` : `С вас списан ${items[itemId]} (${-amount})!`,
+        false : amount > 0 ? `Вам выдан ${items[itemId].name} (${amount})!` : `С вас списан ${items[itemId].name} (${-amount})!`,
     } as INotificationDescription<{itemId: number; amount: number}>,
     {
       type: EventType.CreateImplant,
@@ -102,7 +102,7 @@ export class NotifierService {
         amount: 0,
       },
       handler: ({causedByCharacterId, data: {itemId, amount}}) =>
-        `${this.charCache.getNameByCharacterId(causedByCharacterId)} отправил вам ${items[itemId]} (${amount})!`,
+        `${this.charCache.getNameByCharacterId(causedByCharacterId)} отправил вам ${items[itemId].name} (${amount})!`,
     } as INotificationDescription<{itemId: number; amount: number}>,
     {
       type: EventType.TransferMoney,
