@@ -49,7 +49,7 @@ export default class LoginPage extends Vue {
   }
 
   get isDevVersion() {
-    return ENV_GRAPHQL_WS_URL !== "wss://cyberpunk2219.tech";
+    return ENV_GRAPHQL_WS_URL !== "wss://cyberpunk2219.tech/graphql";
   }
 }
 </script>
