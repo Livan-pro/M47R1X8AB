@@ -129,7 +129,6 @@ export class NotifierService {
   }
 
   private async onEvent(event: Event) {
-    if (!event.affectedUserId) return;
     const desc = this.notifications[event.type];
     if (!desc) return;
     const input = event.data;
@@ -178,7 +177,7 @@ export class NotifierService {
     const info = data ? {notification, data} : {notification};
     for (let i = 0; i < tokens.length; i += 100) {
       const response = await this.messaging.sendMulticast({tokens: tokens.slice(i, i + 100), ...info});
-      this.log.debug({response});
+      if (response.failureCount > 0) this.log.warn({errors: response.responses.filter(r => !r.success)});
     }
   }
 }
