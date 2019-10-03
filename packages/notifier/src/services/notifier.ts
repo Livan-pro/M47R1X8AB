@@ -76,6 +76,22 @@ export class NotifierService {
       handler: ({causedByCharacterId}: Event) => `${this.charCache.getNameByCharacterId(causedByCharacterId)} вылечил вас!`,
     } as INotificationDescription<void>,
     {
+      type: EventType.NewMessage,
+      data: {
+        fromId: 0,
+        toId: 0,
+        text: "",
+      },
+      handler: ({type, data: {fromId, toId, text}}) => ({
+        title: this.charCache.getNameByCharacterId(fromId),
+        body: text,
+        data: {
+          type,
+          chatId: toId.toString(),
+        },
+      }),
+    } as INotificationDescription<{fromId: number; toId: number; text: string}>,
+    {
       type: EventType.RejectImplants,
       handler: () => "Ваши импланты отторглись...",
     } as INotificationDescription<void>,
