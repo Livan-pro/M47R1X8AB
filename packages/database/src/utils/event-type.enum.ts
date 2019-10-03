@@ -20,6 +20,7 @@ export enum EventType {
   Heal = "Heal",
   Login = "Login",
   Logout = "Logout",
+  NewMessage = "NewMessage",
   GetPollutionByHomeless = "GetPollutionByHomeless",
   GetSevereWoundByPollution = "GetSevereWoundByPollution",
   ProlongImplants = "ProlongImplants",
