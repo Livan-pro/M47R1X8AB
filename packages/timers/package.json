@@ -1,6 +1,6 @@
 {
   "name": "timers",
-  "version": "1.3.7",
+  "version": "1.4.0",
   "description": "Matrix backend timers",
   "scripts": {
     "lint": "echo \"No linter!\" && exit 1",
@@ -23,7 +23,7 @@
     "eslint": "^6.3.0",
     "eslint-config-prettier": "^6.1.0",
     "eslint-plugin-prettier": "^3.1.0",
-    "matrix-database": "^1.3.7",
+    "matrix-database": "^1.4.0",
     "nodemon": "^1.19.1",
     "pino-pretty": "^3.2.1",
     "prettier": "^1.18.2",
@@ -31,7 +31,7 @@
     "ts-node": "^8.3.0"
   },
   "dependencies": {
-    "bshared": "^1.3.7",
+    "bshared": "^1.4.0",
     "dotenv": "^8.1.0",
     "mysql": "^2.17.1",
     "nats": "^1.3.0",
