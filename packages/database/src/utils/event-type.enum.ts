@@ -1,6 +1,7 @@
 export enum EventType {
   AddBalance = "AddBalance",
   AddItem = "AddItem",
+  BroadcastMessage = "BroadcastMessage",
   ChangePassword = "ChangePassword",
   ConsumeItem = "ConsumeItem",
   CreateImplant = "CreateImplant",
