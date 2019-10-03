@@ -2,9 +2,9 @@ import { Resolver, Mutation, Args, Query } from "@nestjs/graphql";
 import { Logger } from "@nestjs/common";
 import { LocationService } from "./location.service";
 import { GetUser } from "user/get-user.decorator";
-import { User, UserRole as Role, CharacterState, CharacterRole, Location } from "matrix-database";
+import { User, UserRole as Role, Location, EventType } from "matrix-database";
 import { Roles } from "auth/roles.decorator";
-import { CustomError } from "CustomError";
+import { EventService } from "event/event.service";
 
 @Resolver()
 @Roles({user: Role.Admin})
@@ -12,6 +12,7 @@ export class LocationResolvers {
   private readonly log = new Logger(LocationResolvers.name);
   constructor(
     private readonly location: LocationService,
+    private readonly event: EventService,
   ) {}
 
   @Query()
@@ -22,16 +23,21 @@ export class LocationResolvers {
   @Mutation()
   async createLocation(
     @Args("data") data: Partial<Location>,
+    @GetUser() user: User,
   ): Promise<Location> {
-    return await this.location.create(data);
+    const location = await this.location.create(data);
+    await this.event.emit(null, user.id, null, null, EventType.CreateLocation, location);
+    return location;
   }
 
   @Mutation()
   async updateLocation(
     @Args("id") id: number,
     @Args("data") data: Partial<Location>,
+    @GetUser() user: User,
   ): Promise<Location> {
     await this.location.update(id, data);
+    await this.event.emit(null, user.id, null, null, EventType.CreateLocation, {id, ...data});
     return this.location.getById(id);
   }
 }

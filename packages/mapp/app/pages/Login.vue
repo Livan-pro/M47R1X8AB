@@ -4,7 +4,7 @@
     <StackLayout class="p-x-20 p-t-30">
       <TextField v-model="form.email" hint="Email" returnKeyType="next" />
       <TextField v-model="form.password" hint="Пароль" returnKeyType="done" secure="true" @returnPress="doLogin" />
-      <LoadingButton :loading="loading" text="Вход" @tap="doLogin" />
+      <LoadingButton :loading="loading" text="Вход" :class="{bgRed: isDevVersion}" @tap="doLogin" />
     </StackLayout>
   </Page>
 </template>
@@ -46,6 +46,10 @@ export default class LoginPage extends Vue {
       });
     }
     this.loading = false;
+  }
+
+  get isDevVersion() {
+    return ENV_GRAPHQL_WS_URL !== "wss://cyberpunk2219.tech";
   }
 }
 </script>

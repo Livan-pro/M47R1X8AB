@@ -2,7 +2,7 @@ import { Resolver, Query, Subscription, Mutation, Args } from "@nestjs/graphql";
 import { Logger, Inject } from "@nestjs/common";
 import { ImplantService } from "./implant.service";
 import { GetUser } from "user/get-user.decorator";
-import { User, UserRole as Role, Implant, CharacterRole, ImplantProlongation, Profession, CharacterState, Character } from "matrix-database";
+import { User, UserRole as Role, Implant, ImplantProlongation, Profession, CharacterState, EventType, Character } from "matrix-database";
 import { Roles } from "auth/roles.decorator";
 import { ImplantCacheService } from "cache/implant-cache.service";
 import { UserCacheService } from "cache/user-cache.service";
@@ -11,6 +11,7 @@ import { Client } from "nats";
 import { FullImplantInput } from "graphql.schema";
 import { CustomError } from "CustomError";
 import { mapCodeToString, codeToString } from "utils";
+import { EventService } from "event/event.service";
 
 @Resolver()
 @Roles({user: Role.LoggedIn})
@@ -20,6 +21,7 @@ export class ImplantResolvers {
     private readonly implant: ImplantService,
     private readonly iCache: ImplantCacheService,
     private readonly uCache: UserCacheService,
+    private readonly event: EventService,
     @Inject("NATS")
     private readonly nats: Client,
   ) {}
@@ -32,7 +34,7 @@ export class ImplantResolvers {
 
   @Mutation()
   @Roles({user: Role.Admin})
-  async createImplantProlongation(@Args("code") code: string, @Args("time") time: number): Promise<ImplantProlongation> {
+  async createImplantProlongation(@Args("code") code: string, @Args("time") time: number, @GetUser() user: User): Promise<ImplantProlongation> {
     if (code.length !== 16) throw new CustomError("Неверный код!");
     let buf: Buffer;
     try {
@@ -41,7 +43,9 @@ export class ImplantResolvers {
       throw new CustomError("Неверный код!");
     }
     try {
-      return codeToString(await this.implant.createImplantProlongation(buf, time));
+      const data = await this.implant.createImplantProlongation(buf, time);
+      await this.event.emit(null, user.id, null, null, EventType.CreateImplantProlongation, data);
+      return codeToString(data);
     } catch (err) {
       if (err.code && err.code === "ER_DUP_ENTRY") throw new CustomError("QR-код с таким кодом уже существует");
       throw err;
@@ -74,6 +78,7 @@ export class ImplantResolvers {
       throw new CustomError("Неверный код продления имплантов!");
     }
     await this.implant.useProlongation(buf, user.mainCharacterId);
+    await this.event.emit(user.mainCharacterId, user.id, user.mainCharacterId, user.id, EventType.ProlongImplants, {code});
   }
 
   @Mutation()
@@ -85,7 +90,9 @@ export class ImplantResolvers {
     if (data.characterId === user.mainCharacterId && !user.roles.has(Role.Admin)) throw new CustomError("Вы не можете добавить имплант себе!");
     if (!user.roles.has(Role.Admin) || !Object.prototype.hasOwnProperty.call(data, "working")) data.working = true;
     if (!user.roles.has(Role.Admin) || !Object.prototype.hasOwnProperty.call(data, "quality")) data.quality = false;
-    return await this.implant.create(data);
+    const implant = user.roles.has(Role.Admin) ? await this.implant.create(data) : await this.implant.createMax3(data);
+    await this.event.emit(user.mainCharacterId, user.id, data.characterId, null, EventType.CreateImplant, implant);
+    return implant;
   }
 
   @Mutation()
@@ -93,8 +100,11 @@ export class ImplantResolvers {
   async updateImplant(
     @Args("id") id: number,
     @Args("data") data: FullImplantInput,
+    @GetUser() user: User,
   ): Promise<Partial<Implant>> {
-    return await this.implant.update(id, data);
+    const update = await this.implant.update(id, data);
+    await this.event.emit(null, user.id, null, null, EventType.UpdateImplant, {id, ...data});
+    return update;
   }
 
   @Mutation()
@@ -105,6 +115,7 @@ export class ImplantResolvers {
   ): Promise<Partial<Character>> {
     if (characterId === user.mainCharacterId) throw new CustomError("Вы не можете чинить свои импланты!");
     const implantsRejectTime = await this.implant.fix(user.mainCharacterId, characterId);
+    await this.event.emit(user.mainCharacterId, user.id, characterId, null, EventType.FixImplants);
     return {id: characterId, implantsRejectTime};
   }
 
@@ -117,7 +128,7 @@ export class ImplantResolvers {
       return {...filtered, _id: id};
     },
   })
-  sMainCharacter() {
+  sImplants() {
     return new NatsAsyncIterator(this.nats, "*.implant.update", "implant");
   }
 }

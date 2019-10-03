@@ -1,6 +1,6 @@
 import { Injectable, Logger, Inject } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository, Transaction, EntityManager, TransactionManager } from "typeorm";
+import { Repository, Transaction, EntityManager, TransactionManager, In } from "typeorm";
 import { Character, CharacterState } from "matrix-database";
 import { FileUpload } from "graphql-upload";
 import { FileService } from "file/file.service";
@@ -19,6 +19,10 @@ export class CharacterService {
 
   async getById(id: number, fields?: Array<keyof Character>, relations: string[] = []): Promise<Character> {
     return await this.repo.findOneOrFail(id, {select: fields, relations});
+  }
+
+  async getByIds(ids: number[], fields?: Array<keyof Character>, relations: string[] = []): Promise<Character[]> {
+    return await this.repo.find({select: fields, where: {id: In(ids)}, relations});
   }
 
   async getByIdAndOwner(id: number, userId: number, relations: string[] = []): Promise<Character> {

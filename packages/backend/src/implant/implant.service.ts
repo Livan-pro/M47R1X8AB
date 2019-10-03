@@ -35,6 +35,19 @@ export class ImplantService {
     return implant;
   }
 
+  @Transaction()
+  async createMax3(
+    data: Partial<Implant>,
+    @TransactionManager() manager?: EntityManager,
+  ): Promise<Implant> {
+    const repo = manager.getRepository(Implant);
+    const implants = await repo.find({where: {characterId: data.characterId, quality: false}});
+    if (implants.length >= 3) throw new CustomError("У этого персонажа уже 3 некачественных импланта!");
+    const implant = await repo.save(repo.create(data));
+    this.nats.publish("backend.implant.update", implant);
+    return implant;
+  }
+
   async update(id: number, data: Partial<Implant>): Promise<Partial<Implant>> {
     const implant = this.repo.create(data);
     await this.repo.update(id, implant);

@@ -1,8 +1,9 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger, Inject } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, Transaction, EntityManager, TransactionManager } from "typeorm";
 import { Character, BalanceTransfer } from "matrix-database";
 import { CustomError } from "CustomError";
+import { Client } from "nats";
 
 @Injectable()
 export class BalanceService {
@@ -10,6 +11,7 @@ export class BalanceService {
   constructor(
     @InjectRepository(BalanceTransfer)
     private readonly repo: Repository<BalanceTransfer>,
+    @Inject("NATS") private readonly nats: Client,
   ) {}
 
   async getAllHistory(): Promise<BalanceTransfer[]> {
@@ -33,6 +35,10 @@ export class BalanceService {
     const historyRepo = manager.getRepository(BalanceTransfer);
     const transfer = historyRepo.create({fromId, toId, amount});
     await historyRepo.save(transfer);
+    const fromAmount = await repo.findOneOrFail(fromId, {select: ["id", "balance"]});
+    const toAmount = await repo.findOneOrFail(toId, {select: ["id", "balance"]});
+    this.nats.publish("backend.character.update", {id: fromId, balance: fromAmount.balance});
+    this.nats.publish("backend.character.update", {id: toId, balance: toAmount.balance});
   }
 
   @Transaction()
@@ -46,5 +52,7 @@ export class BalanceService {
     const historyRepo = manager.getRepository(BalanceTransfer);
     const transfer = historyRepo.create({toId, amount});
     await historyRepo.save(transfer);
+    const toAmount = await repo.findOneOrFail(toId, {select: ["id", "balance"]});
+    this.nats.publish("backend.character.update", {id: toId, balance: toAmount.balance});
   }
 }

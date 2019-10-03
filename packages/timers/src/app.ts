@@ -4,10 +4,14 @@ import { IService } from "./service.interface";
 import { Logger } from "pino";
 import { CharacterImplantsService } from "./services/character-implants";
 import { HomelessPollutionService } from "./services/homeless-pollution";
+import { UserCacheService } from "./services/user-cache";
+import { EventService } from "./services/event";
 
 @Service()
 export class AppService {
   private readonly serviceTypes = [
+    UserCacheService,
+    EventService,
     CharacterStateService,
     CharacterImplantsService,
     HomelessPollutionService,
@@ -24,10 +28,10 @@ export class AppService {
   }
 
   async init() {
-    this.services.map(async s => {
+    for (const s of this.services) {
       if (!s.init) return null;
       await s.init();
       this.log.info(s.constructor.name + " initialized");
-    });
+    }
   }
 }

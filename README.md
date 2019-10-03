@@ -133,6 +133,15 @@ nano packages/database/.env # set DB_PASSWORD
 cp packages/backend/.env-example packages/backend/.env
 nano packages/backend/.env # set DB_PASSWORD & JWT_SECRET
 
+cp packages/bshared/.env-example packages/bshared/.env
+nano packages/bshared/.env # edit
+
+cp packages/timers/.env-example packages/timers/.env
+nano packages/timers/.env # edit
+
+cp packages/notifier/.env-example packages/notifier/.env
+nano packages/notifier/.env # edit
+
 npm run deploy # migrate DB, restart backend, rebuild website
 pm2 save # save pm2 process list for autostart on reboot
 ```

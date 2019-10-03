@@ -27,7 +27,7 @@ import ChangeCharacterPage from "./ChangeCharacter.vue";
 import QRCode from "@/components/QRCode.vue";
 import StatePage from "./State.vue";
 import { CharacterState } from "@/gql/__generated__/globalTypes";
-import MessagesPage from "./Messages.vue";
+import ChatsPage from "./Chats.vue";
 import { openUrl } from "tns-core-modules/utils/utils";
 
 @Component({
@@ -64,7 +64,7 @@ export default class MenuPage extends Vue {
   get items() {
     return [
       { title: `Баланс: ${this.balance}`, open: MoneyPage },
-      { title: "Сообщения", open: MessagesPage },
+      { title: "Сообщения", open: ChatsPage },
       { title: "Инвентарь", open: InventoryPage },
       { title: "Состояние", open: StatePage },
       { title: "Импланты", open: ImplantsPage, props: { id: this.character.id } },
