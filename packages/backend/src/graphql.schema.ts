@@ -349,6 +349,8 @@ export abstract class IMutation {
     abstract setMainCharacter(characterId: number): Character | Promise<Character>;
 
     abstract updateUser(id: number, data?: EditUserInput): User | Promise<User>;
+
+    abstract setPassword(id: number, password: string): boolean | Promise<boolean>;
 }
 
 export class News {

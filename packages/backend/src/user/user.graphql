@@ -71,4 +71,5 @@ type Mutation {
   setUserRole(id: Int!, role: UserRole!, value: Boolean): Boolean
   setMainCharacter(characterId: Int!): Character
   updateUser(id: Int!, data: EditUserInput): User
+  setPassword(id: Int!, password: String!): Boolean
 }
