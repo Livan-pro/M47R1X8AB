@@ -27,6 +27,7 @@ import { InventoryModule } from "inventory/inventory.module";
 import { LocationModule } from "location/location.module";
 import { EventModule } from "event/event.module";
 import { FirebaseModule } from "firebase/firebase.module";
+import { MessageModule } from "message/message.module";
 
 @Global()
 @Module({
@@ -74,6 +75,7 @@ import { FirebaseModule } from "firebase/firebase.module";
     InventoryModule,
     LocationModule,
     MedicineModule,
+    MessageModule,
     NewsModule,
     UserModule,
   ],

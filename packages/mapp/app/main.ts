@@ -6,6 +6,7 @@ import { apolloProvider, updateFirebaseToken } from "./vue-apollo";
 
 import App from "./pages/App.vue";
 import Login from "./pages/Login.vue";
+import MessagesPage from "./pages/Messages.vue";
 import { VNode } from "vue";
 
 import firebase, { Message } from "nativescript-plugin-firebase";
@@ -30,7 +31,25 @@ Vue.config.silent = TNS_ENV === "production";
 Vue.registerElement("VideoPlayer", () => require("nativescript-videoplayer").Video);
 /* eslint-enable @typescript-eslint/explicit-function-return-type */
 
+let vue: Vue;
 const isLoggedIn = appSettings.hasKey("token");
+
+const confirm = ((global as unknown) as {
+  confirm: (
+    message?:
+      | string
+      | {
+          title: string;
+          message: string;
+          okButtonText: string;
+          cancelButtonText: string;
+        },
+  ) => Promise<boolean>;
+}).confirm;
+
+function isChatOpen(chatId: number): boolean {
+  return vue.currentChat === chatId;
+}
 
 firebase
   .init({
@@ -40,10 +59,24 @@ firebase
     },
     onMessageReceivedCallback: async (message: Message): Promise<void> => {
       if (message.foreground) {
-        await alert({
-          title: message.title,
-          message: message.body,
-        });
+        if (message.data && message.data.type === "NewMessage") {
+          const chatId = +message.data.chatId;
+          if (isChatOpen(chatId)) return;
+          const res = await confirm({
+            title: message.title,
+            message: message.body,
+            okButtonText: "Перейти",
+            cancelButtonText: "Закрыть",
+          });
+          if (!res) return;
+          vue.$navigateTo(MessagesPage, { frame: "f4", props: { id: chatId } });
+          vue.$emit("selectTab", 4);
+        } else {
+          await alert({
+            title: message.title,
+            message: message.body,
+          });
+        }
       } // TODO: else => open specific activity
     },
   })
@@ -56,12 +89,15 @@ firebase
     },
   );
 
-export const vue = new Vue({
+vue = new Vue({
   apolloProvider,
   data: {
     currentFrame: "",
+    currentChat: null,
   },
   render: (h): VNode => h("frame", [isLoggedIn ? h(App) : h(Login)]),
 });
+
+export { vue };
 
 vue.$start();

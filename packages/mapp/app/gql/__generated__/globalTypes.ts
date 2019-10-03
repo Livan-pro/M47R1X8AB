@@ -62,6 +62,10 @@ export interface FullImplantInput {
   quality?: boolean | null;
 }
 
+export interface MessageInput {
+  text: string;
+}
+
 //==============================================================
 // END Enums and Input Objects
 //==============================================================

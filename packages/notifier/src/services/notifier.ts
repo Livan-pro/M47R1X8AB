@@ -1,7 +1,7 @@
 import { Service, Inject } from "typedi";
 import { Logger } from "pino";
 import { Client } from "nats";
-import { Event, EventType, Character } from "matrix-database";
+import { Event, EventType } from "matrix-database";
 import { messaging } from "firebase-admin";
 import { TokenCacheService } from "./token-cache";
 import { CharacterCacheService } from "./character-cache";
@@ -41,7 +41,7 @@ export class NotifierService {
         amount: 0,
       },
       handler: ({data: {itemId, amount}}) => amount === 0 ?
-        false : amount > 0 ? `Вам выдан ${items[itemId]} (${amount})!` : `С вас списан ${items[itemId]} (${-amount})!`,
+        false : amount > 0 ? `Вам выдан ${items[itemId].name} (${amount})!` : `С вас списан ${items[itemId].name} (${-amount})!`,
     } as INotificationDescription<{itemId: number; amount: number}>,
     {
       type: EventType.CreateImplant,
@@ -76,6 +76,22 @@ export class NotifierService {
       handler: ({causedByCharacterId}: Event) => `${this.charCache.getNameByCharacterId(causedByCharacterId)} вылечил вас!`,
     } as INotificationDescription<void>,
     {
+      type: EventType.NewMessage,
+      data: {
+        fromId: 0,
+        toId: 0,
+        text: "",
+      },
+      handler: ({type, data: {fromId, toId, text}}) => ({
+        title: this.charCache.getNameByCharacterId(fromId),
+        body: text,
+        data: {
+          type,
+          chatId: toId.toString(),
+        },
+      }),
+    } as INotificationDescription<{fromId: number; toId: number; text: string}>,
+    {
       type: EventType.RejectImplants,
       handler: () => "Ваши импланты отторглись...",
     } as INotificationDescription<void>,
@@ -86,7 +102,7 @@ export class NotifierService {
         amount: 0,
       },
       handler: ({causedByCharacterId, data: {itemId, amount}}) =>
-        `${this.charCache.getNameByCharacterId(causedByCharacterId)} отправил вам ${items[itemId]} (${amount})!`,
+        `${this.charCache.getNameByCharacterId(causedByCharacterId)} отправил вам ${items[itemId].name} (${amount})!`,
     } as INotificationDescription<{itemId: number; amount: number}>,
     {
       type: EventType.TransferMoney,
@@ -113,7 +129,6 @@ export class NotifierService {
   }
 
   private async onEvent(event: Event) {
-    if (!event.affectedUserId) return;
     const desc = this.notifications[event.type];
     if (!desc) return;
     const input = event.data;
@@ -162,7 +177,7 @@ export class NotifierService {
     const info = data ? {notification, data} : {notification};
     for (let i = 0; i < tokens.length; i += 100) {
       const response = await this.messaging.sendMulticast({tokens: tokens.slice(i, i + 100), ...info});
-      this.log.debug({response});
+      if (response.failureCount > 0) this.log.warn({errors: response.responses.filter(r => !r.success)});
     }
   }
 }

@@ -112,6 +112,10 @@ export class LoginInput {
     rememberMe?: boolean;
 }
 
+export class MessageInput {
+    text: string;
+}
+
 export class NewsInput {
     title?: string;
     text?: string;
@@ -183,6 +187,18 @@ export class CharacterUpdate {
     properties?: Property[];
 }
 
+export class Chat {
+    id: number;
+    participants: Character[];
+    lastMessage?: Message;
+}
+
+export class ChatUpdate {
+    id: number;
+    participants?: Character[];
+    lastMessage?: Message;
+}
+
 export class Implant {
     id: number;
     name?: string;
@@ -249,6 +265,14 @@ export class Medpack {
     usedAt?: Date;
 }
 
+export class Message {
+    id: number;
+    createdAt: Date;
+    fromId: number;
+    toId: number;
+    text: string;
+}
+
 export abstract class IMutation {
     abstract moneyTransfer(id: number, amount: number): Character | Promise<Character>;
 
@@ -301,6 +325,8 @@ export abstract class IMutation {
     abstract createMedicine(code: string): Medicine | Promise<Medicine>;
 
     abstract createMedpack(code: string): Medpack | Promise<Medpack>;
+
+    abstract sendMessage(chatId: number, message: MessageInput): Message | Promise<Message>;
 
     abstract createNews(data: NewsInput): News | Promise<News>;
 
@@ -361,6 +387,12 @@ export abstract class IQuery {
 
     abstract listMedicine(): Medicine[] | Promise<Medicine[]>;
 
+    abstract messages(chatId: number, beforeId?: number): Message[] | Promise<Message[]>;
+
+    abstract chats(): Chat[] | Promise<Chat[]>;
+
+    abstract chat(id: number): Chat | Promise<Chat>;
+
     abstract news(): News[] | Promise<News[]>;
 
     abstract me(): User | Promise<User>;
@@ -374,6 +406,10 @@ export abstract class ISubscription {
     abstract mainCharacter(): CharacterUpdate | Promise<CharacterUpdate>;
 
     abstract implants(): ImplantUpdate | Promise<ImplantUpdate>;
+
+    abstract messages(chatId: number): Message | Promise<Message>;
+
+    abstract chats(): ChatUpdate | Promise<ChatUpdate>;
 }
 
 export class User {

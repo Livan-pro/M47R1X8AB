@@ -1,0 +1,38 @@
+type Chat {
+  id: Int!
+  participants: [Character!]!
+  lastMessage: Message
+}
+
+type ChatUpdate {
+  id: Int!
+  participants: [Character!]
+  lastMessage: Message
+}
+
+type Message {
+  id: Int!
+  createdAt: Date!
+  fromId: Int!
+  toId: Int!
+  text: String!
+}
+
+input MessageInput {
+  text: String!
+}
+
+type Query {
+  messages(chatId: Int!, beforeId: Int): [Message!]
+  chats: [Chat!]!
+  chat(id: Int!): Chat
+}
+
+type Mutation {
+  sendMessage(chatId: Int!, message: MessageInput!): Message!
+}
+
+type Subscription {
+  messages(chatId: Int!): Message!
+  chats: ChatUpdate!
+}
