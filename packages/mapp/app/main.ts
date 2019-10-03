@@ -59,8 +59,11 @@ firebase
     },
     onMessageReceivedCallback: async (message: Message): Promise<void> => {
       if (message.foreground) {
-        if (message.data && message.data.type === "NewMessage") {
-          const chatId = +message.data.chatId;
+        if (message.data) {
+          let chatId: number;
+          if (message.data.type === "NewMessage") chatId = +message.data.chatId;
+          else if (message.data.type === "BroadcastMessage") chatId = +message.data.fromId;
+          else return;
           if (isChatOpen(chatId)) return;
           const res = await confirm({
             title: message.title,
