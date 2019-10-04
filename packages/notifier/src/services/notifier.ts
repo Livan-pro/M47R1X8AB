@@ -6,6 +6,7 @@ import { messaging } from "firebase-admin";
 import { TokenCacheService } from "./token-cache";
 import { CharacterCacheService } from "./character-cache";
 import { items } from "../items";
+import { Config } from "config";
 
 interface INotificationDescription<T> {
   type: EventType;
@@ -23,6 +24,9 @@ export class NotifierService {
   @Inject("MESSAGING") private messaging: messaging.Messaging;
   @Inject() private cache: TokenCacheService;
   @Inject() private charCache: CharacterCacheService;
+
+  private readonly firebaseEnabled = Config.getBoolean("FIREBASE_ENABLED", false);
+  private readonly eventEnabled = Config.getBoolean("EVENT_ENABLED", true);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   notifications: {[key: string]: INotificationDescription<any>} = Object.freeze([
@@ -180,11 +184,21 @@ export class NotifierService {
   }
 
   private async sendNotification(userId: number, notification: messaging.Notification, data?: NotificationData) {
-    this.sendBatchNotification(this.cache.getTokensByUserId(userId), notification, data);
+    if (this.firebaseEnabled) {
+      this.sendBatchNotification(this.cache.getTokensByUserId(userId), notification, data);
+    }
+    if (this.eventEnabled) {
+      this.nats.emit("notifier.notification", {userIds: [userId], notification, data: JSON.stringify(data)});
+    }
   }
 
   private async sendNotificationToAll(notification: messaging.Notification, data?: NotificationData) {
-    this.sendBatchNotification(this.cache.getAllTokens(), notification, data);
+    if (this.firebaseEnabled) {
+      this.sendBatchNotification(this.cache.getAllTokens(), notification, data);
+    }
+    if (this.eventEnabled) {
+      this.nats.emit("notifier.notification", {userIds: "*", notification, data: JSON.stringify(data)});
+    }
   }
 
   private async sendBatchNotification(tokens: string[], notification: messaging.Notification, data?: NotificationData) {

@@ -18,6 +18,12 @@ type Message {
   text: String!
 }
 
+type Notification {
+  title: String!
+  body: String!
+  data: String!
+}
+
 input MessageInput {
   text: String!
 }
@@ -36,4 +42,5 @@ type Mutation {
 type Subscription {
   messages(chatId: Int!): Message!
   chats: ChatUpdate!
+  notifications: Notification!
 }
