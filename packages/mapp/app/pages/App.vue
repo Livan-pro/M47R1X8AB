@@ -34,7 +34,7 @@ import Menu from "./Menu.vue";
 import me from "@/gql/MainCharacterWithSubscription";
 import { MainCharacter_me as Me } from "@/gql/__generated__/MainCharacter";
 import { CharacterState } from "@/gql/__generated__/globalTypes";
-import NotificationsSubscription from "@/gql/NotificationSubscription";
+import NotificationsSubscription from "@/gql/NotificationsSubscription";
 import { onMessage } from "../main";
 
 const tabCreator = (
@@ -56,7 +56,7 @@ const tabCreator = (
       notifications: {
         ...NotificationsSubscription,
         result(this: App, { data }) {
-          onMessage(data.notifications);
+          onMessage({ ...data.notifications, data: JSON.parse(data.notifications.data) });
         },
       },
     },
