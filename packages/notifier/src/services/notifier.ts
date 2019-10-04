@@ -44,6 +44,21 @@ export class NotifierService {
         false : amount > 0 ? `Вам выдан ${items[itemId].name} (${amount})!` : `С вас списан ${items[itemId].name} (${-amount})!`,
     } as INotificationDescription<{itemId: number; amount: number}>,
     {
+      type: EventType.BroadcastMessage,
+      sendTo: "all",
+      data: {
+        text: "",
+      },
+      handler: ({type, causedByCharacterId, data: {text}}) => ({
+        title: "Рассылка",
+        body: `От: ${this.charCache.getNameByCharacterId(causedByCharacterId)}\n${text}`,
+        data: {
+          type,
+          fromId: causedByCharacterId.toString(),
+        },
+      }),
+    } as INotificationDescription<{text: string}>,
+    {
       type: EventType.CreateImplant,
       handler: ({causedByCharacterId}: Event) => `${this.charCache.getNameByCharacterId(causedByCharacterId)} создал имплант для вас!`,
     } as INotificationDescription<void>,

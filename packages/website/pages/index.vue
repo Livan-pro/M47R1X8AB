@@ -2,9 +2,10 @@
   <div class="text-center" id="main">
     <h1 id="title">Киберпанк <span class="purple">2219</span></h1>
     <div style="width: 100%">
-      <h2 class="yellow" id="standby">Please stand by<RollingDots/></h2>
+      <h2 v-if="!started" class="yellow" id="standby">Please stand by<RollingDots/></h2>
       <hr>
-      <h2 id="countdown"><Countdown :timestamp="1570125600000"/></h2>
+      <h2 v-if="!started" id="countdown"><Countdown :timestamp="1570125600000"/></h2>
+      <h2 v-else>Игра началась!</h2>
       <hr>
     </div>
     <img id="main-logo" src="@/assets/img/Cyberpunk_2219_round.png" alt="Cyberpunk 2219">
@@ -21,6 +22,16 @@ import Countdown from "@/components/Countdown.vue";
   components: {RollingDots, Countdown},
 })
 export default class Index extends Vue {
+  started = false;
+  startTime = 1570168800000;
+  created() {
+    const wait = this.startTime - Date.now();
+    if (wait <= 0) {
+      this.started = true;
+      return;
+    }
+    setTimeout(() => this.started = true, wait);
+  }
 }
 </script>
 

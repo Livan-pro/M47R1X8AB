@@ -328,6 +328,8 @@ export abstract class IMutation {
 
     abstract sendMessage(chatId: number, message: MessageInput): Message | Promise<Message>;
 
+    abstract broadcastMessage(text: string): boolean | Promise<boolean>;
+
     abstract createNews(data: NewsInput): News | Promise<News>;
 
     abstract updateNews(id: number, data: NewsInput): News | Promise<News>;

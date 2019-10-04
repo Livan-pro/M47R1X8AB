@@ -75,6 +75,15 @@ export class MessageResolvers {
     return message;
   }
 
+  @Mutation("broadcastMessage")
+  async broadcastMessage(
+    @Args("text") text: string,
+    @GetUser() user: User,
+  ): Promise<boolean> {
+    await this.event.emit(user.mainCharacterId, user.id, null, null, EventType.BroadcastMessage, {text});
+    return true;
+  }
+
   @Subscription("messages", {
     filter(this: MessageResolvers, payload: {messages: Message}, variables: {chatId: number}, ctx: {req: {user: User}}) {
       const characterId = this.uCache.getMainCharacterId(ctx.req.user.id);
