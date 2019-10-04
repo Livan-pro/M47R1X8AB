@@ -76,10 +76,13 @@ export default class App extends Vue {
 
   created() {
     this.$root.$on("selectTab", this.selectTab);
+    // subscribe
+    this.$apollo.subscribe();
   }
 
   beforeDestroy() {
     this.$root.$off("selectTab", this.selectTab);
+    // unsubscribe
   }
 
   selectTab(id: number) {
