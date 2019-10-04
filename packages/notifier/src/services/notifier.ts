@@ -188,7 +188,7 @@ export class NotifierService {
       this.sendBatchNotification(this.cache.getTokensByUserId(userId), notification, data);
     }
     if (this.eventEnabled) {
-      this.nats.publish("notifier.notification", {userIds: [userId], notification, data: JSON.stringify(data)});
+      this.nats.publish("notifier.notification", {userIds: [userId], notification, data});
     }
   }
 
@@ -197,7 +197,7 @@ export class NotifierService {
       this.sendBatchNotification(this.cache.getAllTokens(), notification, data);
     }
     if (this.eventEnabled) {
-      this.nats.publish("notifier.notification", {userIds: "*", notification, data: JSON.stringify(data)});
+      this.nats.publish("notifier.notification", {userIds: "*", notification, data});
     }
   }
 
