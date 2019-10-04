@@ -24,7 +24,7 @@ async function bootstrap() {
 
     const fbApp = admin.initializeApp({
       credential: admin.credential.applicationDefault(),
-      databaseURL: "https://matrix8ab.firebaseio.com",
+      databaseURL: "https://matrix8ab-prod.firebaseio.com",
     });
     logger.info("Firabase App initialized");
     Container.set("FIREBASE", fbApp);
