@@ -120,4 +120,16 @@ export class MessageResolvers {
   sChats(@GetUser() user: User) {
     return new NatsAsyncIterator(this.nats, "*.message.new", "message");
   }
+
+  @Subscription("notifications", {
+    filter(this: MessageResolvers, payload: {notifications: {userIds: number[], title: string, body: string, data: any}}, _, ctx: {req: {user: User}}) {
+      return payload.notifications.userIds.includes(ctx.req.user.id);
+    },
+    resolve: data => {
+      return {title: data.notifications.title, body: data.notifications.body, data: JSON.stringify(data.notifications.data)};
+    },
+  })
+  sNotifications() {
+    return new NatsAsyncIterator(this.nats, "*.notification", "notifications");
+  }
 }
