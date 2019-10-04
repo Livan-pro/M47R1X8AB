@@ -6,7 +6,7 @@ import { messaging } from "firebase-admin";
 import { TokenCacheService } from "./token-cache";
 import { CharacterCacheService } from "./character-cache";
 import { items } from "../items";
-import { Config } from "config";
+import { Config } from "../config";
 
 interface INotificationDescription<T> {
   type: EventType;
