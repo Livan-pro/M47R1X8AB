@@ -46,14 +46,13 @@ export class CharacterResolvers {
     if (user.roles.has(Role.Admin)) {
       fields.push("quenta", "roles", "registrationProfession", "balance", "state", "pollution", "deathTime", "implantsRejectTime");
     }
-    const chars = await this.character.getAll(fields, relations);
+    const chars: Array<Character & {own?: boolean}> = await this.character.getAll(fields, relations);
     if (!user.roles.has(Role.Admin)) {
       chars.map(c => {
         if (c.userId !== user.id) {
           c.location = null;
           c.professionLevel = null;
         }
-        c.userId = null;
         return c;
       });
     }
@@ -86,7 +85,6 @@ export class CharacterResolvers {
       !user.roles.has(Role.Admin) &&
       !user.mainCharacter.roles.has(CharacterRole.Medic)
     ) char.state = CharacterState.Normal;
-    if (!user.roles.has(Role.Admin)) char.userId = null;
     return char;
   }
 
