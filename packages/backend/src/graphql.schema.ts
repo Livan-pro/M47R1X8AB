@@ -363,6 +363,12 @@ export class News {
     attachment?: Attachment;
 }
 
+export class Notification {
+    title: string;
+    body: string;
+    data: string;
+}
+
 export class Property {
     name: string;
     value: string;
@@ -414,6 +420,8 @@ export abstract class ISubscription {
     abstract messages(chatId: number): Message | Promise<Message>;
 
     abstract chats(): ChatUpdate | Promise<ChatUpdate>;
+
+    abstract notifications(): Notification | Promise<Notification>;
 }
 
 export class User {
