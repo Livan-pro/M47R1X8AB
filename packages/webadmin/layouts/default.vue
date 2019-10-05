@@ -126,6 +126,11 @@ export default class DefaultLayout extends Vue {
         },
       ],
     },
+    {
+      icon: "mdi-message-outline",
+      title: "Сообщения",
+      to: "/messages",
+    },
   ];
   title = "Matrix Webadmin";
 
