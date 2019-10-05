@@ -52,29 +52,27 @@ function isChatOpen(chatId: number): boolean {
 }
 
 export const onMessage = async (message: Message): Promise<void> => {
-  if (message.foreground) {
-    if (message.data) {
-      let chatId: number;
-      if (message.data.type === "NewMessage") chatId = +message.data.chatId;
-      else if (message.data.type === "BroadcastMessage") chatId = +message.data.fromId;
-      else return;
-      if (isChatOpen(chatId)) return;
-      const res = await confirm({
-        title: message.title,
-        message: message.body,
-        okButtonText: "Перейти",
-        cancelButtonText: "Закрыть",
-      });
-      if (!res) return;
-      vue.$navigateTo(MessagesPage, { frame: "f4", props: { id: chatId } });
-      vue.$emit("selectTab", 4);
-    } else {
-      await alert({
-        title: message.title,
-        message: message.body,
-      });
-    }
-  } // TODO: else => open specific activity
+  if (message.data) {
+    let chatId: number;
+    if (message.data.type === "NewMessage") chatId = +message.data.chatId;
+    else if (message.data.type === "BroadcastMessage") chatId = +message.data.fromId;
+    else return;
+    if (isChatOpen(chatId)) return;
+    const res = await confirm({
+      title: message.title,
+      message: message.body,
+      okButtonText: "Перейти",
+      cancelButtonText: "Закрыть",
+    });
+    if (!res) return;
+    vue.$navigateTo(MessagesPage, { frame: "f4", props: { id: chatId } });
+    vue.$emit("selectTab", 4);
+  } else {
+    await alert({
+      title: message.title,
+      message: message.body,
+    });
+  }
 };
 
 firebase
@@ -83,7 +81,9 @@ firebase
     onPushTokenReceivedCallback: (token: string): void => {
       updateFirebaseToken(token);
     },
-    onMessageReceivedCallback: onMessage,
+    onMessageReceivedCallback: async (message: Message): Promise<void> => {
+      if (message.foreground) await onMessage(message);
+    },
   })
   .then(
     (): void => {

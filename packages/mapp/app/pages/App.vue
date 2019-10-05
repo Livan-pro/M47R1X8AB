@@ -34,6 +34,8 @@ import Menu from "./Menu.vue";
 import me from "@/gql/MainCharacterWithSubscription";
 import { MainCharacter_me as Me } from "@/gql/__generated__/MainCharacter";
 import { CharacterState } from "@/gql/__generated__/globalTypes";
+import NotificationsSubscription from "@/gql/NotificationsSubscription";
+import { onMessage } from "../main";
 
 const tabCreator = (
   tabs: { title: string; component: string; id: string; class: string; ref: string; props: Record<string, string | number | object> }[],
@@ -50,6 +52,14 @@ const tabCreator = (
   components: { State, News, Characters, Scan, Menu },
   apollo: {
     me,
+    $subscribe: {
+      notifications: {
+        ...NotificationsSubscription,
+        result(this: App, { data }) {
+          onMessage({ ...data.notifications, data: JSON.parse(data.notifications.data) });
+        },
+      },
+    },
   },
 })
 export default class App extends Vue {
@@ -76,13 +86,10 @@ export default class App extends Vue {
 
   created() {
     this.$root.$on("selectTab", this.selectTab);
-    // subscribe
-    this.$apollo.subscribe();
   }
 
   beforeDestroy() {
     this.$root.$off("selectTab", this.selectTab);
-    // unsubscribe
   }
 
   selectTab(id: number) {

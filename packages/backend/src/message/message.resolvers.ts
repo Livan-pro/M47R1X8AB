@@ -122,13 +122,22 @@ export class MessageResolvers {
   }
 
   @Subscription("notifications", {
-    filter(this: MessageResolvers, payload: {notifications: {userIds: string | number[], title: string, body: string, data: any}}, _, ctx: {req: {user: User}}) {
+    filter(
+      this: MessageResolvers,
+      payload: {notifications: {userIds: string | number[], title: string, body: string, data: any}},
+      _,
+      ctx: {req: {user: User}},
+    ) {
       return typeof payload.notifications.userIds === "string" ?
         payload.notifications.userIds === "*" :
         payload.notifications.userIds.includes(ctx.req.user.id);
     },
     resolve: data => {
-      return {title: data.notifications.title, body: data.notifications.body, data: JSON.stringify(data.notifications.data)};
+      return {
+        title: data.notifications.notification.title,
+        body: data.notifications.notification.body,
+        data: JSON.stringify(data.notifications.data),
+      };
     },
   })
   sNotifications() {
