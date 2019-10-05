@@ -1,60 +1,59 @@
 <template>
-  <v-layout justify-center>
-    <v-flex sm10 md8 lg6>
-      <news-dialog v-model="dialog" :id="newsId" :data="newsData" :type="actionType" />
+  <v-layout justify-space-around>
+    <v-col xs12 md6>
       <v-card>
+        <select-character-dialog v-model="selectedCharacterId" :characters="characters" />
         <v-card-title>
-          Новости
-          <icon-btn class="ml-2" icon="mdi-plus" color="green" tooltip="Создать" @click="createMessage" />
+          Диалоги
+          <icon-btn class="ml-2" icon="mdi-plus" color="green" tooltip="Создать" @click="createChat" />
           <v-spacer></v-spacer>
           <v-text-field v-model="search" append-icon="mdi-search" label="Поиск" single-line hide-details></v-text-field>
         </v-card-title>
         <v-alert v-if="!items.length" type="warning" class="mx-2">
-          Новости не найдены
+          Нет диалогов
         </v-alert>
         <v-list>
-          <template v-for="(item, index) in items">
-            <v-divider :key="index"></v-divider>
-            <v-list-item :key="item.title">
+          <template v-for="item in items">
+            <v-divider :key="'d' + item.id"></v-divider>
+            <v-list-item :key="item.id" :input-value="selectedCharacterId === item.id" @click="selectedCharacterId = item.id">
               <v-list-item-content>
-                <v-list-item-title>{{ item.title }}</v-list-item-title>
-                <v-list-item-subtitle>{{ item.date }}</v-list-item-subtitle>
+                <v-list-item-title>{{ item.character.name }} (ID{{ item.character.id }})</v-list-item-title>
+                <v-list-item-subtitle>{{ item.lastMessage.createdAtText }}</v-list-item-subtitle>
                 <v-list-item-subtitle class="text--primary ws-pre-line">
-                  {{ item.text }}
-                  <img v-if="item.attachment && item.attachment.type === 'Image'" :src="getAttachmentUrl(item.attachment)" class="news-image" />
-                  <video
-                    v-else-if="item.attachment && item.attachment.type === 'Video'"
-                    :src="getAttachmentUrl(item.attachment)"
-                    controls
-                    class="news-video"
-                  />
-                  <audio v-else-if="item.attachment && item.attachment.type === 'Audio'" :src="getAttachmentUrl(item.attachment)" controls />
+                  {{ item.lastMessage.text }}
                 </v-list-item-subtitle>
               </v-list-item-content>
-              <icon-btn icon="mdi-pencil" color="orange" tooltip="Редактировать" @click="updateMessage(item)" />
-              <icon-btn icon="mdi-delete" color="red" tooltip="Удалить" @click="deleteMessage(item)" />
             </v-list-item>
           </template>
         </v-list>
       </v-card>
-    </v-flex>
+    </v-col>
+    <v-col xs12 md6>
+      <Messages :id="selectedCharacterId" />
+    </v-col>
   </v-layout>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from "nuxt-property-decorator";
-import Chats from "~/gql/Chats";
-import Messages from "~/gql/Messages";
-import { Chats_chats as Chat } from "~/gql/__generated__/Chats";
-import { Messages_messages as Message } from "~/gql/__generated__/Messages";
+
 import IconBtn from "@/components/IconBtn.vue";
-import MessageDialog from "@/components/MessageDialog.vue";
+import Messages from "@/components/Messages.vue";
+import SelectCharacterDialog from "@/components/SelectCharacter.vue";
+
+import Chats from "~/gql/Chats";
+import { Chats_chats as Chat, Chats_chats_participants as Participant, Chats_chats_lastMessage as Message } from "~/gql/__generated__/Chats";
+import me from "~/gql/MyCharacter";
+import { MyCharacter_me as Me, MyCharacter_me_mainCharacter as Character } from "~/gql/__generated__/MyCharacter";
+import characters from "~/gql/CharactersInfo";
+import { CharactersInfo_characters as CharacterInfo } from "~/gql/__generated__/CharactersInfo";
 
 @Component({
-  components: { IconBtn, MessageDialog },
+  components: { IconBtn, Messages, SelectCharacterDialog },
   apollo: {
     chats: Chats,
-    // TODO: self character
+    me,
+    characters,
   },
   meta: {
     auth: true,
@@ -62,8 +61,13 @@ import MessageDialog from "@/components/MessageDialog.vue";
 })
 export default class MessagesPage extends Vue {
   chats: Chat[] = [];
+  me: Me = {
+    __typename: "User",
+    mainCharacter: null,
+  };
+  characters: CharacterInfo[] = [];
   search = "";
-  dialog = false;
+  selectedCharacterId: boolean | null | number = null;
 
   get normalizedSearch() {
     return this.search.toLowerCase().trim();
@@ -71,13 +75,43 @@ export default class MessagesPage extends Vue {
 
   get items() {
     const chats = this.chats.map(item => {
-      const opponent = null; // TODO
-      if (!item.lastMessage) return item;
+      const character = item.participants.find(char => char.id !== this.character.id) || item.participants[0];
+      if (!item.lastMessage) return { ...item, character };
       const createdAt = new Date(item.lastMessage.createdAt);
-      return { ...item, lastMessage: { ...item.lastMessage, createdAt, createdAtText: createdAt.toLocaleDateString() } };
-    });
+      return { ...item, character, lastMessage: { ...item.lastMessage, createdAt, createdAtText: createdAt.toLocaleString() } };
+    }) as {
+      character: Participant;
+      __typename: "Chat";
+      id: number;
+      participants: Participant[];
+      lastMessage: Message & { createdAtText: string } | null;
+    }[];
     if (!this.search) return chats;
-    return chats.filter(item => ["par", "text", "date"].some(key => item[key].toLowerCase().includes(this.normalizedSearch))); // TODO
+    return chats.filter(
+      item =>
+        item.character.name.includes(this.normalizedSearch) ||
+        (item.lastMessage &&
+          (item.lastMessage.text.includes(this.normalizedSearch) || item.lastMessage.createdAtText.includes(this.normalizedSearch))),
+    );
+  }
+
+  get character(): Character {
+    return (
+      this.me.mainCharacter || {
+        __typename: "Character",
+        id: -1,
+        name: "",
+        avatarUploadedAt: null,
+      }
+    );
+  }
+
+  createChat() {
+    this.selectedCharacterId = false;
+  }
+
+  get participants() {
+    return (this.chats.find(c => c.id === this.selectedCharacterId) || { participants: [] }).participants;
   }
 }
 </script>

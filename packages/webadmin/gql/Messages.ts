@@ -1,5 +1,6 @@
 import gql from "graphql-tag";
-import { Messages_messages as Message, Messages } from "./__generated__/Messages";
+import { Messages_messages as Message, Messages as MessagesQuery } from "./__generated__/Messages";
+import { Messages as MessagesSubscription } from "./__generated__/MessagesSubscription";
 
 export default {
   query: gql`
@@ -13,7 +14,7 @@ export default {
       }
     }
   `,
-  subscribeToMore: {
+  /*subscribeToMore: {
     document: gql`
       subscription MessagesSubscription($id: Int!) {
         messages(chatId: $id) {
@@ -26,16 +27,16 @@ export default {
       }
     `,
     updateQuery: (
-      prev: Messages,
+      prev: MessagesQuery,
       {
         subscriptionData: {
           data: { messages: message },
         },
       }: { subscriptionData: { data: { messages: Message } } },
-    ): Messages => {
+    ): MessagesSubscription => {
       const idx = prev.messages.findIndex((msg): boolean => msg.id === message.id);
       if (idx < 0) prev.messages.push(message);
       return prev;
     },
-  },
+  },*/
 };

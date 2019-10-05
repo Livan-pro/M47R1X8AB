@@ -95,6 +95,10 @@ export interface LocationInput {
   name?: string | null;
 }
 
+export interface MessageInput {
+  text: string;
+}
+
 export interface NewsInput {
   title?: string | null;
   text?: string | null;

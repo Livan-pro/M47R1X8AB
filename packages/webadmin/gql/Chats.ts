@@ -22,7 +22,7 @@ export default {
       }
     }
   `,
-  subscribeToMore: {
+  /*subscribeToMore: {
     document: gql`
       subscription ChatsSubscription {
         chats {
@@ -59,5 +59,5 @@ export default {
       }
       return prev;
     },
-  },
+  },*/
 };
